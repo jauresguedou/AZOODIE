@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <title>Ajouter un professionnel - AZÔÔDIÉ </title>
+</head>
+<body>
+
+    <div class="form-container">
+
+        <h1>Ajouter un Professionnel</h1>
+
+         <% if (typeof errors !== "undefined" && errors.length > 0) { %>
+            <div style="background:#FBE7E4; color:#C0392B; padding:12px; border-radius:10px; margin-bottom:16px;">
+                <ul style="margin:0; padding-left:18px;">
+                <% errors.forEach(function(err) { %>
+                    <li><%= err.msg %></li>
+                <% }); %>
+                </ul>
+            </div>
+            <% } %>
+
+       <form action="/professionals" method="POST">
+           
+            <div class="form-group">
+               <label for="name">Nom</label>
+               <input type="text" id="name" name="name" required>
+            </div>
+          
+            
+            <div class="form-group">
+                <label for="trade_category">Métier</label>
+                <input type="text" id="trade_category" name="trade_category" required>
+            </div>
+
+            <div class="form-group">
+                <label for="service_radius_km">Rayon de service</label>
+                <input type="number" id="service_radius_km" name="service_radius_km" value="15">
+            </div>
+
+            <div class="form-group">
+                <label for="base_lat">Latitude</label>
+                <input type="text" id="base_lat" name="base_lat" required>
+            </div>
+             
+            <div class="form-group">
+                <label for="base_lng">Longitude</label>
+                <input type="text" id="base_lng" name="base_lng" required>
+         
+            </div>
+
+        
+         <button type="submit" class="btn-primary">Enregistrer</button>
+
+       </form>
+
+
+    </div>
+    
+</body>
+</html>

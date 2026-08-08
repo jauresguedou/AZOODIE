@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title><%= professional.name %> - AZÔÔDIÉ</title>
+</head>
+<body>
+   <div class="form-container">
+         <h1><%= professional.name %></h1>
+         <p><%= professional.trade_category %> <% if(professional.verified) { %>. <span style="color:var(--teal); font-weight:600;" >Vérifié ✓</span><% } %></p>
+        
+        <div class="result-card">
+            <div>Rayon de service</div>
+            <div class="distance-chip"><%= professional.service_radius_km %> km </div>
+        </div>
+   
+
+        <div class="result-card">
+            <div>Note</div>
+            <div class="distance-chip"><%= professional.rating_avg %> (<%= professional.review_count %> avis)</div>
+        </div>
+        <a href="/requests/new/<%= professional.id %>" class="btn-primary" style="display:inline-block; text-decoration:none; text-align:center; margin-top:16px"> Contacter </a>
+        <a href="/professionals" class="btn-primary" style="display:inline-block; text-decoration:none; text-align:center; margin-top:16px;">Retour à la liste</a>
+
+   </div>
+    
+</body>
+</html>

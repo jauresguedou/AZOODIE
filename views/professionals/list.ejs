@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Professionals - AZÔÔDIÉ</title>
+</head>
+<body>
+
+    <div class="form-container">
+        <h1>Professionnels enregistrés</h1>
+
+        <% professionals.forEach(function(pro) { %>
+
+            <div class="form-group">
+                <strong><a href="/professionals/<%= pro.id %>" style="color:var(--dark); text-decoration:none;"><%= pro.name %></a></strong> — <%= pro.trade_category %>
+                <br>
+                <small><%= pro.base_lat %>, <%= pro.base_lng %> . Rayon: <%= pro.service_radius_km %> km</small>
+            </div>
+
+       <% }); %>
+       <a href="/professionals/add" class="btn-primary" style="display:inline-block; text-decoration:none; text-align:center; margin-top:12px;">Ajouter un Professionel</a>
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Recherche - AZÔÔDIÉ</title>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Professionels près de vous</h1>
+
+        <% if (!searched)   { %>   
+            <p>Indiquez une localisation pour voir les professionels à proximité.</p>
+        <% } else if (professionals.length === 0) { %>
+            <p>Aucun professionel trouvé dans cette zone. </p>
+            
+        <% } else { %>
+            <% professionals.forEach(function(pro) {  %>
+                <div class="result-card">
+                    <div>
+                        <strong><%= pro.name %></strong> - <%= pro.trade_category %>
+                        <br>
+                        <small>Rayon: <%= pro.service_radius_km %> km </small>
+                    </div>
+                    <span class="distance-chip" ><%= pro.distance_km.toFixed(1) %> km </span>
+                </div>
+            <%  }); %>
+        <%  }  %>
+        <a href="/professionals/add" class="btn-primary" style="display:inline-block; text-decoration: none; text-align: center; margin-top: 16px;">Ajouter un professionel</a>
+    </div>
+            
+    
+</body>
+</html>
