@@ -18,15 +18,7 @@ app.get("/", (req, res) => {
 });
 
 
-app.get("/db-test", async (req,res) => {
-    try {
-        const result = await pool.query("SELECT NOW()");
-        res.send(`Database connected: ${result.rows[0].now}`);
-    }catch (err) {
-        console.error(err);
-        res.status(500).send("Database connection failed.");
-    }
-});
+
 
 app.use("/professionals", professionalRoute);
 app.use("/search", searchRoute);
