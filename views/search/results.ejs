@@ -5,33 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="/css/styles.css">
-    <title>Recherche - AZÔÔDIÉ</title>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <title>Recherche — AZÔÔDIÉ</title>
 </head>
 <body>
-    <div class="form-container">
-        <h1>Professionels près de vous</h1>
 
-        <% if (!searched)   { %>   
-            <p>Indiquez une localisation pour voir les professionels à proximité.</p>
+    <div class="form-container">
+        <h1>Professionnels près de vous</h1>
+
+        <% if (searched) { %>
+            <div class="toggle-group">
+                <button type="button" id="btn-list" class="toggle-btn active">Liste</button>
+                <button type="button" id="btn-map" class="toggle-btn">Carte</button>
+            </div>
+        <% } %>
+
+        <% if (!searched) { %>
+            <p>Indiquez votre position pour voir les professionnels à proximité.</p>
+
         <% } else if (professionals.length === 0) { %>
-            <p>Aucun professionel trouvé dans cette zone. </p>
-            
+            <p>Aucun professionnel disponible dans cette zone pour le moment.</p>
+
         <% } else { %>
-            <% professionals.forEach(function(pro) {  %>
-                <div class="result-card">
-                    <div>
-                        <strong><%= pro.name %></strong> - <%= pro.trade_category %>
-                        <br>
-                        <small>Rayon: <%= pro.service_radius_km %> km </small>
+            <div id="list-view">
+                <% professionals.forEach(function(pro) { %>
+                    <div class="result-card">
+                        <div>
+                            <strong><%= pro.name %></strong> — <%= pro.trade_category %>
+                            <br>
+                            <small>Rayon: <%= pro.service_radius_km %> km</small>
+                        </div>
+                        <div class="distance-chip">
+                            <%= pro.distance_km.toFixed(1) %> km
+                        </div>
                     </div>
-                    <span class="distance-chip" ><%= pro.distance_km.toFixed(1) %> km </span>
-                </div>
-            <%  }); %>
-        <%  }  %>
-        <a href="/professionals/add" class="btn-primary" style="display:inline-block; text-decoration: none; text-align: center; margin-top: 16px;">Ajouter un professionel</a>
+                <% }); %>
+            </div>
+
+            <div id="map-view" style="display:none;">
+                <div id="map"></div>
+            </div>
+        <% } %>
     </div>
-            
-    
+
+    <% if (searched && professionals.length > 0) { %>
+        <script>
+            window.AZOODIE_SEARCH = {
+                clientLat: <%- lat %>,
+                clientLng: <%- lng %>,
+                professionals: <%- JSON.stringify(professionals) %>
+            };
+        </script>
+        <script src="/js/map.js"></script>
+    <% } %>
+
 </body>
 </html>

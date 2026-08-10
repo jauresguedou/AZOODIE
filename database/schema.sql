@@ -8,10 +8,9 @@ CREATE TABLE IF NOT EXISTS professionals (
     rating_avg NUMERIC(2, 1) DEFAULT 0,
     review_count INT DEFAULT 0,
     verified BOOLEAN DEFAULT FALSE,
-    availability VARCHAR(20) DEFAULT 'available',
+    availability_status VARCHAR(20) DEFAULT 'available',
     photo_urls TEXT[],
     created_at TIMESTAMP DEFAULT NOW()
-
 
 );
 

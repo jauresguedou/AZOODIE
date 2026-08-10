@@ -26,11 +26,11 @@ async function searchNearby(req, res) {
     const { lat , lng } = req.query;
 
     if(!lat || !lng) {
-        return res.render("search/results", { professionals: [], searched: false});
+        return res.render("search/results", { professionals: [], searched: false, lat: null, lng: null });
     }
 
     const professionals = await getNearbyProfessionals(parseFloat(lat), parseFloat(lng));
-    res.render("search/results", { professionals, searched: true});
+    res.render("search/results", { professionals, searched: true, lat: parseFloat(lat), lng: parseFloat(lng) });
 
 
 
