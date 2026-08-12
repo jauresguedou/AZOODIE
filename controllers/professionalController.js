@@ -1,5 +1,5 @@
 const {getAllProfessionals, createProfessional, getNearbyProfessionals, getProfessionalById} = require("../models/professional-model");
-
+const { isFavorited } = require("../models/favorite-model");
 
 async function listProfessionals(req, res) {
     const professionals = await getAllProfessionals();
@@ -43,6 +43,10 @@ async function showProfile(req,res) {
     if(!professional) {
         return res.status(404).send("Professionnel introuvable.");
     }
-    res.render("professionals/profile", { professional });
+    const favorited = await isFavorited(1, professional.id);
+    res.render("professionals/profile", { professional, favorited });
 }
+
+
+  
 module.exports = { listProfessionals, addProfessional, showAddForm, searchNearby, showProfile };

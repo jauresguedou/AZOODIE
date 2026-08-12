@@ -15,6 +15,19 @@ CREATE TABLE IF NOT EXISTS professionals (
 );
 
 
+
+CREATE TABLE IF NOT EXISTS users (
+    id                SERIAL PRIMARY KEY,
+    name              VARCHAR(150) NOT NULL,
+    email             VARCHAR(255)  UNIQUE NOT NULL,
+    password_hash     VARCHAR(255)NOT NULL,
+    role              VARCHAR(20) NOT NULL DEFAULT 'client',
+    professional_id  INTERGER REFERENCES professionals(id) ON DELETE SET NULL,
+    created_at       TIMESTAMP DEFAULT NOW()
+
+);
+
+
 CREATE TABLE IF NOT EXISTS requests (
     id  SERIAL PRIMARY KEY,
     client_id INT NOT NULL,

@@ -4,6 +4,7 @@ const pool = require("./config/database");
 const professionalRoute = require("./routes/professionalRoute");
 const searchRoute = require("./routes/searchRoute");
 const requestRoute = require("./routes/requestRoute");
+const favoriteRoute = require("./routes/favoriteRoute");
 const app = express();
 
 
@@ -23,5 +24,6 @@ app.get("/", (req, res) => {
 app.use("/professionals", professionalRoute);
 app.use("/search", searchRoute);
 app.use("/requests", requestRoute);
+app.use("/favorites", favoriteRoute);
 
 module.exports = app;

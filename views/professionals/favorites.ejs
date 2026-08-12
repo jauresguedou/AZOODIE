@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Mes favoris — AZÔÔDIÉ</title>
+</head>
+<body>
+
+    <div class="form-container">
+        <h1>Mes favoris</h1>
+
+        <% if (favorites.length === 0) { %>
+            <p>Vous n'avez encore aucun professionnel favori.</p>
+        <% } else { %>
+            <% favorites.forEach(function(pro) { %>
+                <div class="result-card">
+                    <div>
+                        <strong><a href="/professionals/<%= pro.id %>" style="color:var(--dark); text-decoration:none;"><%= pro.name %></a></strong> — <%= pro.trade_category %>
+                    </div>
+                </div>
+            <% }); %>
+        <% } %>
+
+        <a href="/professionals" class="btn-primary" style="display:inline-block; text-decoration:none; text-align:center; margin-top:16px;">Retour à la liste</a>
+    </div>
+
+</body>
+</html>
