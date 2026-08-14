@@ -9,9 +9,9 @@ async function toggleFavorite(req, res) {
 
     if(action === "remove") {
 
-        await removeFavorite(TEMP_CLIENT_ID, professionalId);
+        await removeFavorite(req.session.userId, professionalId);
     }else {
-        await addFavorite(TEMP_CLIENT_ID, professionalId);
+        await addFavorite(req.session.userId, professionalId);
     }
 
     res.redirect(req.get("Referer") || "/professionals");
@@ -20,7 +20,7 @@ async function toggleFavorite(req, res) {
 
 async function listFavorites(req, res) {
 
-    const favorites = await getFavoritesByClient(TEMP_CLIENT_ID);
+    const favorites = await getFavoritesByClient(req.session.userId);
     res.render("professionals/favorites", { favorites });
 }
 

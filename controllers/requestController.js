@@ -18,7 +18,7 @@ async function showContactForm(req, res) {
 
 async function submitRequest(req, res) {
     const newRequest = await createRequest( {
-       client_id: 1,
+       client_id: req.session.userId,
        category: req.body.category,
        description: req.body.description,
        address_text: req.body.address_text,

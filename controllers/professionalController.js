@@ -43,7 +43,7 @@ async function showProfile(req,res) {
     if(!professional) {
         return res.status(404).send("Professionnel introuvable.");
     }
-    const favorited = await isFavorited(1, professional.id);
+    const favorited = req.session.userId? await isFavorited(req.session.userId, professional.id) : false;
     res.render("professionals/profile", { professional, favorited });
 }
 

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+     <%- include('../partials/header', { title: 'Connexion — AZÔÔDIÉ' }) %>
+</head>
+<body>
+
+    <%- include('../partials/nav') %>
+
+
+    <div class="form-container">
+        <h1>Se connecter</h1>
+
+        <% if(errors.length > 0) { %>
+            <div style="background: #FBE7E4; color:#C0392B; padding:12px; border-radius:10px; margin-bottom:16px;">
+                <ul style="margin: 0; padding-left:18px;">
+                   <% errors.forEach(function(err) { %>
+                     <li><%= err.msg %></li>
+                
+                
+                   <% }); %>
+
+                </ul>
+            </div>
+        <%  }  %>
+
+        <form action="/login" method="POST">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" name="password" id="password" required>
+
+            </div>
+            
+            <button type="submit" class="btn-primary"> Se connecter</button>
+
+        </form>
+
+        <p style="margin-top: 16px; text-align: center;">
+
+            <a href="/register" style="color:var(--teal);"> Créer un compte</a>
+        </p>
+
+
+    </div>
+    
+</body>
+</html>

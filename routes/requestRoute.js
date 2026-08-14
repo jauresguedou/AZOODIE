@@ -3,9 +3,9 @@ const express = require("express");
 const router = express.Router();
 
 const  { showContactForm, submitRequest } = require("../controllers/requestController");
-
-router.get("/new/:id", showContactForm);
-router.post("/", submitRequest);
+const  { requireLogin } = require("../middleware/auth");
+router.get("/new/:id", requireLogin, showContactForm);
+router.post("/",  requireLogin, submitRequest);
 
 
 module.exports = router;

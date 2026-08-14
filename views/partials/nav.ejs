@@ -1,0 +1,26 @@
+<nav class="site-nav">
+    <a href="/" class="nav-brand">AZÔÔDIÉ</a>
+
+    <div class="nav-links">
+        <a href="/search?lat=6.3703&lng=2.3912">Rechercher</a>
+        <a href="/professionals">Professionnels</a>
+
+        <% if(session.userId) { %>
+
+            <a href="/favorites">Mes favoris</a>
+            <span class="nav-user"><%= session.userName %></span>
+            <form action="/logout" method="POST" style="display:inline;">
+                   
+                <button type="submit" class="nav-link-btn">Déconnexion</button>
+
+            </form>
+        <%} else { %>
+            <a href="/login">Connexion</a>
+            <a href="/register">Inscription</a>
+
+        <% } %>
+
+    </div>
+
+
+</nav>
