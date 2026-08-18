@@ -67,7 +67,7 @@ async function editProfessional(req, res) {
     await updateProfessional(req.params.id, req.body);
 
     if (req.file) {
-        await addPhotoToProfessional(req.params.id, req.file.path);
+        await addPhotoToProfessional(req.params.id, req.file.secure_url);
     }
     res.redirect(`/professionals/${req.params.id}`);
 }
