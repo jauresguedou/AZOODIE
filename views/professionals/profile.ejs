@@ -5,7 +5,7 @@
 </head>
 <body>
 
-   <%- include('../partials-nav') %>
+   <%- include('../partials/nav') %>
    <div class="form-container">
          <h1><%= professional.name %></h1>
          <p><%= professional.trade_category %> <% if(professional.verified) { %>. <span style="color:var(--teal); font-weight:600;" >Vérifié ✓</span><% } %></p>
@@ -22,7 +22,9 @@
         </div>
         <a href="/requests/new/<%= professional.id %>" class="btn-primary" style="display:inline-block; text-decoration:none; text-align:center; margin-top:16px"> Contacter </a>
         <a href="/professionals" class="btn-primary" style="display:inline-block; text-decoration:none; text-align:center; margin-top:16px;">Retour à la liste</a>
-
+       <% if(session.userId) {%>
+          <a href="/professionals/<%= professional.id%>/edit" class="btn-primary" style="display:inline-block; text-decoration:none; text-align:center; background:var(--dark); margin-top:16px;">Modifier</a> 
+       <%  } %>  
         <form action="/favorites/<%= professional.id %>" method="POST" style="margin-top:12px;">
             <input type="hidden" name="action" value="<%= favorited ? 'remove' : 'add' %>">
             <button type="submit" class="btn-primary" style="background: <%= favorited ? '#C0392B' : 'var(--orange)' %>;">

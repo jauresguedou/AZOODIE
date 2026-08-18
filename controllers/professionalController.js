@@ -1,5 +1,7 @@
-const {getAllProfessionals, createProfessional, getNearbyProfessionals, getProfessionalById} = require("../models/professional-model");
+const {getAllProfessionals, createProfessional, getNearbyProfessionals, getProfessionalById, updateProfessional, deleteProfessional, addPhotoToProfessional} = require("../models/professional-model");
 const { isFavorited } = require("../models/favorite-model");
+
+
 
 async function listProfessionals(req, res) {
     const professionals = await getAllProfessionals();
@@ -47,6 +49,36 @@ async function showProfile(req,res) {
     res.render("professionals/profile", { professional, favorited });
 }
 
+async function showEditForm(req, res) {
+
+    const professional = await getProfessionalById(req.params.id);
+
+    if(!professional) {
+         
+        return res.status(404).send("Professionel introuvable.");
+    }
+    res.render("professionals/edit-form", {professional, errors: []});
+
+}
+
+
+async function editProfessional(req, res) {
+    
+    await updateProfessional(req.params.id, req.body);
+
+    if (req.file) {
+        await addPhotoToProfessional(req.params.id, req.file.path);
+    }
+    res.redirect(`/professionals/${req.params.id}`);
+}
+
+
+async function deleteProfessionalHandler(req, res) {
+    await deleteProfessional(req.params.id);
+    res.redirect("/professionals");
+}
+
+
 
   
-module.exports = { listProfessionals, addProfessional, showAddForm, searchNearby, showProfile };
+module.exports = { listProfessionals, addProfessional, showAddForm, searchNearby, showProfile, showEditForm, editProfessional, deleteProfessionalHandler };
