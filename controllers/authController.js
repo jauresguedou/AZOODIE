@@ -9,7 +9,7 @@ function showRegisterForm(req,res) {
 
 
 async function register(req, res) {
-   const {name, email, password} = req.body;
+   const {name, email, password, role} = req.body;
 
    const existing = await findUserByEmail(email);
 
@@ -19,7 +19,7 @@ async function register(req, res) {
     });
    }
 
-   await createUser({name, email, password});
+   await createUser({name, email, password, role});
    res.redirect("/login");
 }
 
@@ -51,6 +51,7 @@ async function login(req,res) {
     req.session.userId = user.id;
     req.session.userName = user.name;
     req.session.userRole = user.role;
+    req.session.professionalId = user.professional_id;
 
     res.redirect("/");
 

@@ -22,7 +22,7 @@
         </div>
         <a href="/requests/new/<%= professional.id %>" class="btn-primary" style="display:inline-block; text-decoration:none; text-align:center; margin-top:16px"> Contacter </a>
         <a href="/professionals" class="btn-primary" style="display:inline-block; text-decoration:none; text-align:center; margin-top:16px;">Retour à la liste</a>
-       <% if(session.userId) {%>
+       <% if(session.professionalId === professional.id) {%>
           <a href="/professionals/<%= professional.id%>/edit" class="btn-primary" style="display:inline-block; text-decoration:none; text-align:center; background:var(--dark); margin-top:16px;">Modifier</a> 
        <%  } %>  
         <form action="/favorites/<%= professional.id %>" method="POST" style="margin-top:12px;">

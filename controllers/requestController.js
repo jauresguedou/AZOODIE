@@ -12,7 +12,7 @@ async function showContactForm(req, res) {
         return res.status(404).send("Professionnel introuvable.");
     }
 
-    res.render("requests/contact-form",  { professional  });
+    res.render("requests/contact-form",  { professional, errors:[]  });
 }
 
 
@@ -24,7 +24,7 @@ async function submitRequest(req, res) {
        address_text: req.body.address_text,
        lat: req.body.lat,
        lng: req.body.lng,
-       budget_estimate: req.body.estimate,
+       budget_estimate: req.body.budget_estimate,
     })
     res.redirect(`/professionals/${ req.body.professional_id }`);
 

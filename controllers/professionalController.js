@@ -1,5 +1,6 @@
 const {getAllProfessionals, createProfessional, getNearbyProfessionals, getProfessionalById, updateProfessional, deleteProfessional, addPhotoToProfessional} = require("../models/professional-model");
 const { isFavorited } = require("../models/favorite-model");
+const { createUser, findUserByEmail } = require("../models/user-model");
 
 
 
@@ -13,7 +14,15 @@ async function listProfessionals(req, res) {
 async function addProfessional (req, res) {
 
     const newProfessional = await createProfessional(req.body);
-    res.redirect("/professionals");
+     
+    await pool.query(
+
+
+        "UPDATE users SET professional_id = $1 WHERE id = $2",
+        [newProfessional.id, req.session.userId]
+    );
+    req.session.professionalId = newProfessional.id;
+    res.redirect(`/professionals/${newProfessional.id}`);
 }
 
 

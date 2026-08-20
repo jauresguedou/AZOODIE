@@ -8,6 +8,16 @@
     <%- include('../partials/nav') %>
     <div class="form-container">
         <h1>Contacter <%= professional.name %></h1>
+
+        <% if (errors.length > 0) {  %>
+            <div style="background: #FBE7E4; color:#C0392B; padding:12px; border-radius: 10px; margin-bottom: 16px;">
+                <ul style="margin:0; padding-left: 18px;">
+                    <% errors.forEach(function(err) {  %>
+                        <li><%= err.msg %></li>
+                    <%   }); %>    
+                </ul>
+            </div>
+        <% } %>
         <p><%= professional.trade_category %> . <%= professional.service_radius_km %> km de rayon</p>
 
         <form action="/requests" method="POST">

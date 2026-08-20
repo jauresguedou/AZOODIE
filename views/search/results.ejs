@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="/css/styles.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/js/search.js"></script>
     <title>Recherche — AZÔÔDIÉ</title>
 </head>
 <body>
@@ -14,6 +15,16 @@
 
     <div class="form-container">
         <h1>Professionnels près de vous</h1>
+        <div class="form-group" id="location-form" style="margin-bottom:20px;">
+            <label for="location-input">Votre position (latitude, longitude)</label>
+            <div style ="display:flex; gap:8px;">
+                <input type="text" id="location-input" placeholder="ex: 6.3700, 2.3900" style="flex:1;">
+                <button type="button" id="location-submit" class="btn-primary" style="width:auto; padding:10px 20px;">Rechercher</button>
+            
+            </div>
+
+        
+        </div>
 
         <% if (searched) { %>
             <div class="toggle-group">
