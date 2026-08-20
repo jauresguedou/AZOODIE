@@ -11,18 +11,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (hasCoordsInUrl) {
 
+        const cleanLat = params.get("lat");
+        const cleanLng = params.get("lng");
+
         localStorage.setItem("azoodie_last_location", JSON.stringify({
-            lat: params.get("lat"),
-            lng: params.get("lng"),
+            lat: cleanLat,
+            lng: cleanLng,
 
         }));
 
-        if (saved) {
-            const { lat, lng } = JSON.parse(saved);
-            input.value = `${lat}, ${lng}`;
-        } else {
-            input.value = `${params.get("lat")}, ${params.get("lng")}`;
-            }
+        input.value = `${cleanLat}, ${cleanLng}`;
+
         } else if (saved) {
             const { lat, lng } = JSON.parse(saved);
             input.value = `${lat}, ${lng}`;
@@ -34,6 +33,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 alert("Format attendu: latitude, longitude (ex: 6.3700, 2.3900")
                 return;
             }
-            window.location.href = `/search?lat=${parts[0]}&lng=${parts[1]};`
+            window.location.href = `/search?lat=${parts[0]}&lng=${parts[1]}`;
         });
     });
