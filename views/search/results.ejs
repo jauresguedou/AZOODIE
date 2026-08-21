@@ -15,15 +15,10 @@
 
     <div class="form-container">
         <h1>Professionnels près de vous</h1>
-        <div class="form-group" id="location-form" style="margin-bottom:20px;">
-            <label for="location-input">Votre position (latitude, longitude)</label>
-            <div style ="display:flex; gap:8px;">
-                <input type="text" id="location-input" placeholder="ex: 6.3700, 2.3900" style="flex:1;">
-                <button type="button" id="location-submit" class="btn-primary" style="width:auto; padding:10px 20px;">Rechercher</button>
-            
-            </div>
-
-        
+        <div class="form-group" id="location-form" style="margin-bottom:20px; position: relative;">
+            <label for="location-input">Votre position</label>
+            <input type="text" id="location-input" placeholder="Entrez une adresse à Cotonou..." autocomplete="off">
+            <div id="suggestions" style="position:absolute; top:100%; left:0; right:0; background:#fff; border:1px solid var(--gray-light); border-radius:10px; margin-top:4px; z-index:10; display:none;"></div>
         </div>
 
         <% if (searched && professionals.length > 0) { %>

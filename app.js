@@ -7,6 +7,7 @@ const searchRoute = require("./routes/searchRoute");
 const requestRoute = require("./routes/requestRoute");
 const favoriteRoute = require("./routes/favoriteRoute");
 const authRoute = require("./routes/authRoute");
+const apiRoute = require("./routes/apiRoute");
 const app = express();
 
 
@@ -37,5 +38,6 @@ app.use("/search", searchRoute);
 app.use("/requests", requestRoute);
 app.use("/favorites", favoriteRoute);
 app.use("/", authRoute);
+app.use("/api", apiRoute);
 
 module.exports = app;

@@ -1,38 +1,73 @@
 document.addEventListener("DOMContentLoaded", function() {
     const input = document.getElementById("location-input");
-    const button = document.getElementById("location-submit");
+    const suggestionsBox = document.getElementById("suggestions");
 
-    if(!input || !button) return;
+    if(!input || !suggestionsBox) return;
 
     const params = new URLSearchParams(window.location.search);
-    const hasCoordsInUrl = params.has("lat") && params.has("lng");
 
-    const saved = localStorage.getItem("azoodie_last_location");
+    if (params.has("lat") && params.has("lng")) {
 
-    if (hasCoordsInUrl) {
-
-        const cleanLat = params.get("lat");
-        const cleanLng = params.get("lng");
 
         localStorage.setItem("azoodie_last_location", JSON.stringify({
-            lat: cleanLat,
-            lng: cleanLng,
+            lat: params.get("lat"),
+            lng: params.get("lng"),
 
         }));
 
-        input.value = `${cleanLat}, ${cleanLng}`;
-
-        } else if (saved) {
-            const { lat, lng } = JSON.parse(saved);
-            input.value = `${lat}, ${lng}`;
         }
 
-        button.addEventListener("click", function() {
-            const parts = input.value.split(",").map(s => s.trim());
-            if (parts.length !== 2 || isNaN(parts[0]) || isNaN(parts[1])) {
-                alert("Format attendu: latitude, longitude (ex: 6.3700, 2.3900")
+        let debounceTimer;
+
+        input.addEventListener("input", function () {
+            clearTimeout(debounceTimer);
+            const query = input.value.trim();
+
+
+            if (query.length < 3) {
+                suggestionsBox.style.display = "none";
                 return;
             }
-            window.location.href = `/search?lat=${parts[0]}&lng=${parts[1]}`;
+
+            debounceTimer = setTimeout(async function () {
+
+                const response = await fetch(`/api/geocode?q=${encodeURIComponent(query)}`);
+                const results = await response.json();
+
+                if (results.length === 0) {
+                    suggestionsBox.style.display = "none";
+                    return;
+                }
+
+                suggestionsBox.innerHTML = "";
+
+                results.forEach(function (place) {
+
+                    const item = document.createElement("div");
+                    item.textContent = place.display_name;
+                    item.style.padding = "10px 14px";
+                    item.style.cursor = "pointer";
+                    item.style.borderBottom = "1px solid var(--gray-light)";
+
+                    item.addEventListener("click", function() {
+                        localStorage.setItem("azoodie_last_location", JSON.stringify({lat: place.lat, lng: place.lng}));
+                        window.location.href = `/search?lat=${place.lat}&lng=${place.lng}`;
+                    });
+                    
+                    suggestionsBox.appendChild(item);
+        
+                });
+
+                suggestionsBox.style.display = "block";
+            }, 400);
         });
-    });
+        document.addEventListener("click", function(e) {
+
+            if (!suggestionsBox.contains(e.target) && e.target !== input) {
+                suggestionsBox.style.display = "none";
+            }
+        });
+
+      });
+        
+        
