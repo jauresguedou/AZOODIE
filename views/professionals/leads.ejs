@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/header', { title: 'Demande à proximité - AZÔÔDIÉ '}) %>
+</head>
+<body>
+    <%- include('../partials/nav') %>
+
+    <div class="form-container" style="margin-top:32px; max-width: 720px;">
+        <h1><%= leads.length %>demande<%= leads.length !== 1 ? 's' : '' %> près de vous</h1>
+        <p style="color:var(--gray); margin-top: -8px;"> Dans un rayon de <%= professional.service_radius_km %>autour de votre position</p>
+
+        <% if (leads.length === 0) {  %>
+            <p>Aucune demande ouverte dans votre zone pour le moment.</p>
+
+        <% } else { %>
+             <% leads.forEach(function(lead) { %>
+                <div class="result-card">
+                    <div>
+                        <strong><%= lead.category %></strong>
+                        <br>
+                        <small><%= lead.description %></small>
+                        <br>
+                        <small style="color:var(--gray);"><%= lead.address_text %></small>
+
+                    </div>
+                    <div class="distance-chip"><%= lead.distance_km.toFixed(1) %> km </div>
+                </div>
+
+            <% }); %>
+        <%  }  %>
+    </div>
+    
+</body>
+</html>

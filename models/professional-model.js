@@ -52,6 +52,12 @@ async function getNearbyProfessionals(lat, lng, maxDistanceKm = 25) {
 
 
 async function getProfessionalById(id) {
+
+    const professionalId = Number(id);
+
+    if(!Number.isInterger(professionalId)) {
+        return null;
+    }
      
     const result = await pool.query(
         "SELECT * FROM professionals WHERE id = $1",

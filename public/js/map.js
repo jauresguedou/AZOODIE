@@ -33,10 +33,22 @@ document.addEventListener("DOMContentLoaded", function() {
 
      const nearest = data.professionals[0];
      if (nearest) {
-        L.polyline(
-            [[data.clientLat, data.clientLng,], [nearest.base_lat, nearest.base_lng]],
-            { color: "#0F6E6E", weight: 3, dashArray: " 6, 8"}
-        ).addTo(map);
+       fetch(`/api/route?originLat=${data.clientLat}&originLng=${data.clientLng}&destLat=${nearest.base_lat}&destLng=${nearest.base_lng}`)
+        .then(response => response.json())
+        .then(routeData => {
+           if (routeData.geometry) {
+               L.geoJSON(routeData.geometry, {
+                    style: { color: "#0F6E6E", weight: 4}
+               }).addTo(map);
+
+               const minutes = Math.round(routeData.duration_s / 60);
+               L.popup()
+                    .setLatLng([nearest.base_lat, nearest.base_lng])
+                    .setContent(`Trajet réel: ${minutes} min`)
+                    .openOn(map);
+           }
+        })
+        .catch(err => console.error("Route fetch failed:", err));
      }
      
      document.getElementById("btn-list").addEventListener("click", function() {

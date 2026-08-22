@@ -8,6 +8,10 @@
         <% if(session.userId) { %>
 
             <a href="/favorites">Mes favoris</a>
+
+            <% if (session.professionalId) {  %>
+                <a href="/professionals/leads">Mes demandes</a>
+            <%  } %>
             <span class="nav-user"><%= session.userName %></span>
             <form action="/logout" method="POST" style="display:inline;">
                    

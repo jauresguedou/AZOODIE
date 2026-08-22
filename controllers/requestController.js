@@ -1,4 +1,4 @@
-const { createRequest } = require("../models/request-model");
+const { createRequest, getNearbyRequestsForProfessional } = require("../models/request-model");
 const { getProfessionalById } = require("../models/professional-model");
 
 
@@ -30,4 +30,20 @@ async function submitRequest(req, res) {
 
 }
 
-module.exports = { showContactForm, submitRequest };
+async function showJobLeads(req, res) {
+    if (!req.session.professionalId) {
+        return res.status(403).send("Cette page est réservée aux professionals ayant un profil.");
+    }
+
+    const professional = await getProfessionalById(req.session.professionalId);
+    const leads = await getNearbyRequestsForProfessional(
+        professional.base_lat,
+        professional.base_lng,
+        professional.service_radius_km
+
+    );
+
+    res.render("professionals/leads", { professional, leads });
+}
+
+module.exports = { showContactForm, submitRequest, showJobLeads };
