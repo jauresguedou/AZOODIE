@@ -35,7 +35,11 @@ async function showJobLeads(req, res) {
         return res.status(403).send("Cette page est réservée aux professionals ayant un profil.");
     }
 
+    console.log("session.professionalId:", req.session.professionalId, typeof req.session.professionalId);
+
     const professional = await getProfessionalById(req.session.professionalId);
+
+    console.log("professional found:", professional);
     const leads = await getNearbyRequestsForProfessional(
         professional.base_lat,
         professional.base_lng,

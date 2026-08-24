@@ -21,6 +21,38 @@
             <div id="suggestions" style="position:absolute; top:100%; left:0; right:0; background:#fff; border:1px solid var(--gray-light); border-radius:10px; margin-top:4px; z-index:10; display:none;"></div>
         </div>
 
+        <% if (searched) {%>
+        <form  method="GET" action="/search" id="filter-form">
+           <input type="hidden" name="lat" value="<%= lat %>">
+           <input type="hidden" name="lng" value="<%= lng %>">
+           
+           <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+              <div class="form-group" style="flex:1; min-width: 140px; margin-bottom:0" >
+                <label for="category" >Métier</label>
+                <select name="category" id="category" onchange="document.getElementById('filter-form').submit()">
+                   <option value="">Tous</option>
+                   <% tradeCategories.forEach(function(group) {%>
+                       <optgroup label="<%= group.label%>">
+                       
+                       
+                       <% group.trades.forEach(function(trade) {%>
+                        
+                          <option value="<%= trade%> <%= filters.category === trade ? 'selected' : ''%>"><%= trade %></option>
+
+                       <%  }); %>
+                       </optgroup>
+                  
+                  <% }); %>
+                </select>
+
+              </div>
+           
+           
+           
+           </div>
+        </form>
+        <% }%>
+
         <% if (searched && professionals.length > 0) { %>
             <div class="toggle-group">
                 <button type="button" id="btn-list" class="toggle-btn active">Liste</button>

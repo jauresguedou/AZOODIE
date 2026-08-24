@@ -8,6 +8,7 @@ const requestRoute = require("./routes/requestRoute");
 const favoriteRoute = require("./routes/favoriteRoute");
 const authRoute = require("./routes/authRoute");
 const apiRoute = require("./routes/apiRoute");
+const adminRoute = require("./routes/adminRoute");
 const app = express();
 
 
@@ -39,5 +40,6 @@ app.use("/requests", requestRoute);
 app.use("/favorites", favoriteRoute);
 app.use("/", authRoute);
 app.use("/api", apiRoute);
+app.use("/admin", adminRoute);
 
 module.exports = app;

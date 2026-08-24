@@ -1,6 +1,8 @@
 const {getAllProfessionals, createProfessional, getNearbyProfessionals, getProfessionalById, updateProfessional, deleteProfessional, addPhotoToProfessional} = require("../models/professional-model");
 const { isFavorited } = require("../models/favorite-model");
 const { createUser, findUserByEmail } = require("../models/user-model");
+const pool = require("../config/database");
+const tradeCategories = require("../config/tradeCategories");
 
 
 
@@ -34,14 +36,21 @@ function showAddForm(req,res) {
 
 async function searchNearby(req, res) {
     
-    const { lat , lng } = req.query;
+    const { lat , lng, category,minRating, maxDistance, sortBy } = req.query;
 
     if(!lat || !lng) {
-        return res.render("search/results", { professionals: [], searched: false, lat: null, lng: null });
+        return res.render("search/results", { professionals: [], searched: false, lat: null, lng: null, filters: {}, tradeCategories});
     }
 
-    const professionals = await getNearbyProfessionals(parseFloat(lat), parseFloat(lng));
-    res.render("search/results", { professionals, searched: true, lat: parseFloat(lat), lng: parseFloat(lng) });
+    const professionals = await getNearbyProfessionals(parseFloat(lat), parseFloat(lng), {
+       category: category || null,
+       minRating: minRating ? parseFloat(minRating) : null,
+       maxDistanceKm: maxDistance ? parseFloat(maxDistance) : 25,
+       sortBy: sortBy || "distance",
+
+    });
+       
+    res.render("search/results", { professionals, searched: true, lat: parseFloat(lat), lng: parseFloat(lng), filters: { category, minRating, maxDistance, sortBy}, tradeCategories, });
 
 
 
@@ -86,7 +95,7 @@ async function deleteProfessionalHandler(req, res) {
     await deleteProfessional(req.params.id);
     res.redirect("/professionals");
 }
-
+ 
 
 
   

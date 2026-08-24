@@ -30,6 +30,17 @@ function requireOwnership(req, res, next) {
     next();
 }
 
+function requireAdmin(req, res, next){
+   if(!req.session.userId) {
+    return res.redirect("/login");
+   }
+
+   if (req.session.userRole !== "admin") {
+       return res.status(403).send("Accès réservé aux administrateurs.");
+   }
+   next();
+}
 
 
-module.exports = { requireLogin, requireProfessionalRole, requireOwnership };
+
+module.exports = { requireLogin, requireProfessionalRole, requireOwnership, requireAdmin };

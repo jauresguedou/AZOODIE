@@ -30,7 +30,42 @@ async function createProfessional(data) {
 
 
 
-async function getNearbyProfessionals(lat, lng, maxDistanceKm = 25) {
+async function getNearbyProfessionals(lat, lng, options = {}) {
+
+
+
+  const maxDistanceKm = options.maxDistanceKm || 25;
+  const category = options.category || null;
+  const minRating = options.minRating || null;
+  const sortBy = options.sortBy || "distance";
+
+  const conditions = ["availability_status = 'available' "];
+  const params = [lat, lng];
+  let paramIndex = 3;
+
+  if (category) {
+    conditions.push(`trade_category = $${paramIndex}`);
+    params.push(category);
+    paramIndex++;
+  }
+
+  const whereClause = conditions.join(" AND ");
+
+  let orderClause = "distance_km ASC";
+   if (sortBy === 'rating') {
+       orderClause = "rating_avg DESC, distance_km ASC";
+
+   }
+
+   params.push(maxDistanceKm);
+   const maxDistanceParam = paramIndex;
+   paramIndex++;
+
+   let havingRating = "";
+   if (minRating) {
+      params.push(minRating);
+      havingRating = `AND rating_avg >= $${paramIndex}`;
+   }
   const result = await pool.query(
     `SELECT * FROM (
         SELECT *,
@@ -55,7 +90,7 @@ async function getProfessionalById(id) {
 
     const professionalId = Number(id);
 
-    if(!Number.isInterger(professionalId)) {
+    if(!Number.isInteger(professionalId)) {
         return null;
     }
      

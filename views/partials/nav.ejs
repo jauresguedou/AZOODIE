@@ -9,6 +9,10 @@
 
             <a href="/favorites">Mes favoris</a>
 
+            <% if (session.userRole === 'admin') {  %>
+                <a href="/admin/coverage">Admin</a>
+            <%  } %>
+
             <% if (session.professionalId) {  %>
                 <a href="/professionals/leads">Mes demandes</a>
             <%  } %>
