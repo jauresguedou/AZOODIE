@@ -1,5 +1,7 @@
 const { createRequest, getNearbyRequestsForProfessional } = require("../models/request-model");
-const { getProfessionalById } = require("../models/professional-model");
+const { getProfessionalById, getUsersToNotifyForRequest } = require("../models/professional-model");
+const { createNotification} = require("../models/notification-model");
+const { getNotificationForUser, markAllAsRead } = require("../models/notification-model");
 
 
 
@@ -50,4 +52,32 @@ async function showJobLeads(req, res) {
     res.render("professionals/leads", { professional, leads });
 }
 
-module.exports = { showContactForm, submitRequest, showJobLeads };
+async function submitRequest(req, res) {
+    const newRequest = await createRequest({
+        client_id: req.session.userId,
+        category: req.body.category,
+        description: req.body.description,
+        address_text: req.body.address_text,
+        lat: req.body.lat,
+        lng: req.body.lng,
+        budget_estimate: req.body.budget_estimate,
+    });
+
+    const usersToNotify = await getUsersToNotifyForRequest(req.body.lat, req.body.lng);
+
+    for (const user of usersToNotify) {
+        await createNotification(
+            user.user_id,
+            `Nouvelle demande "${req.body.category}" près de vous`,
+            "/professionals/leads"
+        );
+    }
+    res.redirect(`/professionals/${req.body.professional_id}`);
+}
+
+async function showNotifications(req, res) {
+    const notifications = await getNotificationForUser(req.session.userId);
+    await markAllAsRead(req.session.userId);
+    res.render("professionals/notifications", { notifications });
+}
+module.exports = { showContactForm, submitRequest, showJobLeads, showNotifications };

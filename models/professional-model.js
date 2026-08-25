@@ -76,11 +76,11 @@ async function getNearbyProfessionals(lat, lng, options = {}) {
             )
           ) AS distance_km
         FROM professionals
-        WHERE availability_status = 'available'
+        WHERE ${whereClause}
      ) AS professionals_with_distance
-     WHERE distance_km <= $3
-     ORDER BY distance_km ASC`,
-    [lat, lng, maxDistanceKm]
+     WHERE distance_km <= $${maxDistanceParam}${havingRating}
+     ORDER BY ${orderClause}`,
+     params
   );
   return result.rows;
 }
@@ -134,6 +134,27 @@ async function addPhotoToProfessional(id, photoUrl) {
     return result.rows[0];
 }
 
+async function getUsersToNotifyForRequest(lat, lng) {
+    const result = await pool.query(
+        `SELECT u.id AS user_id, p.name AS professional_name FROM  (
+             SELECT *,
+                (6371 * acos(
+                    cos(radians($1)) * cos(radians(base_lat)) *
+                    cos(radians(base_lng) - radians($2)) +
+                    sin(radians($1)) * sin(radians(base_lat))
+                
+                )
+             )AS distance_km
+             FROM professionals
+             WHERE availability_status = 'available'
+            )AS p
+            JOIN users u ON u.professional_id = p.id
+            WHERE p.distance_km <= p.service_radius_km `,
+            [lat, lng]
+    );
+    return result.rows;
+}
+
 
 
 module.exports = {
@@ -143,5 +164,6 @@ module.exports = {
     getProfessionalById,
     updateProfessional,
     deleteProfessional,
-    addPhotoToProfessional
+    addPhotoToProfessional,
+    getUsersToNotifyForRequest
 };

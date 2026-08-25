@@ -37,7 +37,7 @@
                        
                        <% group.trades.forEach(function(trade) {%>
                         
-                          <option value="<%= trade%> <%= filters.category === trade ? 'selected' : ''%>"><%= trade %></option>
+                          <option value="<%= trade%>"   <%= filters.category === trade ? 'selected' : ''%>><%= trade %></option>
 
                        <%  }); %>
                        </optgroup>

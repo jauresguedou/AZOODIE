@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('../partials/header', { title: 'Notifications — AZÔÔDIÉ' }) %>
+</head>
+<body>
+
+    <%- include('../partials/nav') %>
+
+    <style>
+        .notification-read { background: #fff; }
+        .notification-unread { background: var(--teal-light); }
+    </style>
+
+    <div class="form-container" style="margin-top:32px; max-width:600px;">
+        <h1>Notifications</h1>
+
+        <% if (notifications.length === 0) { %>
+            <p>Aucune notification pour le moment.</p>
+        <% } else { %>
+            <% notifications.forEach(function(note) { %>
+                <a href="<%= note.link || '#' %>" style="text-decoration:none; color:inherit;">
+                    <div class="result-card <%= note.is_read ? 'notification-read' : 'notification-unread' %>">
+                        <div><%= note.message %></div>
+                    </div>
+                </a>
+            <% }); %>
+        <% } %>
+    </div>
+
+</body>
+</html>

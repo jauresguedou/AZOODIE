@@ -4,6 +4,7 @@ const { listProfessionals, addProfessional, showAddForm, showProfile, showEditFo
 const { professionalValidationRules, checkValidation } = require("../middleware/validation");
 const { requireLogin, requireProfessionalRole, requireOwnership} = require("../middleware/auth");
 const { showJobLeads} = require("../controllers/requestController");
+const { showNotifications } = require("../controllers/requestController");
 const upload = require("../config/cloudinary");
 
 
@@ -15,6 +16,7 @@ router.get("/leads", requireLogin, showJobLeads);
 router.get("/:id", showProfile);
 router.get("/", listProfessionals);
 router.post("/", requireLogin, requireProfessionalRole, professionalValidationRules(), checkValidation, addProfessional);
+router.get("/notifications", requireLogin, showNotifications);
 
 
 

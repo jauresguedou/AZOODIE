@@ -9,6 +9,7 @@ const favoriteRoute = require("./routes/favoriteRoute");
 const authRoute = require("./routes/authRoute");
 const apiRoute = require("./routes/apiRoute");
 const adminRoute = require("./routes/adminRoute");
+const { getUnreadCount } = require("./models/notification-model");
 const app = express();
 
 
@@ -24,6 +25,15 @@ app.use(session({
 }));
 app.use((req,res,next) => {
     res.locals.session = req.session;
+    next();
+});
+
+app.use(async (req, res, next) => {
+    if (req.session.userId && req.session.professionalId){
+        res.locals.unreadCount = await getUnreadCount(req.session.userId);
+    }else {
+        res.locals.unreadCount = 0;
+    }
     next();
 });
 
