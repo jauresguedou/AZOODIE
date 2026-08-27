@@ -47,4 +47,24 @@ async function getNearbyRequestsForProfessional(baseLat, baseLng, maxDistanceKm)
 
   return result.rows;
 }
-module.exports = {  createRequest, getNearbyRequestsForProfessional  };
+
+async function getAllOpenAnnouncements() {
+   const result = await pool.query(
+
+    ` SELECT r.*, u.name AS client_name, u.photo_url AS client_photo
+      FROM requests r
+      JOIN users u ON u.id = r.client_id
+      WHERE r.status = 'open'
+      ORDER BY r.created_at DESC`
+   );
+   return result.rows;
+}
+
+async function getRequestsByClient(clientId) {
+  const result = await pool.query(
+    "SELECT * FROM requests WHERE client_id = $1 ORDER BY created_at DESC",
+    [clientId]
+  );
+  return result.rows;
+}
+module.exports = {  createRequest, getNearbyRequestsForProfessional, getAllOpenAnnouncements, getRequestsByClient  };

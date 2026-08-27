@@ -82,3 +82,6 @@ CREATE TABLE IF NOT EXISTS notifications (
     is_read BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT NOW()
 );
+
+
+ALTER TABLE users ADD COLUMN IF NOT EXISTS photo_url VARCHAR(255);

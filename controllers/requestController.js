@@ -1,7 +1,8 @@
 const { createRequest, getNearbyRequestsForProfessional } = require("../models/request-model");
 const { getProfessionalById, getUsersToNotifyForRequest } = require("../models/professional-model");
 const { createNotification} = require("../models/notification-model");
-const { getNotificationForUser, markAllAsRead } = require("../models/notification-model");
+const { getNotificationsForUser, markAllAsRead } = require("../models/notification-model");
+const {getAllOpenAnnouncements} = require("../models/request-model");
 
 
 
@@ -76,8 +77,13 @@ async function submitRequest(req, res) {
 }
 
 async function showNotifications(req, res) {
-    const notifications = await getNotificationForUser(req.session.userId);
+    const notifications = await getNotificationsForUser(req.session.userId);
     await markAllAsRead(req.session.userId);
     res.render("professionals/notifications", { notifications });
 }
-module.exports = { showContactForm, submitRequest, showJobLeads, showNotifications };
+
+async function showAnnouncementFeed (req,res) {
+    const announcements = await getAllOpenAnnouncements()
+    res.render("requests/feed", { announcements });
+}
+module.exports = { showContactForm, submitRequest, showJobLeads, showNotifications, showAnnouncementFeed };

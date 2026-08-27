@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+   <%- include('../partials/header', { title: 'Annonces - AZÔÔDIÉ' }) %>
+</head>
+<body>
+
+    <%- include('../partials/nav') %>
+
+    <div class="form-container" style="margin-top:32px; max-width:700px;">
+        <h1>Annonces</h1>
+        <p style="color:var(--gray); margin-top: -8px;">Toutes les opportunités publiées par les clients</p>
+
+        <% if (announcements.length === 0) { %>
+            <p>Aucune annonce  publiée pour le moment.</p>
+         
+        <% } else { %>
+            <% announcements.forEach(function(a) { %>
+
+                <div class="result-card" style="align-items:flex-start;">
+                    <img src="<%= a.client_photo || 'https://via.placeholder.com/48?text=?' %>"
+                         style="width:48px; height:48px; border-radius: 50%; object-fit:cover; margin-right:14px;">
+
+                        <div style="flex:1;">
+                            <strong><%= a.client_name %></strong>
+                            <br>
+                            <span style="color:var(--teal); font-weight: 600;"><%= a.category %></span>
+                            <br>
+                            <small><%= a.description %></small>
+                            <br>
+                            <small style="color:var(--gray);"><%= a.address_text %></small>
+
+                        </div>
+
+
+                </div>
+             
+            <% }) %>
+
+        <% } %>
+
+    </div>
+    
+</body>
+</html>

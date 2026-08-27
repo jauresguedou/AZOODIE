@@ -10,6 +10,7 @@ const authRoute = require("./routes/authRoute");
 const apiRoute = require("./routes/apiRoute");
 const adminRoute = require("./routes/adminRoute");
 const { getUnreadCount } = require("./models/notification-model");
+const profileRoute = require("./routes/profileRoute");
 const app = express();
 
 
@@ -51,5 +52,6 @@ app.use("/favorites", favoriteRoute);
 app.use("/", authRoute);
 app.use("/api", apiRoute);
 app.use("/admin", adminRoute);
+app.use("/profile", profileRoute);
 
 module.exports = app;

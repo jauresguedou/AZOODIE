@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('../partials/header', {title: 'Mon profil - AZÔÔDIÉ'})  %>
+</head>
+<body>
+    <%- include('../partials/nav') %>
+
+    <div class="form-container" style="margin-top:32px;">
+         <div style="text-align:center; margin-bottom:20px;">
+            <img src="<%= user.photo_url || 'https://via.placeholder.com/120?text=Photo' %>"
+                 style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid var(--teal);">
+         </div>
+
+        <h1 style="text-align: center;"><%= user.name %></h1>
+        <p style="text-align:center; color:var(--gray);"><%= user.email %></p>
+  
+
+        <form action="/profile/photo" method="POST" enctype="multipart/form-data" style="margin-top:16px;">
+             <div class="form-group">
+                <label for="photo">Changer ma photo</label>
+
+                <input type="file" id="photo" name="photo" accept="image/*">
+             </div>
+             <button type="submit" class="btn-primary">Mettre à jour</button>
+        </form>
+        <h2 style="margin-top: 32px; font-family:var(--font-heading); color:var(--teal);">Mes annonces</h2>
+
+        <% if (announcements.length === 0) { %>
+              <p>Vous n'avez publié aucune annonce.</p>
+        <% }  else { %>
+            <% announcements.forEach(function(a) { %>
+                <div class="result-card">
+                    <div>
+                        <strong><%= a.category %></strong>
+                        <br>
+                        <small><%= a.description %></small>
+                        <br>
+                        <small style="color:var(--gray);"><%= a.address_text %></small>
+                    </div>
+                    <div class="distance-chip"><%= a.status %></div>
+
+                </div>
+             
+            <% }); %>
+       <% } %>
+
+
+    </div>
+    
+</body>
+</html>
