@@ -5,36 +5,35 @@
         <a href="/search?lat=6.3703&lng=2.3912">Rechercher</a>
         <a href="/professionals">Professionnels</a>
 
-        <% if(session.userId) { %>
+        <% if (session.userId) { %>
 
             <a href="/favorites">Mes favoris</a>
 
-            <% if (session.userRole === 'admin') {  %>
+            <% if (session.userRole === 'admin') { %>
                 <a href="/admin/coverage">Admin</a>
-            <%  } %>
+            <% } %>
 
-            <% if (session.professionalId) {  %>
+            <% if (session.professionalId) { %>
                 <a href="/professionals/<%= session.professionalId %>">Info</a>
                 <a href="/professionals/leads">Mes demandes</a>
                 <a href="/requests/feed">Annonces</a>
 
-                <a href="/professionals/notification">
+                <a href="/professionals/notifications">
                     Notifications<% if (unreadCount > 0) { %> <span style="background:var(--orange); color:#fff; border-radius: 999px; padding:2px 8px; font-size: 0.75rem;"><%= unreadCount %></span><% } %>
                 </a>
-            <%  } %>
-            <a href="/profile">Mon profil</a> 
-            <form action="/logout" method="POST" style="display:inline;">
-                   
-                <button type="submit" class="nav-link-btn">Déconnexion</button>
+            <% } else if (session.userRole === 'professional') { %>
+                <a href="/professionals/add" style="color:var(--orange); font-weight:700;">⚠ Compléter mon profil pro</a>
+            <% } %>
 
+            <a href="/profile">Mon profil</a>
+            <form action="/logout" method="POST" style="display:inline;">
+                <button type="submit" class="nav-link-btn">Déconnexion</button>
             </form>
-        <%} else { %>
+
+        <% } else { %>
             <a href="/login">Connexion</a>
             <a href="/register">Inscription</a>
-
         <% } %>
 
     </div>
-
-
 </nav>

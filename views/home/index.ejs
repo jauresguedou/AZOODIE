@@ -9,6 +9,17 @@
 
     <div class="form-container" style="text-align:center;">
         <h1>AZÔÔDIÉ Localisation</h1>
+
+        <% if (session.userRole === 'professional' && !session.professionalId) { %>
+    <div style="background:#FCEEE1; border:2px solid var(--orange); border-radius:12px; padding:16px; margin-bottom:20px; text-align:center;">
+        <p style="margin:0 0 10px; font-weight:600; color:var(--dark);">
+            Votre compte professionnel n'a pas encore de profil publié.
+        </p>
+        <a href="/professionals/add" class="btn-primary" style="display:inline-block; text-decoration:none; width:auto; padding:12px 24px;">
+            Créer mon profil professionnel
+        </a>
+    </div>
+<% } %>
         <p>Trouvez un professionnel du bâtiment près de chez vous à Cotonou, ou consultez votre profil.</p>
 
         <div style="display:flex; flex-direction:column; gap:12px; margin-top:24px;">
