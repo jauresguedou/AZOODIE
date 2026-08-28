@@ -23,8 +23,6 @@ const requestValidationRules = () => {
        body("budget_estimate").optional({ checkFalsy: true }).isFloat({ min: 0 }).withMessage("Le budget doit être un nombre positif."),
     ]
 
-
-
 }
 
 const checkValidation = async (req, res, next) => {

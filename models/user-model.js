@@ -47,4 +47,4 @@ async function updateUserPhoto (id, photoUrl) {
     await pool.query("UPDATE users SET photo_url = $1 WHERE id = $2 ", [photoUrl, id]);
 }
 
-module.exports = { createUser, findUserByEmail, updateUserPhoto, getUserById};
+module.exports = { createUser, findUserByEmail, updateUserPhoto, getUserById };

@@ -27,7 +27,7 @@ async function getUnreadCount(userId) {
 
 async function markAllAsRead(userId) {
     await pool.query(
-        "UPDATE notifications SET is_read = TRUE  WHERE  user_id = $1 AND IS_read = FALSE",
+        "UPDATE notifications SET is_read = TRUE  WHERE  user_id = $1 AND is_read = FALSE",
         [userId]
     );
 }
