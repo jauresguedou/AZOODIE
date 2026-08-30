@@ -12,10 +12,10 @@ async function createUser(data) {
     const result = await pool.query(
 
          `
-            INSERT INTO users (name, email, password_hash, role)
-            VALUES($1, $2, $3, $4)
+            INSERT INTO users (name, email, password_hash, role, verification_token)
+            VALUES($1, $2, $3, $4, $5)
             RETURNING id, name, email, role, created_at`,
-            [data.name, data.email, password_hash, data.role || "client"]
+            [data.name, data.email, password_hash, data.role || "client", data.verificationToken]
 
 
     );

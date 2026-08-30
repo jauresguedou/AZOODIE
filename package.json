@@ -23,7 +23,8 @@
     "express-validator": "^7.3.2",
     "multer": "^2.2.0",
     "multer-storage-cloudinary": "^2.2.1",
-    "pg": "^8.22.0"
+    "pg": "^8.22.0",
+    "sib-api-v3-sdk": "^8.5.0"
   },
   "devDependencies": {
     "jest": "^30.4.2",

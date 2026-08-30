@@ -1,6 +1,9 @@
 
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 const { createUser, findUserByEmail} = require("../models/user-model");
+const { sendVerificationEmail } = require("../config/mailer");
+const pool = require("../config/database");
 
 function showRegisterForm(req,res) {
     res.render("auth/register", { errors: []});
@@ -19,8 +22,18 @@ async function register(req, res) {
     });
    }
 
-   await createUser({name, email, password, role});
-   res.redirect("/login");
+   const verificationToken = crypto.randomBytes(32).toString("hex");
+   const newUser = await createUser({name, email, password, role, verificationToken });
+
+   const verificationLink = `${req.protocol}://${req.get("host")}/verify/${verificationToken}`;
+
+   try{
+    await sendVerificationEmail(newUser.email, newUser.name, verificationLink);
+   } catch (err) {
+      console.error("Email sending failed:", err);
+   }
+
+   res.render("auth/check-email", { email: newUser.email});
 }
 
 function showLoginForm(req,res) {
@@ -48,6 +61,12 @@ async function login(req,res) {
         });
     }
 
+    if (!user.email_verified) {
+        return res.status(403).render("auth/login", {
+            errors: [{msg: "Veuillez confirmer votre email avant de vous connecter. Vérifiez votre boîte de réception."}],
+        });
+    }
+
     req.session.userId = user.id;
     req.session.userName = user.name;
     req.session.userRole = user.role;
@@ -68,5 +87,22 @@ async function login(req,res) {
 
 }
 
+async function verifyEmail(req, res) {
+    const { token } = req.params;
 
-module.exports = { showRegisterForm, register,showLoginForm, login, logout};
+    const result = await pool.query(
+        
+        "UPDATE users SET email_verified = TRUE, verification_token = NULL WHERE verification_token = $1 RETURNING id ",
+        [token]
+
+    );
+
+    if (result.rows.length === 0) {
+        return res.status(400).send("Lien de verification invalide ou déjà utilisé.");
+    }
+    res.render("auth/verified");
+}
+
+
+
+module.exports = { showRegisterForm, register,showLoginForm, login, logout, verifyEmail};
