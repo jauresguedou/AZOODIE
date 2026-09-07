@@ -8,7 +8,7 @@
     <%- include('../partials/nav') %>
 
     <div class="form-container" style="text-align:center;">
-        <h1>AZÔÔDIÉ Localisation</h1>
+        <h1>AZÔÔDIÉ</h1>
 
         <% if (session.userRole === 'professional' && !session.professionalId) { %>
     <div style="background:#FCEEE1; border:2px solid var(--orange); border-radius:12px; padding:16px; margin-bottom:20px; text-align:center;">
@@ -20,7 +20,7 @@
         </a>
     </div>
 <% } %>
-        <p>Trouvez un professionnel du bâtiment près de chez vous à Cotonou, ou consultez votre profil.</p>
+        <p>Trouvez un professionnel du bâtiment près de chez vous ou consultez votre profil.</p>
 
         <div style="display:flex; flex-direction:column; gap:12px; margin-top:24px;">
             <a href="/search?lat=6.3703&lng=2.3912" class="btn-primary" style="text-decoration:none; display:block;">Rechercher un professionnel</a>
