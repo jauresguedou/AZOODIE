@@ -45,7 +45,7 @@ describe("application routes", () => {
         ["/", "AZÔÔDIÉ Localisation", "Trouvez un professionnel du bâtiment"],
         ["/login", "Connexion — AZÔÔDIÉ", "Se connecter"],
         ["/register", "Inscription — AZÔÔDIÉ", "Créer un compte"],
-        ["/search", "Recherche — AZÔÔDIÉ", "Professionnels près de vous"],
+        ["/search", "Recherche — AZÔÔDIÉ", "Des professionnels près de vous"],
     ])("GET %s renders successfully through the shared layout", async (path, expectedTitle, expectedText) => {
         const response = await request(server, path);
 

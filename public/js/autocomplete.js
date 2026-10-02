@@ -1,11 +1,14 @@
 document.addEventListener("DOMContentLoaded", function() {
     const input = document.getElementById("location-input");
     const suggestionsBox = document.getElementById("suggestions");
+    const searchButton = document.getElementById("search-location-button");
+    const searchStatus = document.getElementById("location-search-status");
 
-    if (!input || !suggestionsBox) return;
+    if (!input || !suggestionsBox || !searchButton || !searchStatus) return;
 
     let debounceTimer;
     let activeController;
+    let searchController;
     let requestId = 0;
 
     function closeSuggestions() {
@@ -18,17 +21,39 @@ document.addEventListener("DOMContentLoaded", function() {
         input.setAttribute("aria-expanded", "false");
     }
 
+    function validPlaces(places) {
+        if (!Array.isArray(places)) {
+            throw new TypeError("Geocoding response must be an array.");
+        }
+
+        return places.filter(function(place) {
+            if (!place || typeof place.display_name !== "string"
+                || place.lat == null || place.lng == null) return false;
+
+            const latitude = Number(place.lat);
+            const longitude = Number(place.lng);
+            return Number.isFinite(latitude) && latitude >= -90 && latitude <= 90
+                && Number.isFinite(longitude) && longitude >= -180 && longitude <= 180;
+        });
+    }
+
+    async function fetchPlaces(query, signal) {
+        const response = await fetch(`/api/geocode?q=${encodeURIComponent(query)}`, { signal });
+        if (!response.ok) {
+            throw new Error(`Geocoding request failed with status ${response.status}.`);
+        }
+        return validPlaces(await response.json());
+    }
+
+    function goToPlace(place) {
+        const params = new URLSearchParams({ lat: place.lat, lng: place.lng });
+        window.location.href = `/search?${params}`;
+    }
+
     function showSuggestions(places) {
         const fragment = document.createDocumentFragment();
 
         places.forEach(function(place) {
-            if (place.lat == null || place.lng == null) return;
-
-            const latitude = Number(place.lat);
-            const longitude = Number(place.lng);
-            if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90
-                || !Number.isFinite(longitude) || longitude < -180 || longitude > 180) return;
-
             const item = document.createElement("button");
             item.type = "button";
             item.setAttribute("role", "option");
@@ -43,8 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
             item.style.cursor = "pointer";
 
             item.addEventListener("click", function() {
-                const params = new URLSearchParams({ lat: place.lat, lng: place.lng });
-                window.location.href = `/search?${params}`;
+                goToPlace(place);
             });
 
             fragment.appendChild(item);
@@ -62,8 +86,57 @@ document.addEventListener("DOMContentLoaded", function() {
     input.setAttribute("aria-expanded", "false");
     suggestionsBox.setAttribute("role", "listbox");
 
+    async function searchAddress() {
+        const query = input.value.trim();
+        if (query.length < 3) {
+            searchStatus.textContent = "Entrez au moins 3 caractères pour rechercher une adresse.";
+            input.focus();
+            return;
+        }
+
+        closeSuggestions();
+        searchController?.abort();
+        const controller = new AbortController();
+        searchController = controller;
+        searchButton.disabled = true;
+        searchStatus.textContent = "Recherche de l’adresse…";
+
+        try {
+            const places = await fetchPlaces(query, controller.signal);
+            if (places.length === 0) {
+                searchStatus.textContent = "Adresse introuvable. Vérifiez votre saisie ou choisissez une suggestion.";
+                return;
+            }
+            goToPlace(places[0]);
+        } catch (error) {
+            if (error.name !== "AbortError" && searchController === controller) {
+                console.error("Address search failed:", error);
+                searchStatus.textContent = "La recherche a échoué. Veuillez réessayer.";
+            }
+        } finally {
+            if (searchController === controller) {
+                searchButton.disabled = false;
+                searchController = undefined;
+            }
+        }
+    }
+
+    searchButton.addEventListener("click", searchAddress);
+    input.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            searchAddress();
+        } else if (event.key === "Escape") {
+            closeSuggestions();
+        } else if (event.key === "ArrowDown") {
+            suggestionsBox.querySelector("button")?.focus();
+        }
+    });
+
     input.addEventListener("input", function() {
         closeSuggestions();
+        searchController?.abort();
+        searchStatus.textContent = "";
         const query = input.value.trim();
         if (query.length < 3) return;
 
@@ -73,22 +146,10 @@ document.addEventListener("DOMContentLoaded", function() {
             activeController = controller;
 
             try {
-                const response = await fetch(`/api/geocode?q=${encodeURIComponent(query)}`, {
-                    signal: controller.signal,
-                });
-                if (!response.ok) {
-                    throw new Error(`Geocoding request failed with status ${response.status}.`);
-                }
-
-                const places = await response.json();
-                if (!Array.isArray(places)) {
-                    throw new TypeError("Geocoding response must be an array.");
-                }
+                const places = await fetchPlaces(query, controller.signal);
                 if (controller.signal.aborted || currentRequestId !== requestId) return;
 
-                showSuggestions(places.filter((place) =>
-                    place && typeof place.display_name === "string"
-                ));
+                showSuggestions(places);
             } catch (error) {
                 if (error.name !== "AbortError" && currentRequestId === requestId) {
                     console.error("Geocoding request failed:", error);
@@ -100,14 +161,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             }
         }, 400);
-    });
-
-    input.addEventListener("keydown", function(event) {
-        if (event.key === "Escape") {
-            closeSuggestions();
-        } else if (event.key === "ArrowDown") {
-            suggestionsBox.querySelector("button")?.focus();
-        }
     });
 
     suggestionsBox.addEventListener("keydown", function(event) {
