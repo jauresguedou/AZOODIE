@@ -23,6 +23,15 @@
                 <a href="/professionals/leads">Mes demandes</a>
                 <a href="/requests/feed">Annonces</a>
 
+            <% } else if (session.userRole === 'professional') { %>
+                <a href="/professionals/add" style="color:var(--orange); font-weight:700;">⚠ Compléter mon profil pro</a>
+            <% } %>
+
+            <a href="/profile">Mon profil</a>
+            <form action="/logout" method="POST" style="display:inline;">
+                <button type="submit" class="nav-link-btn">Déconnexion</button>
+            </form>
+            <% if (session.professionalId) { %>
                 <a href="/professionals/notifications"
                     class="nav-notifications"
                     aria-label="<%= unreadCount > 0 ? 'Notifications, nouvelles notifications' : 'Notifications' %>"
@@ -33,14 +42,7 @@
                     </svg>
                     <% if (unreadCount > 0) { %><span class="nav-notification-dot" aria-hidden="true"></span><% } %>
                 </a>
-            <% } else if (session.userRole === 'professional') { %>
-                <a href="/professionals/add" style="color:var(--orange); font-weight:700;">⚠ Compléter mon profil pro</a>
             <% } %>
-
-            <a href="/profile">Mon profil</a>
-            <form action="/logout" method="POST" style="display:inline;">
-                <button type="submit" class="nav-link-btn">Déconnexion</button>
-            </form>
 
         <% } else { %>
             <a href="/login">Connexion</a>
