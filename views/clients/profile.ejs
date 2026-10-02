@@ -1,41 +1,112 @@
-<div class="form-container" style="margin-top:32px;">
-         <div style="text-align:center; margin-bottom:20px;">
-            <img src="<%= user.photo_url || 'https://via.placeholder.com/120?text=Photo' %>"
-                 style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid var(--teal);">
-         </div>
+<%
+    const openAnnouncementCount = announcements.filter((announcement) => announcement.status === "open").length;
+    const memberSince = user.created_at
+        ? new Intl.DateTimeFormat("fr-FR", { month: "long", year: "numeric" }).format(new Date(user.created_at))
+        : null;
+%>
+<div class="profile-page">
+    <section class="profile-card profile-identity" aria-labelledby="profile-name">
+        <div class="profile-cover" aria-hidden="true">
+            <span class="profile-cover-mark">AZÔÔDIÉ</span>
+        </div>
 
-        <h1 style="text-align: center;"><%= user.name %></h1>
-        <p style="text-align:center; color:var(--gray);"><%= user.email %></p>
-  
-
-        <form action="/profile/photo" method="POST" enctype="multipart/form-data" style="margin-top:16px;">
-             <div class="form-group">
-                <label for="photo">Changer ma photo</label>
-
-                <input type="file" id="photo" name="photo" accept="image/*">
-             </div>
-             <button type="submit" class="btn-primary">Mettre à jour</button>
-        </form>
-        <h2 style="margin-top: 32px; font-family:var(--font-heading); color:var(--teal);">Mes annonces</h2>
-
-        <% if (announcements.length === 0) { %>
-              <p>Vous n'avez publié aucune annonce.</p>
-        <% }  else { %>
-            <% announcements.forEach(function(a) { %>
-                <div class="result-card">
-                    <div>
-                        <strong><%= a.category %></strong>
-                        <br>
-                        <small><%= a.description %></small>
-                        <br>
-                        <small style="color:var(--gray);"><%= a.address_text %></small>
-                    </div>
-                    <div class="distance-chip"><%= a.status %></div>
-
+        <div class="profile-identity-content">
+            <% if (user.photo_url) { %>
+                <img class="profile-avatar" src="<%= user.photo_url %>" alt="Photo de profil de <%= user.name %>">
+            <% } else { %>
+                <div class="profile-avatar profile-avatar-placeholder" role="img" aria-label="Initiale de <%= user.name %>">
+                    <%= user.name.trim().charAt(0).toLocaleUpperCase("fr-FR") %>
                 </div>
-             
-            <% }); %>
-       <% } %>
+            <% } %>
 
+            <div class="profile-identity-details">
+                <div>
+                    <p class="profile-eyebrow">Espace personnel</p>
+                    <h1 id="profile-name"><%= user.name %></h1>
+                    <p class="profile-contact"><%= user.email %></p>
+                    <% if (memberSince) { %>
+                        <p class="profile-meta">Membre depuis <%= memberSince %></p>
+                    <% } %>
+                </div>
 
+                <a class="profile-action-link" href="/professionals" aria-label="Découvrir les professionnels">
+                    Découvrir les professionnels
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="profile-columns">
+        <section class="profile-card profile-activity" aria-labelledby="activity-heading">
+            <div class="profile-section-heading">
+                <div>
+                    <p class="profile-eyebrow">Votre activité</p>
+                    <h2 id="activity-heading">Mes annonces</h2>
+                </div>
+                <span class="profile-count"><%= announcements.length %></span>
+            </div>
+
+            <% if (announcements.length === 0) { %>
+                <div class="profile-empty-state">
+                    <span class="profile-empty-icon" aria-hidden="true">+</span>
+                    <h3>Votre activité commence ici</h3>
+                    <p>Publiez une demande pour la retrouver facilement et suivre son évolution depuis votre profil.</p>
+                    <a href="/professionals" class="profile-action-link">Trouver un professionnel</a>
+                </div>
+            <% } else { %>
+                <div class="profile-announcements">
+                    <% announcements.forEach(function(announcement) { %>
+                        <article class="profile-announcement">
+                            <div class="profile-announcement-icon" aria-hidden="true">
+                                <%= announcement.category.trim().charAt(0).toLocaleUpperCase("fr-FR") %>
+                            </div>
+                            <div class="profile-announcement-content">
+                                <h3><%= announcement.category %></h3>
+                                <p><%= announcement.description %></p>
+                                <% if (announcement.address_text) { %>
+                                    <span class="profile-announcement-location"><%= announcement.address_text %></span>
+                                <% } %>
+                            </div>
+                            <span class="profile-status <%= announcement.status === 'open' ? 'profile-status-open' : 'profile-status-closed' %>">
+                                <%= announcement.status === "open" ? "En cours" : "Terminée" %>
+                            </span>
+                        </article>
+                    <% }); %>
+                </div>
+            <% } %>
+        </section>
+
+        <aside class="profile-sidebar" aria-label="Résumé du profil">
+            <section class="profile-card profile-stat-card">
+                <p class="profile-eyebrow">En un coup d'œil</p>
+                <div class="profile-stat-row">
+                    <span>Demandes publiées</span>
+                    <strong><%= announcements.length %></strong>
+                </div>
+                <div class="profile-stat-row">
+                    <span>Demandes en cours</span>
+                    <strong><%= openAnnouncementCount %></strong>
+                </div>
+            </section>
+
+            <section class="profile-card profile-photo-card">
+                <div class="profile-section-heading">
+                    <div>
+                        <p class="profile-eyebrow">Votre présence</p>
+                        <h2>Photo de profil</h2>
+                    </div>
+                </div>
+                <p class="profile-help-text">Une photo aide les professionnels à mettre un visage sur votre demande.</p>
+                <form action="/profile/photo" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="photo">Choisir une photo</label>
+                        <input type="file" id="photo" name="photo" accept="image/jpeg,image/png,image/webp">
+                    </div>
+                    <button type="submit" class="btn-primary profile-photo-submit">Mettre à jour la photo</button>
+                </form>
+            </section>
+
+            <p class="profile-privacy-note">Vos coordonnées de connexion restent privées et ne sont pas affichées aux professionnels.</p>
+        </aside>
     </div>
+</div>
