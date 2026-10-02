@@ -32,4 +32,39 @@ describe("professional notifications navigation", () => {
         expect(html).toContain('class="nav-notification-dot"');
         expect(html).toContain('title="Nouvelles notifications"');
     });
+
+    test("links professional profile navigation to the professional profile", async () => {
+        const html = await renderNavigation(0);
+
+        expect(html).toContain('href="/professionals/12">Mon profil</a>');
+        expect(html).not.toContain('href="/profile">Mon profil</a>');
+    });
+
+    test("links professionals without a profile to professional profile creation", async () => {
+        const html = await ejs.renderFile(navigationTemplate, {
+            session: {
+                userId: 7,
+                userRole: "professional",
+                professionalId: null,
+            },
+            unreadCount: 0,
+        });
+
+        expect(html).toContain('href="/professionals/add">Mon profil</a>');
+        expect(html).not.toContain('href="/profile">Mon profil</a>');
+    });
+
+    test("keeps client profiles linked to the client profile page", async () => {
+        const html = await ejs.renderFile(navigationTemplate, {
+            session: {
+                userId: 7,
+                userRole: "client",
+                professionalId: null,
+            },
+            unreadCount: 0,
+        });
+
+        expect(html).toContain('href="/profile">Mon profil</a>');
+        expect(html).not.toContain('href="/professionals/add">Mon profil</a>');
+    });
 });

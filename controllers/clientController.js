@@ -1,9 +1,26 @@
 const {getUserById, updateUserPhoto } = require("../models/user-model");
 const { getRequestsByClient } = require("../models/request-model");
+const { getProfessionalById } = require("../models/professional-model");
 
 
 
 async function showMyProfile(req, res){
+    if (req.session.userRole === "professional") {
+        if (!req.session.professionalId) {
+            return res.redirect("/professionals/add");
+        }
+
+        const professional = await getProfessionalById(req.session.professionalId);
+        if (!professional) {
+            req.session.professionalId = null;
+            await new Promise((resolve, reject) => {
+                req.session.save((error) => error ? reject(error) : resolve());
+            });
+            return res.redirect("/professionals/add");
+        }
+
+        return res.redirect(`/professionals/${professional.id}`);
+    }
 
     const user = await getUserById(req.session.userId);
     if (!user) {

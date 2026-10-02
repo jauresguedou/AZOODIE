@@ -27,7 +27,11 @@
                 <a href="/professionals/add" style="color:var(--orange); font-weight:700;">⚠ Compléter mon profil pro</a>
             <% } %>
 
-            <a href="/profile">Mon profil</a>
+            <% if (session.userRole === 'professional') { %>
+                <a href="<%= session.professionalId ? `/professionals/${session.professionalId}` : '/professionals/add' %>">Mon profil</a>
+            <% } else { %>
+                <a href="/profile">Mon profil</a>
+            <% } %>
             <form action="/logout" method="POST" style="display:inline;">
                 <button type="submit" class="nav-link-btn">Déconnexion</button>
             </form>
