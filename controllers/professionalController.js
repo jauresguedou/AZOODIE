@@ -1,5 +1,4 @@
 const {getAllProfessionals, createProfessional, getNearbyProfessionals, getProfessionalById, updateProfessional, deleteProfessional, addPhotoToProfessional} = require("../models/professional-model");
-const { isFavorited } = require("../models/favorite-model");
 const { getNearbyRequestsForProfessional } = require("../models/request-model");
 const { createUser, findUserByEmail } = require("../models/user-model");
 const pool = require("../config/database");
@@ -134,11 +133,9 @@ async function showProfile(req,res) {
     if(!professional) {
         return res.status(404).send("Professionnel introuvable.");
     }
-    const favorited = req.session.userId? await isFavorited(req.session.userId, professional.id) : false;
     res.render("professionals/profile", {
         title: `${professional.name} — AZÔÔDIÉ`,
         professional,
-        favorited,
     });
 }
 

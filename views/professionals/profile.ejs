@@ -47,14 +47,6 @@
 
                 <div class="professional-profile-actions">
                     <a href="/requests/new/<%= professional.id %>" class="professional-profile-contact">Contacter</a>
-                    <% if (session.userId) { %>
-                        <form action="/favorites/<%= professional.id %>" method="POST">
-                            <input type="hidden" name="action" value="<%= favorited ? 'remove' : 'add' %>">
-                            <button type="submit" class="professional-profile-save">
-                                <%= favorited ? "★ Retirer des favoris" : "☆ Ajouter aux favoris" %>
-                            </button>
-                        </form>
-                    <% } %>
                 </div>
             </div>
         </div>

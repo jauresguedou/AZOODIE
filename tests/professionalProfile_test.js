@@ -19,7 +19,6 @@ describe("professional profile template", () => {
     test("renders professional identity, services, rating, and contact actions", async () => {
         const html = await ejs.renderFile(profileTemplate, {
             professional,
-            favorited: false,
             session: { userId: 4, professionalId: null },
         });
 
@@ -32,8 +31,8 @@ describe("professional profile template", () => {
         expect(html).toContain("4.7");
         expect(html).toContain("Basé sur 9 avis");
         expect(html).toContain('href="/requests/new/21"');
-        expect(html).toContain('action="/favorites/21"');
-        expect(html).toContain("Ajouter aux favoris");
+        expect(html).not.toContain('action="/favorites/21"');
+        expect(html).not.toContain("Ajouter aux favoris");
     });
 
     test("provides an initials avatar, empty rating state, and owner edit link", async () => {
@@ -47,7 +46,6 @@ describe("professional profile template", () => {
                 availability_status: "busy",
                 photo_urls: [],
             },
-            favorited: true,
             session: { userId: 4, professionalId: "21" },
         });
 
@@ -55,13 +53,12 @@ describe("professional profile template", () => {
         expect(html).toContain("Aucun avis pour le moment");
         expect(html).toContain("Occupé");
         expect(html).toContain('href="/professionals/21/edit"');
-        expect(html).toContain("Retirer des favoris");
+        expect(html).not.toContain("Retirer des favoris");
     });
 
     test("does not expose edit or favorite actions to guests", async () => {
         const html = await ejs.renderFile(profileTemplate, {
             professional,
-            favorited: false,
             session: {},
         });
 

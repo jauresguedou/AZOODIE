@@ -1733,8 +1733,7 @@ body {
   background: #fff4dc;
 }
 
-.professional-profile-edit,
-.professional-profile-save {
+.professional-profile-edit {
   display: inline-flex;
   min-height: 38px;
   align-items: center;
@@ -1751,8 +1750,7 @@ body {
   cursor: pointer;
 }
 
-.professional-profile-edit:hover,
-.professional-profile-save:hover {
+.professional-profile-edit:hover {
   border-color: var(--teal);
   background: #f1f8f8;
 }
@@ -1905,7 +1903,6 @@ body {
 
 .professional-profile-edit:focus-visible,
 .professional-profile-contact:focus-visible,
-.professional-profile-save:focus-visible,
 .professional-profile-back:focus-visible {
   outline: 3px solid rgba(15, 110, 110, 0.25);
   outline-offset: 3px;
