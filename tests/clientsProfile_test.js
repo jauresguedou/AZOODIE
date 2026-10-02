@@ -19,6 +19,10 @@ describe("client profile template", () => {
         expect(html).toContain("Demandes publiées");
         expect(html).toContain("Demandes en cours");
         expect(html).toContain('href="/professionals"');
+        expect(html).toContain('action="/profile/photo"');
+        expect(html).toContain('aria-label="Modifier la photo de profil"');
+        expect(html).toContain('name="photo"');
+        expect(html).toContain("/js/profile-photo.js");
     });
 
     test("renders announcement activity, status, and summary counts", async () => {

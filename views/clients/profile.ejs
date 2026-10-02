@@ -11,13 +11,24 @@
         </div>
 
         <div class="profile-identity-content">
-            <% if (user.photo_url) { %>
-                <img class="profile-avatar" src="<%= user.photo_url %>" alt="Photo de profil de <%= user.name %>">
-            <% } else { %>
-                <div class="profile-avatar profile-avatar-placeholder" role="img" aria-label="Initiale de <%= user.name %>">
-                    <%= user.name.trim().charAt(0).toLocaleUpperCase("fr-FR") %>
-                </div>
-            <% } %>
+            <div class="profile-avatar-wrap">
+                <% if (user.photo_url) { %>
+                    <img class="profile-avatar" src="<%= user.photo_url %>" alt="Photo de profil de <%= user.name %>">
+                <% } else { %>
+                    <div class="profile-avatar profile-avatar-placeholder" role="img" aria-label="Initiale de <%= user.name %>">
+                        <%= user.name.trim().charAt(0).toLocaleUpperCase("fr-FR") %>
+                    </div>
+                <% } %>
+                <form id="profile-photo-form" class="profile-photo-editor" action="/profile/photo" method="POST" enctype="multipart/form-data">
+                    <label class="profile-photo-edit" aria-label="Modifier la photo de profil">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"></path>
+                        </svg>
+                        <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" aria-label="Choisir une nouvelle photo de profil">
+                    </label>
+                </form>
+            </div>
 
             <div class="profile-identity-details">
                 <div>
@@ -89,24 +100,8 @@
                 </div>
             </section>
 
-            <section class="profile-card profile-photo-card">
-                <div class="profile-section-heading">
-                    <div>
-                        <p class="profile-eyebrow">Votre présence</p>
-                        <h2>Photo de profil</h2>
-                    </div>
-                </div>
-                <p class="profile-help-text">Une photo aide les professionnels à mettre un visage sur votre demande.</p>
-                <form action="/profile/photo" method="POST" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="photo">Choisir une photo</label>
-                        <input type="file" id="photo" name="photo" accept="image/jpeg,image/png,image/webp">
-                    </div>
-                    <button type="submit" class="btn-primary profile-photo-submit">Mettre à jour la photo</button>
-                </form>
-            </section>
-
             <p class="profile-privacy-note">Vos coordonnées de connexion restent privées et ne sont pas affichées aux professionnels.</p>
         </aside>
     </div>
 </div>
+<script src="/js/profile-photo.js" defer></script>

@@ -439,11 +439,18 @@ body {
   padding: 0 32px 28px;
 }
 
-.profile-avatar {
+.profile-avatar-wrap {
+  position: relative;
   flex: 0 0 auto;
   width: 132px;
   height: 132px;
   margin-top: -66px;
+}
+
+.profile-avatar {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   border: 5px solid #fff;
   border-radius: 50%;
@@ -459,6 +466,55 @@ body {
   font-family: var(--font-heading);
   font-size: 3.2rem;
   font-weight: 600;
+}
+
+.profile-photo-editor {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+}
+
+.profile-photo-edit {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  overflow: hidden;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--teal);
+  box-shadow: 0 2px 8px rgba(31, 41, 55, 0.2);
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.profile-photo-edit:hover {
+  background: #0b5557;
+  transform: scale(1.05);
+}
+
+.profile-photo-edit svg {
+  width: 17px;
+  height: 17px;
+}
+
+.profile-photo-edit input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.profile-photo-edit:focus-within {
+  outline: 3px solid var(--orange);
+  outline-offset: 3px;
 }
 
 .profile-identity-details {
@@ -663,8 +719,7 @@ body {
   gap: 16px;
 }
 
-.profile-stat-card,
-.profile-photo-card {
+.profile-stat-card {
   padding: 22px;
 }
 
@@ -685,23 +740,6 @@ body {
 .profile-stat-row strong {
   color: var(--dark);
   font-size: 1rem;
-}
-
-.profile-photo-card .profile-section-heading {
-  margin-bottom: 12px;
-}
-
-.profile-photo-card .form-group {
-  margin: 16px 0;
-}
-
-.profile-photo-card input[type="file"] {
-  width: 100%;
-  font-size: 0.85rem;
-}
-
-.profile-photo-submit {
-  font-size: 0.9rem;
 }
 
 .profile-privacy-note {
@@ -744,6 +782,11 @@ body {
   }
 
   .profile-avatar {
+    width: 104px;
+    height: 104px;
+  }
+
+  .profile-avatar-wrap {
     width: 104px;
     height: 104px;
     margin-top: -52px;
