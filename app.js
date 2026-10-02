@@ -1,28 +1,58 @@
 const express = require("express");
+const ejs = require("ejs");
 const path = require("path");
-const pool = require("./config/database");
 const session = require("express-session");
-const professionalRoute = require("./routes/professionalRoute");
-const searchRoute = require("./routes/searchRoute");
-const requestRoute = require("./routes/requestRoute");
-const favoriteRoute = require("./routes/favoriteRoute");
-const authRoute = require("./routes/authRoute");
-const apiRoute = require("./routes/apiRoute");
-const adminRoute = require("./routes/adminRoute");
+const PgSession = require("connect-pg-simple")(session);
+const routes = require("./routes");
+const pool = require("./config/database");
 const { getUnreadCount } = require("./models/notification-model");
-const profileRoute = require("./routes/profileRoute");
+const { notFoundHandler, errorHandler } = require("./middleware/errorHandler");
 const app = express();
+const isProduction = process.env.NODE_ENV === "production";
+const sessionSecret = process.env.SESSION_SECRET;
 
+if (isProduction && !sessionSecret) {
+   throw new Error("SESSION_SECRET must be configured in production.");
+}
+if (isProduction) {
+   app.set("trust proxy", 1);
+}
+
+app.engine("ejs", (filePath, options, callback) => {
+   ejs.renderFile(filePath, options, (viewError, body) => {
+      if (viewError) {
+         return callback(viewError);
+      }
+
+      ejs.renderFile(
+         path.join(__dirname, "views", "layouts", "main.ejs"),
+         {
+            ...options,
+            body,
+            title: options.title || "AZÔÔDIÉ",
+         },
+         callback
+      );
+   });
+});
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-   secret: process.env.SESSION_SECRET,
+   secret: sessionSecret || "azoodie-development-only-session-secret",
    resave: false,
    saveUninitialized: false,
-   cookie: {maxAge: 1000 * 60 * 60* 24}
+   store: isProduction
+      ? new PgSession({ pool, tableName: "user_sessions", createTableIfMissing: true })
+      : undefined,
+   cookie: {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: isProduction,
+      maxAge: 1000 * 60 * 60 * 24,
+   },
 }));
 app.use((req,res,next) => {
     res.locals.session = req.session;
@@ -39,19 +69,15 @@ app.use(async (req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-    res.render("home/index", {title: "AZÔÔDIÉ", session: req.session});
+    res.render("home/index", { title: "AZÔÔDIÉ Localisation", session: req.session });
 });
 
 
 
 
-app.use("/professionals", professionalRoute);
-app.use("/search", searchRoute);
-app.use("/requests", requestRoute);
-app.use("/favorites", favoriteRoute);
-app.use("/", authRoute);
-app.use("/api", apiRoute);
-app.use("/admin", adminRoute);
-app.use("/profile", profileRoute);
+app.use(routes);
+
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 module.exports = app;

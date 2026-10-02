@@ -5,12 +5,17 @@ const { getRequestsByClient } = require("../models/request-model");
 
 async function showMyProfile(req, res){
 
-    console.log("SESSION:", req.session);
-    console.log("SESSION USER ID:", req.session.userId);
     const user = await getUserById(req.session.userId);
-    console.log("USER FROM DATABASE:", user);
+    if (!user) {
+        return req.session.destroy((error) => {
+            if (error) {
+                return res.status(500).send("Impossible de restaurer la session utilisateur.");
+            }
+            return res.redirect("/login");
+        });
+    }
     const announcements = await getRequestsByClient(req.session.userId);
-    res.render("clients/profile", { user, announcements });
+    res.render("clients/profile", { title: "Mon profil — AZÔÔDIÉ", user, announcements });
 }
 
 async function uploadMyPhoto(req, res) {

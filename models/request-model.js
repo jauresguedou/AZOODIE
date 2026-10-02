@@ -1,9 +1,9 @@
 const pool = require("../config/database");
 
 
-async function createRequest(data) {
+async function createRequest(data, database = pool) {
 
-    const result = await pool.query(
+    const result = await database.query(
         `
         INSERT INTO requests
           (client_id, category, description, address_text, lat, lng, budget_estimate)

@@ -29,6 +29,17 @@ body {
   padding: 0;
 }
 
+.site-footer {
+  padding: 16px 24px;
+  color: var(--gray);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
 /* ============================================
    Add Professional Form
    ============================================ */
@@ -53,6 +64,19 @@ body {
   margin-bottom: 18px;
   display: flex;
   flex-direction: column;
+}
+
+.form-errors {
+  background: #FBE7E4;
+  color: var(--error);
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+.form-errors ul {
+  margin: 0;
+  padding-left: 18px;
 }
 
 .form-group label {
@@ -115,6 +139,14 @@ body {
   border: 1px solid var(--gray-light);
   border-radius: 12px;
   margin-bottom: 12px;
+}
+
+.notification-read {
+  background: #fff;
+}
+
+.notification-unread {
+  background: var(--teal-light);
 }
 
 .distance-chip {

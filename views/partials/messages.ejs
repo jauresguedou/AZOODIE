@@ -1,0 +1,14 @@
+<%
+    const validationErrors = typeof errors !== "undefined" && Array.isArray(errors)
+        ? errors
+        : [];
+%>
+<% if (validationErrors.length > 0) { %>
+    <div class="form-errors" role="alert" aria-live="assertive">
+        <ul>
+            <% validationErrors.forEach(function(error) { %>
+                <li><%= typeof error === "string" ? error : error.msg %></li>
+            <% }); %>
+        </ul>
+    </div>
+<% } %>

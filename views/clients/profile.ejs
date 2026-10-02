@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <%- include('../partials/header', {title: 'Mon profil - AZÔÔDIÉ'})  %>
-</head>
-<body>
-    <%- include('../partials/nav') %>
-
-    <div class="form-container" style="margin-top:32px;">
+<div class="form-container" style="margin-top:32px;">
          <div style="text-align:center; margin-bottom:20px;">
             <img src="<%= user.photo_url || 'https://via.placeholder.com/120?text=Photo' %>"
                  style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid var(--teal);">
@@ -47,6 +39,3 @@
 
 
     </div>
-    
-</body>
-</html>

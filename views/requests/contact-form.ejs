@@ -1,23 +1,8 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-     <%- include('../partials/header', { title: 'Contacter ' + professional.name + ' — AZÔÔDIÉ' }) %>
-</head>
-<body>
-
-    <%- include('../partials/nav') %>
-    <div class="form-container">
+<% const submittedValues = typeof formValues === "undefined" ? {} : formValues; %>
+<div class="form-container">
         <h1>Contacter <%= professional.name %></h1>
 
-        <% if (errors.length > 0) {  %>
-            <div style="background: #FBE7E4; color:#C0392B; padding:12px; border-radius: 10px; margin-bottom: 16px;">
-                <ul style="margin:0; padding-left: 18px;">
-                    <% errors.forEach(function(err) {  %>
-                        <li><%= err.msg %></li>
-                    <%   }); %>    
-                </ul>
-            </div>
-        <% } %>
+        <%- include('../partials/messages', { errors }) %>
         <p><%= professional.trade_category %> . <%= professional.service_radius_km %> km de rayon</p>
 
         <form action="/requests" method="POST">
@@ -25,37 +10,37 @@
 
             <div class="form-group">
                 <label for="category"> Categories </label>
-                <input type="text" id="category" name="category" value="<%= professional.trade_category %>" required>  
+                <input type="text" id="category" name="category" value="<%= submittedValues.category ?? professional.trade_category %>" required>
 
             </div>
 
             <div class="form-group">
                 <label for="description">Description de la demande</label>
-                <input type="text" id="description" name="description" required>
+                <input type="text" id="description" name="description" value="<%= submittedValues.description ?? '' %>" required>
 
 
             </div>
             <div class="form-group">
 
                <label for="address_text">Lieu du chantier</label>
-               <input type="text" id="address_text" name="address_text" required>
+               <input type="text" id="address_text" name="address_text" value="<%= submittedValues.address_text ?? '' %>" required>
 
 
             </div>
             <div class="form-group"> 
                 <label for="lat">Latitude</label>
-                <input type="text" id="lat" name="lat" required>
+                <input type="text" id="lat" name="lat" value="<%= submittedValues.lat ?? '' %>" required>
             </div>
 
             <div class="form-group">
                  <label for="lng">Longitude</label>
-                 <input type="text" id="lng" name="lng" required>
+                 <input type="text" id="lng" name="lng" value="<%= submittedValues.lng ?? '' %>" required>
 
             </div>
 
             <div class="form-group">
                    <label for="budget_estimate"> Budget estimé (optionel)</label>
-                   <input type="number" id="budget_estimate" name="budget_estimate">
+                   <input type="number" id="budget_estimate" name="budget_estimate" value="<%= submittedValues.budget_estimate ?? '' %>">
             </div>
 
             <button type="submit" class="btn-primary">Envoyer la demande</button>
@@ -64,6 +49,3 @@
         </form>
 
     </div>
-    
-</body>
-</html>

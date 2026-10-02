@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-   <%- include('../partials/header', { title: 'AZÔÔDIÉ Localisation'})  %>
-</head>
-<body>
-
-    <%- include('../partials/nav') %>
-
-    <div class="form-container" style="text-align:center;">
+<div class="form-container" style="text-align:center;">
         <h1>AZÔÔDIÉ</h1>
 
         <% if (session.userRole === 'professional' && !session.professionalId) { %>
@@ -29,6 +20,3 @@
             <a href="/favorites" class="btn-primary" style="text-decoration:none; display:block; background:var(--gray);">Mes favoris</a>
         </div>
     </div>
-
-</body>
-</html>

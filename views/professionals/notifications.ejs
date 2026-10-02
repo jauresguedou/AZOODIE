@@ -1,18 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <%- include('../partials/header', { title: 'Notifications — AZÔÔDIÉ' }) %>
-</head>
-<body>
-
-    <%- include('../partials/nav') %>
-
-    <style>
-        .notification-read { background: #fff; }
-        .notification-unread { background: var(--teal-light); }
-    </style>
-
-    <div class="form-container" style="margin-top:32px; max-width:600px;">
+<div class="form-container" style="margin-top:32px; max-width:600px;">
         <h1>Notifications</h1>
 
         <% if (notifications.length === 0) { %>
@@ -27,6 +13,3 @@
             <% }); %>
         <% } %>
     </div>
-
-</body>
-</html>

@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <%- include('../partials/header', {title: 'Mes favoris - AZÔÔDIÉ'}) %>
-</head>
-<body>
-
-    <%- include('../partials/nav') %>
-
-    <div class="form-container">
+<div class="form-container">
         <h1>Mes favoris</h1>
 
         <% if (favorites.length === 0) { %>
@@ -24,6 +15,3 @@
 
         <a href="/professionals" class="btn-primary" style="display:inline-block; text-decoration:none; text-align:center; margin-top:16px;">Retour à la liste</a>
     </div>
-
-</body>
-</html>

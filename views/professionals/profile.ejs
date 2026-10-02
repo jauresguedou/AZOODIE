@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <%- include('../partials/header', { title: professional.name + ' — AZÔÔDIÉ' }) %>
-</head>
-<body>
-
-   <%- include('../partials/nav') %>
-   <div class="form-container">
+<div class="form-container">
          <h1><%= professional.name %></h1>
          <p><%= professional.trade_category %> <% if(professional.verified) { %>. <span style="color:var(--teal); font-weight:600;" >Vérifié ✓</span><% } %></p>
         
@@ -33,6 +25,3 @@
         </form>
 
    </div>
-    
-</body>
-</html>

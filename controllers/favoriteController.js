@@ -21,7 +21,7 @@ async function toggleFavorite(req, res) {
 async function listFavorites(req, res) {
 
     const favorites = await getFavoritesByClient(req.session.userId);
-    res.render("professionals/favorites", { favorites });
+    res.render("professionals/favorites", { title: "Mes favoris — AZÔÔDIÉ", favorites });
 }
 
 module.exports = { toggleFavorite, listFavorites };

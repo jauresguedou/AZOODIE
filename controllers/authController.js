@@ -6,18 +6,28 @@ const { sendVerificationEmail } = require("../config/mailer");
 const pool = require("../config/database");
 
 function showRegisterForm(req,res) {
-    res.render("auth/register", { errors: []});
+    res.render("auth/register", { title: "Inscription — AZÔÔDIÉ", errors: [] });
 
 }
 
 
 async function register(req, res) {
-   const {name, email, password, role} = req.body;
+   const { name, email, password } = req.body;
+   const allowedRoles = ["client", "professional"];
+   const role = req.body.role || "client";
+
+   if (!allowedRoles.includes(role)) {
+      return res.status(400).render("auth/register", {
+         title: "Inscription — AZÔÔDIÉ",
+         errors: [{ msg: "Le type de compte sélectionné est invalide." }],
+      });
+   }
 
    const existing = await findUserByEmail(email);
 
    if (existing) {
     return res.status(400).render("auth/register", {
+       title: "Inscription — AZÔÔDIÉ",
        errors: [{msg: "Un compte existe déjà avec cet email."}], 
     });
    }
@@ -33,11 +43,11 @@ async function register(req, res) {
       console.error("Email sending failed:", err);
    }
 
-   res.render("auth/check-email", { email: newUser.email});
+   res.render("auth/check-email", { title: "Vérifiez votre email — AZÔÔDIÉ", email: newUser.email });
 }
 
 function showLoginForm(req,res) {
-    res.render("auth/login", { errors: []});
+    res.render("auth/login", { title: "Connexion — AZÔÔDIÉ", errors: [] });
 
 }
 
@@ -49,6 +59,7 @@ async function login(req,res) {
     if(!user) {
 
         return res.status(400).render("auth/login", {
+            title: "Connexion — AZÔÔDIÉ",
             errors: [{msg: "Email ou mot de passe incorrect."}],
         });
     }   
@@ -57,12 +68,14 @@ async function login(req,res) {
     const match = await bcrypt.compare(password, user.password_hash);
     if(!match) {
         return res.status(400).render("auth/login", {
+            title: "Connexion — AZÔÔDIÉ",
             errors: [{msg: "Email ou mot de passe incorrect."}],
         });
     }
 
     if (!user.email_verified) {
         return res.status(403).render("auth/login", {
+            title: "Connexion — AZÔÔDIÉ",
             errors: [{msg: "Veuillez confirmer votre email avant de vous connecter. Vérifiez votre boîte de réception."}],
         });
     }
@@ -100,7 +113,7 @@ async function verifyEmail(req, res) {
     if (result.rows.length === 0) {
         return res.status(400).send("Lien de verification invalide ou déjà utilisé.");
     }
-    res.render("auth/verified");
+    res.render("auth/verified", { title: "Email confirmé — AZÔÔDIÉ" });
 }
 
 

@@ -6,8 +6,8 @@ async function getAllProfessionals() {
     return result.rows;
 }
 
-async function createProfessional(data) {
-    const result = await pool.query(
+async function createProfessional(data, database = pool) {
+    const result = await database.query(
         `
         INSERT INTO professionals
         (name, trade_category, service_radius_km, base_lat, base_lng, verified, availability_status, photo_urls)
@@ -119,7 +119,8 @@ async function updateProfessional(id, data) {
 }
 
 async function deleteProfessional(id) {
-    await pool.query("DELETE FROM professionals WHERE id = $1", [id]);
+    const result = await pool.query("DELETE FROM professionals WHERE id = $1", [id]);
+    return result.rowCount;
 }
 
 async function addPhotoToProfessional(id, photoUrl) {
@@ -134,8 +135,8 @@ async function addPhotoToProfessional(id, photoUrl) {
     return result.rows[0];
 }
 
-async function getUsersToNotifyForRequest(lat, lng) {
-    const result = await pool.query(
+async function getUsersToNotifyForRequest(lat, lng, database = pool) {
+    const result = await database.query(
         `SELECT u.id AS user_id, p.name AS professional_name FROM  (
              SELECT *,
                 (6371 * acos(

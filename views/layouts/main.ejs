@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <%- include('../partials/header', { title: typeof title !== 'undefined' && title ? title : 'AZÔÔDIÉ' }) %>
+    <%- typeof headContent !== 'undefined' ? headContent : '' %>
+</head>
+<body>
+    <%- include('../partials/nav') %>
+    <main id="main-content">
+        <%- body %>
+    </main>
+    <%- include('../partials/footer') %>
+</body>
+</html>

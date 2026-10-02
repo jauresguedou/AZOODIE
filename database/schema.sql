@@ -14,6 +14,14 @@ CREATE TABLE IF NOT EXISTS professionals (
 
 );
 
+ALTER TABLE professionals ADD COLUMN IF NOT EXISTS service_radius_km NUMERIC(5, 2) DEFAULT 15;
+ALTER TABLE professionals ADD COLUMN IF NOT EXISTS rating_avg NUMERIC(2, 1) DEFAULT 0;
+ALTER TABLE professionals ADD COLUMN IF NOT EXISTS review_count INT DEFAULT 0;
+ALTER TABLE professionals ADD COLUMN IF NOT EXISTS verified BOOLEAN DEFAULT FALSE;
+ALTER TABLE professionals ADD COLUMN IF NOT EXISTS availability_status VARCHAR(20) DEFAULT 'available';
+ALTER TABLE professionals ADD COLUMN IF NOT EXISTS photo_urls TEXT[];
+ALTER TABLE professionals ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT NOW();
+
 
 
 CREATE TABLE IF NOT EXISTS users (
@@ -22,15 +30,19 @@ CREATE TABLE IF NOT EXISTS users (
     email             VARCHAR(255)  UNIQUE NOT NULL,
     password_hash     VARCHAR(255)NOT NULL,
     role              VARCHAR(20) NOT NULL DEFAULT 'client',
-    professional_id  INTERGER REFERENCES professionals(id) ON DELETE SET NULL,
+    professional_id  INTEGER CONSTRAINT users_professional_id_fkey REFERENCES professionals(id) ON DELETE SET NULL,
     created_at       TIMESTAMP DEFAULT NOW()
 
 );
 
+ALTER TABLE users ADD COLUMN IF NOT EXISTS role VARCHAR(20) NOT NULL DEFAULT 'client';
+ALTER TABLE users ADD COLUMN IF NOT EXISTS professional_id INTEGER;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT NOW();
+
 
 CREATE TABLE IF NOT EXISTS requests (
     id  SERIAL PRIMARY KEY,
-    client_id INT NOT NULL,
+    client_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     category VARCHAR(80) NOT NULL,
     description TEXT,
     address_text VARCHAR(255),
@@ -38,40 +50,63 @@ CREATE TABLE IF NOT EXISTS requests (
     lng NUMERIC(9,6) NOT NULL,
     budget_estimate NUMERIC(12, 2),
     status VARCHAR(20) DEFAULT 'open',
-    created_at TIMESTAMP DEFAULT NOW(),
+    created_at TIMESTAMP DEFAULT NOW()
 );
 
+ALTER TABLE requests ADD COLUMN IF NOT EXISTS budget_estimate NUMERIC(12, 2);
+ALTER TABLE requests ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'open';
+ALTER TABLE requests ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT NOW();
 
 CREATE TABLE IF NOT EXISTS place_cache (
 
     id SERIAL PRIMARY KEY,
-    place_id VARCHAR(150) UNIQUE NOT NULL,
+    place_id VARCHAR(150) UNIQUE,
     formatted_address VARCHAR(255),
     lat NUMERIC(9,6),
     lng NUMERIC(9,6),
+    search_query VARCHAR(255),
+    results JSONB,
     last_fetched_at TIMESTAMP DEFAULT NOW()
 );
+
+ALTER TABLE place_cache ADD COLUMN IF NOT EXISTS formatted_address VARCHAR(255);
+ALTER TABLE place_cache ADD COLUMN IF NOT EXISTS lat NUMERIC(9,6);
+ALTER TABLE place_cache ADD COLUMN IF NOT EXISTS lng NUMERIC(9,6);
+ALTER TABLE place_cache ADD COLUMN IF NOT EXISTS last_fetched_at TIMESTAMP DEFAULT NOW();
+ALTER TABLE place_cache ALTER COLUMN place_id DROP NOT NULL;
+ALTER TABLE place_cache ADD COLUMN IF NOT EXISTS search_query VARCHAR(255);
+ALTER TABLE place_cache ADD COLUMN IF NOT EXISTS results JSONB;
+CREATE UNIQUE INDEX IF NOT EXISTS place_cache_search_query_key
+    ON place_cache(search_query);
 
 
 CREATE TABLE IF NOT EXISTS route_cache (
     id SERIAL PRIMARY KEY,
     origin_lat NUMERIC(9,6) NOT NULL,
     origin_lng NUMERIC(9,6) NOT NULL,
-    destination_lat NUMERIC(9,6) NOT NULL,
-    destination_lng NUMERIC(9,6) NOT NULL,
-    distance_meters INT,
-    duration_seconds INT,
+    dest_lat NUMERIC(9,6) NOT NULL,
+    dest_lng NUMERIC(9,6) NOT NULL,
+    distance_m INT,
+    duration_s INT,
     geometry JSONB,
     fetched_at TIMESTAMP DEFAULT NOW()
 );
 
+ALTER TABLE route_cache ADD COLUMN IF NOT EXISTS distance_m INT;
+ALTER TABLE route_cache ADD COLUMN IF NOT EXISTS duration_s INT;
+ALTER TABLE route_cache ADD COLUMN IF NOT EXISTS geometry JSONB;
+ALTER TABLE route_cache ADD COLUMN IF NOT EXISTS fetched_at TIMESTAMP DEFAULT NOW();
+
 CREATE TABLE IF NOT EXISTS favorites (
     id SERIAL PRIMARY KEY,
-    client_id INT NOT NULL,
+    client_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     professional_id INT NOT NULL REFERENCES professionals(id) ON DELETE CASCADE,
+    saved_at TIMESTAMP DEFAULT NOW(),
     UNIQUE(client_id, professional_id)
 
 );
+
+ALTER TABLE favorites ADD COLUMN IF NOT EXISTS saved_at TIMESTAMP DEFAULT NOW();
 
 CREATE TABLE IF NOT EXISTS notifications (
 
@@ -83,6 +118,23 @@ CREATE TABLE IF NOT EXISTS notifications (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
+CREATE INDEX IF NOT EXISTS notifications_user_unread_idx
+    ON notifications(user_id, is_read);
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM pg_constraint
+        WHERE conname = 'users_professional_id_fkey'
+          AND conrelid = 'users'::regclass
+    ) THEN
+        ALTER TABLE users
+            ADD CONSTRAINT users_professional_id_fkey
+            FOREIGN KEY (professional_id) REFERENCES professionals(id) ON DELETE SET NULL;
+    END IF;
+END;
+$$;
 
 ALTER TABLE users ADD COLUMN IF NOT EXISTS photo_url VARCHAR(255);
 
