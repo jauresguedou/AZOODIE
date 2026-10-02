@@ -240,6 +240,40 @@ body {
   color:var(--teal);
 }
 
+.nav-links .nav-notifications {
+  position: relative;
+  display: inline-grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 50%;
+}
+
+.nav-notifications svg {
+  width: 21px;
+  height: 21px;
+}
+
+.nav-links .nav-notifications:hover {
+  background: var(--teal-light);
+}
+
+.nav-notification-dot {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 9px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #e53935;
+}
+
+.nav-links .nav-notifications:focus-visible {
+  outline: 3px solid rgba(15, 110, 110, 0.25);
+  outline-offset: 2px;
+}
+
 .nav-user {
 
   color: var(--teal);
