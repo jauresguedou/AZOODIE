@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const toggle = document.getElementById('nav-toggle');
-    const links = document.getElementById('nav-links');
+    const links = document.querySelector('.nav-links');
 
     if(!toggle || !links) return;
 

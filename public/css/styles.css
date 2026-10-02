@@ -307,7 +307,8 @@ body {
     padding: 16px 24px;
     gap: 14px;
     z-index: 20;
-
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
   }
   .nav-links.open {
     display: flex;
