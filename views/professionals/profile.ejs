@@ -1,27 +1,122 @@
-<div class="form-container">
-         <h1><%= professional.name %></h1>
-         <p><%= professional.trade_category %> <% if(professional.verified) { %>. <span style="color:var(--teal); font-weight:600;" >Vérifié ✓</span><% } %></p>
-        
-        <div class="result-card">
-            <div>Rayon de service</div>
-            <div class="distance-chip"><%= professional.service_radius_km %> km </div>
+<%
+    const profilePhoto = Array.isArray(professional.photo_urls) && professional.photo_urls.length > 0
+        ? professional.photo_urls[professional.photo_urls.length - 1]
+        : null;
+    const rating = Number(professional.rating_avg || 0);
+    const reviewCount = Number(professional.review_count || 0);
+    const isOwner = Number(session.professionalId) === Number(professional.id);
+%>
+<div class="professional-profile-page">
+    <section class="professional-profile-card" aria-labelledby="professional-profile-name">
+        <div class="professional-profile-cover" aria-hidden="true">
+            <span>AZÔÔDIÉ · PROFESSIONNELS</span>
         </div>
-   
 
-        <div class="result-card">
-            <div>Note</div>
-            <div class="distance-chip"><%= professional.rating_avg %> (<%= professional.review_count %> avis)</div>
+        <div class="professional-profile-identity">
+            <div class="professional-profile-avatar">
+                <% if (profilePhoto) { %>
+                    <img src="<%= profilePhoto %>" alt="Photo de <%= professional.name %>">
+                <% } else { %>
+                    <span aria-hidden="true"><%= professional.name.trim().charAt(0).toLocaleUpperCase("fr-FR") %></span>
+                <% } %>
+            </div>
+
+            <div class="professional-profile-main">
+                <div class="professional-profile-heading">
+                    <div>
+                        <p class="professional-profile-eyebrow">Professionnel du bâtiment</p>
+                        <h1 id="professional-profile-name"><%= professional.name %></h1>
+                        <p class="professional-profile-trade"><%= professional.trade_category %></p>
+                        <div class="professional-profile-badges">
+                            <% if (professional.verified) { %>
+                                <span class="professional-profile-badge professional-profile-verified">
+                                    <span aria-hidden="true">✓</span> Profil vérifié
+                                </span>
+                            <% } %>
+                            <span class="professional-profile-badge <%= professional.availability_status === 'available' ? 'professional-profile-available' : 'professional-profile-busy' %>">
+                                <span aria-hidden="true"></span>
+                                <%= professional.availability_status === "available" ? "Disponible" : "Occupé" %>
+                            </span>
+                        </div>
+                    </div>
+
+                    <% if (isOwner) { %>
+                        <a class="professional-profile-edit" href="/professionals/<%= professional.id %>/edit">Modifier le profil</a>
+                    <% } %>
+                </div>
+
+                <div class="professional-profile-actions">
+                    <a href="/requests/new/<%= professional.id %>" class="professional-profile-contact">Contacter</a>
+                    <% if (session.userId) { %>
+                        <form action="/favorites/<%= professional.id %>" method="POST">
+                            <input type="hidden" name="action" value="<%= favorited ? 'remove' : 'add' %>">
+                            <button type="submit" class="professional-profile-save">
+                                <%= favorited ? "★ Retirer des favoris" : "☆ Ajouter aux favoris" %>
+                            </button>
+                        </form>
+                    <% } %>
+                </div>
+            </div>
         </div>
-        <a href="/requests/new/<%= professional.id %>" class="btn-primary" style="display:inline-block; text-decoration:none; text-align:center; margin-top:16px"> Contacter </a>
-        <a href="/professionals" class="btn-primary" style="display:inline-block; text-decoration:none; text-align:center; margin-top:16px;">Retour à la liste</a>
-       <% if(session.professionalId === professional.id) {%>
-          <a href="/professionals/<%= professional.id%>/edit" class="btn-primary" style="display:inline-block; text-decoration:none; text-align:center; background:var(--dark); margin-top:16px;">Modifier</a> 
-       <%  } %>  
-        <form action="/favorites/<%= professional.id %>" method="POST" style="margin-top:12px;">
-            <input type="hidden" name="action" value="<%= favorited ? 'remove' : 'add' %>">
-            <button type="submit" class="btn-primary" style="background: <%= favorited ? '#C0392B' : 'var(--orange)' %>;">
-                <%= favorited ? '★ Retirer des favoris' : '☆ Ajouter aux favoris' %>
-            </button>
-        </form>
+    </section>
 
-   </div>
+    <div class="professional-profile-columns">
+        <div class="professional-profile-content">
+            <section class="professional-profile-section">
+                <p class="professional-profile-eyebrow">À propos</p>
+                <h2>Présentation</h2>
+                <p class="professional-profile-intro">
+                    <%= professional.name %> propose des services en <strong><%= professional.trade_category %></strong>.
+                    <% if (professional.availability_status === "available") { %>
+                        Ce professionnel est actuellement disponible pour de nouvelles demandes.
+                    <% } else { %>
+                        Ce professionnel est actuellement occupé.
+                    <% } %>
+                </p>
+            </section>
+
+            <section class="professional-profile-section professional-profile-rating-section">
+                <p class="professional-profile-eyebrow">Avis clients</p>
+                <h2>Évaluations</h2>
+                <% if (reviewCount > 0) { %>
+                    <div class="professional-profile-rating">
+                        <span class="professional-profile-rating-number"><%= rating.toFixed(1) %></span>
+                        <div>
+                            <span class="professional-profile-stars" aria-label="Note de <%= rating.toFixed(1) %> sur 5">
+                                <% for (let star = 1; star <= 5; star += 1) { %>
+                                    <span aria-hidden="true"><%= rating >= star ? "★" : "☆" %></span>
+                                <% } %>
+                            </span>
+                            <p>Basé sur <%= reviewCount %> avis</p>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <p class="professional-profile-muted">Aucun avis pour le moment.</p>
+                <% } %>
+            </section>
+        </div>
+
+        <aside class="professional-profile-sidebar" aria-label="Informations sur le professionnel">
+            <section class="professional-profile-section professional-profile-facts">
+                <p class="professional-profile-eyebrow">Informations</p>
+                <h2>Services</h2>
+                <div class="professional-profile-fact">
+                    <span class="professional-profile-fact-icon" aria-hidden="true">⌖</span>
+                    <div>
+                        <strong>Zone d’intervention</strong>
+                        <span>Dans un rayon de <%= professional.service_radius_km %> km</span>
+                    </div>
+                </div>
+                <div class="professional-profile-fact">
+                    <span class="professional-profile-fact-icon" aria-hidden="true">✦</span>
+                    <div>
+                        <strong>Métier</strong>
+                        <span><%= professional.trade_category %></span>
+                    </div>
+                </div>
+            </section>
+
+            <a href="/professionals" class="professional-profile-back">← Retour aux professionnels</a>
+        </aside>
+    </div>
+</div>
