@@ -142,11 +142,12 @@ async function showProfile(req,res) {
 }
 
 function validatePortfolioCaption(req, res, next) {
-    const caption = typeof req.body.caption === "string" ? req.body.caption.trim() : "";
+    const body = req.body || {};
+    const caption = typeof body.caption === "string" ? body.caption.trim() : "";
     if (caption.length > 500) {
         return res.status(400).send("La légende ne peut pas dépasser 500 caractères.");
     }
-    req.body.caption = caption;
+    req.body = { ...body, caption };
     next();
 }
 
@@ -156,7 +157,7 @@ async function createPortfolioPostHandler(req, res) {
     }
 
     await createPortfolioPost(req.params.id, {
-        caption: req.body.caption || "",
+        caption: (req.body && req.body.caption) || "",
         mediaUrl: req.file.secure_url,
         mediaType: req.file.mimetype.startsWith("video/") ? "video" : "image",
     });

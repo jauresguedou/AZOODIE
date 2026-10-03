@@ -16,7 +16,7 @@ router.post("/:id/edit", requireLogin, requireOwnership, upload.single("photo"),
 router.post("/:id/delete", requireLogin, requireOwnership,deleteProfessionalHandler);
 router.get("/leads", requireLogin, showJobLeads);
 router.get("/notifications", requireLogin, showNotifications);
-router.post("/:id/portfolio", requireLogin, requireOwnership, validatePortfolioCaption, portfolioUpload.single("media"), createPortfolioPostHandler);
+router.post("/:id/portfolio", requireLogin, requireOwnership, portfolioUpload.single("media"), validatePortfolioCaption, createPortfolioPostHandler);
 router.post("/:id/portfolio/:postId/delete", requireLogin, requireOwnership, deletePortfolioPostHandler);
 router.get("/:id", showProfile);
 router.get("/", listProfessionals);
