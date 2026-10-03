@@ -1834,6 +1834,178 @@ body {
   gap: 16px;
 }
 
+.professional-profile-feed {
+  padding: 0;
+}
+
+.professional-profile-feed-heading {
+  padding: 23px 26px 17px;
+  border-bottom: 1px solid #e8edf0;
+}
+
+.professional-profile-composer {
+  display: grid;
+  gap: 12px;
+  padding: 18px 26px;
+  border-bottom: 1px solid #e8edf0;
+}
+
+.professional-profile-composer > label {
+  color: var(--dark);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.professional-profile-composer textarea {
+  width: 100%;
+  min-height: 82px;
+  resize: vertical;
+  padding: 12px 14px;
+  border: 1px solid #d8e0e4;
+  border-radius: 12px;
+  color: var(--dark);
+  background: #f7f9fa;
+  font: inherit;
+  font-size: 0.9rem;
+}
+
+.professional-profile-composer textarea:focus {
+  border-color: var(--teal);
+  outline: 2px solid rgba(15, 110, 110, 0.14);
+}
+
+.professional-profile-composer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.professional-profile-media-picker {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  gap: 7px;
+  color: var(--teal);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.professional-profile-media-picker > span {
+  font-size: 1.2rem;
+}
+
+.professional-profile-composer input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.professional-profile-media-picker:focus-within,
+.professional-profile-composer input[type="file"]:focus-visible + .professional-profile-contact {
+  outline: 3px solid rgba(15, 110, 110, 0.25);
+  outline-offset: 3px;
+}
+
+.professional-profile-upload-hint {
+  margin: -5px 0 0;
+  color: #718096;
+  font-size: 0.75rem;
+}
+
+.professional-profile-posts {
+  display: grid;
+  gap: 13px;
+  padding: 16px;
+  background: #f4f6f8;
+}
+
+.professional-profile-post {
+  overflow: hidden;
+  border: 1px solid rgba(31, 41, 55, 0.08);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.professional-profile-post-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 17px 10px;
+}
+
+.professional-profile-post-avatar {
+  display: grid;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--teal);
+  font-weight: 700;
+}
+
+.professional-profile-post-author {
+  display: grid;
+  flex: 1;
+  gap: 3px;
+  color: var(--dark);
+  font-size: 0.85rem;
+}
+
+.professional-profile-post-author time {
+  color: #718096;
+  font-size: 0.74rem;
+  font-weight: 400;
+}
+
+.professional-profile-post-header form {
+  margin: 0;
+}
+
+.professional-profile-post-delete {
+  padding: 6px 9px;
+  border: 0;
+  border-radius: 7px;
+  color: #64748b;
+  background: transparent;
+  font: inherit;
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+
+.professional-profile-post-delete:hover {
+  color: #a83232;
+  background: #fff1f1;
+}
+
+.professional-profile-post-caption {
+  margin: 3px 17px 14px;
+  color: #334155;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.professional-profile-post-media {
+  display: block;
+  width: 100%;
+  max-height: 640px;
+  object-fit: contain;
+  background: #101820;
+}
+
+.professional-profile-empty-portfolio {
+  margin: 0;
+  padding: 21px 26px;
+}
+
 .professional-profile-section {
   padding: 24px 26px;
 }
@@ -1997,5 +2169,32 @@ body {
 
   .professional-profile-section {
     padding: 21px 19px;
+  }
+
+  .professional-profile-feed {
+    padding: 0;
+  }
+
+  .professional-profile-feed-heading,
+  .professional-profile-composer {
+    padding-right: 19px;
+    padding-left: 19px;
+  }
+
+  .professional-profile-composer-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .professional-profile-composer-actions .professional-profile-contact {
+    width: 100%;
+  }
+
+  .professional-profile-posts {
+    padding: 10px;
+  }
+
+  .professional-profile-empty-portfolio {
+    padding: 18px 19px;
   }
 }

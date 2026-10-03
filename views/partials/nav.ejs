@@ -8,8 +8,10 @@
     </button>
 
     <div class="nav-links">
-        <a href="/search?lat=6.3703&lng=2.3912">Rechercher</a>
-        <a href="/professionals">Professionnels</a>
+        <% if (session.userRole !== 'professional') { %>
+            <a href="/search?lat=6.3703&lng=2.3912">Rechercher</a>
+            <a href="/professionals">Professionnels</a>
+        <% } %>
 
         <% if (session.userId) { %>
 

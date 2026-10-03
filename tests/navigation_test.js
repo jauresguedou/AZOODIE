@@ -67,4 +67,25 @@ describe("professional notifications navigation", () => {
         expect(html).toContain('href="/profile">Mon profil</a>');
         expect(html).not.toContain('href="/professionals/add">Mon profil</a>');
     });
+
+    test("removes discovery links from the professional navigation", async () => {
+        const html = await renderNavigation(0);
+
+        expect(html).not.toContain(">Rechercher</a>");
+        expect(html).not.toContain(">Professionnels</a>");
+    });
+
+    test("keeps discovery links in the client navigation", async () => {
+        const html = await ejs.renderFile(navigationTemplate, {
+            session: {
+                userId: 7,
+                userRole: "client",
+                professionalId: null,
+            },
+            unreadCount: 0,
+        });
+
+        expect(html).toContain(">Rechercher</a>");
+        expect(html).toContain(">Professionnels</a>");
+    });
 });

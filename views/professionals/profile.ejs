@@ -54,6 +54,70 @@
 
     <div class="professional-profile-columns">
         <div class="professional-profile-content">
+            <section class="professional-profile-section professional-profile-feed" aria-labelledby="professional-profile-portfolio-title">
+                <div class="professional-profile-feed-heading">
+                    <div>
+                        <p class="professional-profile-eyebrow">Réalisations</p>
+                        <h2 id="professional-profile-portfolio-title">Portfolio</h2>
+                    </div>
+                </div>
+
+                <% if (isOwner) { %>
+                    <form class="professional-profile-composer" action="/professionals/<%= professional.id %>/portfolio" method="POST" enctype="multipart/form-data">
+                        <label for="portfolio-caption">Partagez une réalisation</label>
+                        <textarea id="portfolio-caption" name="caption" maxlength="500" placeholder="Décrivez votre projet, les matériaux utilisés ou le résultat obtenu..." rows="3"></textarea>
+                        <div class="professional-profile-composer-actions">
+                            <label class="professional-profile-media-picker" for="portfolio-media">
+                                <span aria-hidden="true">＋</span> Ajouter une photo ou une vidéo
+                            </label>
+                            <input id="portfolio-media" type="file" name="media" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" required>
+                            <button type="submit" class="professional-profile-contact">Publier</button>
+                        </div>
+                        <p class="professional-profile-upload-hint">Images JPEG, PNG ou WebP, vidéos courtes MP4, WebM ou MOV (40 Mo max.).</p>
+                    </form>
+                <% } %>
+
+                <% if (typeof portfolioPosts !== "undefined" && portfolioPosts.length > 0) { %>
+                    <div class="professional-profile-posts">
+                        <% portfolioPosts.forEach((post) => { %>
+                            <article class="professional-profile-post">
+                                <header class="professional-profile-post-header">
+                                    <div class="professional-profile-post-avatar" aria-hidden="true"><%= professional.name.trim().charAt(0).toLocaleUpperCase("fr-FR") %></div>
+                                    <div class="professional-profile-post-author">
+                                        <strong><%= professional.name %></strong>
+                                        <time datetime="<%= new Date(post.created_at).toISOString() %>"><%= new Date(post.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) %></time>
+                                    </div>
+                                    <% if (isOwner) { %>
+                                        <form action="/professionals/<%= professional.id %>/portfolio/<%= post.id %>/delete" method="POST">
+                                            <button type="submit" class="professional-profile-post-delete" aria-label="Supprimer cette publication">Supprimer</button>
+                                        </form>
+                                    <% } %>
+                                </header>
+                                <% if (post.caption) { %>
+                                    <p class="professional-profile-post-caption"><%= post.caption %></p>
+                                <% } %>
+                                <% if (post.media_type === "video") { %>
+                                    <video class="professional-profile-post-media" controls playsinline preload="metadata">
+                                        <source src="<%= post.media_url %>">
+                                        Votre navigateur ne prend pas en charge la lecture vidéo.
+                                    </video>
+                                <% } else { %>
+                                    <img class="professional-profile-post-media" src="<%= post.media_url %>" alt="Réalisation de <%= professional.name %>" loading="lazy">
+                                <% } %>
+                            </article>
+                        <% }); %>
+                    </div>
+                <% } else { %>
+                    <p class="professional-profile-muted professional-profile-empty-portfolio">
+                        <% if (isOwner) { %>
+                            Vos réalisations apparaîtront ici. Publiez votre premier projet pour présenter votre savoir-faire.
+                        <% } else { %>
+                            Aucune réalisation publiée pour le moment.
+                        <% } %>
+                    </p>
+                <% } %>
+            </section>
+
             <section class="professional-profile-section">
                 <p class="professional-profile-eyebrow">À propos</p>
                 <h2>Présentation</h2>

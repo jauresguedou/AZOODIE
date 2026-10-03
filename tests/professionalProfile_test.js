@@ -66,4 +66,45 @@ describe("professional profile template", () => {
         expect(html).not.toContain('action="/favorites/21"');
         expect(html).toContain('href="/requests/new/21"');
     });
+
+    test("lets the profile owner publish work and manage their portfolio posts", async () => {
+        const html = await ejs.renderFile(profileTemplate, {
+            professional,
+            portfolioPosts: [{
+                id: 33,
+                caption: "Cuisine rénovée avec des finitions en bois massif.",
+                media_url: "https://images.example.test/kitchen.jpg",
+                media_type: "image",
+                created_at: new Date("2026-06-15T12:00:00Z"),
+            }],
+            session: { userId: 4, professionalId: "21" },
+        });
+
+        expect(html).toContain('action="/professionals/21/portfolio"');
+        expect(html).toContain('name="media"');
+        expect(html).toContain('accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime"');
+        expect(html).toContain("Cuisine rénovée avec des finitions en bois massif.");
+        expect(html).toContain('action="/professionals/21/portfolio/33/delete"');
+        expect(html).toContain('src="https://images.example.test/kitchen.jpg"');
+    });
+
+    test("renders published videos publicly without exposing owner controls", async () => {
+        const html = await ejs.renderFile(profileTemplate, {
+            professional,
+            portfolioPosts: [{
+                id: 34,
+                caption: "Avant et après.",
+                media_url: "https://videos.example.test/renovation.mp4",
+                media_type: "video",
+                created_at: new Date("2026-06-15T12:00:00Z"),
+            }],
+            session: {},
+        });
+
+        expect(html).toContain("<video");
+        expect(html).toContain('src="https://videos.example.test/renovation.mp4"');
+        expect(html).toContain("Avant et après.");
+        expect(html).not.toContain('action="/professionals/21/portfolio"');
+        expect(html).not.toContain('action="/professionals/21/portfolio/34/delete"');
+    });
 });

@@ -1,4 +1,4 @@
-const {getAllProfessionals, createProfessional, getNearbyProfessionals, getProfessionalById, updateProfessional, deleteProfessional, addPhotoToProfessional} = require("../models/professional-model");
+const {getAllProfessionals, createProfessional, getNearbyProfessionals, getProfessionalById, updateProfessional, deleteProfessional, addPhotoToProfessional, getPortfolioPosts, createPortfolioPost, deletePortfolioPost} = require("../models/professional-model");
 const { getNearbyRequestsForProfessional } = require("../models/request-model");
 const { createUser, findUserByEmail } = require("../models/user-model");
 const pool = require("../config/database");
@@ -133,10 +133,42 @@ async function showProfile(req,res) {
     if(!professional) {
         return res.status(404).send("Professionnel introuvable.");
     }
+    const portfolioPosts = await getPortfolioPosts(professional.id);
     res.render("professionals/profile", {
         title: `${professional.name} — AZÔÔDIÉ`,
         professional,
+        portfolioPosts,
     });
+}
+
+function validatePortfolioCaption(req, res, next) {
+    const caption = typeof req.body.caption === "string" ? req.body.caption.trim() : "";
+    if (caption.length > 500) {
+        return res.status(400).send("La légende ne peut pas dépasser 500 caractères.");
+    }
+    req.body.caption = caption;
+    next();
+}
+
+async function createPortfolioPostHandler(req, res) {
+    if (!req.file) {
+        return res.status(400).send("Ajoutez une photo ou une vidéo à votre publication.");
+    }
+
+    await createPortfolioPost(req.params.id, {
+        caption: req.body.caption || "",
+        mediaUrl: req.file.secure_url,
+        mediaType: req.file.mimetype.startsWith("video/") ? "video" : "image",
+    });
+    res.redirect(`/professionals/${req.params.id}`);
+}
+
+async function deletePortfolioPostHandler(req, res) {
+    const deletedCount = await deletePortfolioPost(req.params.id, req.params.postId);
+    if (deletedCount === 0) {
+        return res.status(404).send("Publication introuvable.");
+    }
+    res.redirect(`/professionals/${req.params.id}`);
 }
 
 async function showEditForm(req, res) {
@@ -195,6 +227,9 @@ module.exports = {
     showDashboard,
     searchNearby,
     showProfile,
+    validatePortfolioCaption,
+    createPortfolioPostHandler,
+    deletePortfolioPostHandler,
     showEditForm,
     editProfessional,
     deleteProfessionalHandler,

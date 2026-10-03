@@ -135,6 +135,37 @@ async function addPhotoToProfessional(id, photoUrl) {
     return result.rows[0];
 }
 
+async function getPortfolioPosts(professionalId) {
+    const result = await pool.query(
+        `SELECT id, professional_id, caption, media_url, media_type, created_at
+         FROM professional_portfolio_posts
+         WHERE professional_id = $1
+         ORDER BY created_at DESC, id DESC`,
+        [professionalId]
+    );
+    return result.rows;
+}
+
+async function createPortfolioPost(professionalId, post) {
+    const result = await pool.query(
+        `INSERT INTO professional_portfolio_posts
+            (professional_id, caption, media_url, media_type)
+         VALUES ($1, $2, $3, $4)
+         RETURNING id, professional_id, caption, media_url, media_type, created_at`,
+        [professionalId, post.caption, post.mediaUrl, post.mediaType]
+    );
+    return result.rows[0];
+}
+
+async function deletePortfolioPost(professionalId, postId) {
+    const result = await pool.query(
+        `DELETE FROM professional_portfolio_posts
+         WHERE professional_id = $1 AND id = $2`,
+        [professionalId, postId]
+    );
+    return result.rowCount;
+}
+
 async function getUsersToNotifyForRequest(lat, lng, database = pool) {
     const result = await database.query(
         `SELECT u.id AS user_id, p.name AS professional_name FROM  (
@@ -166,5 +197,8 @@ module.exports = {
     updateProfessional,
     deleteProfessional,
     addPhotoToProfessional,
+    getPortfolioPosts,
+    createPortfolioPost,
+    deletePortfolioPost,
     getUsersToNotifyForRequest
 };

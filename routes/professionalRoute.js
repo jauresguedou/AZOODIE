@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { listProfessionals, addProfessional, showAddForm, showDashboard, showProfile, showEditForm, editProfessional, deleteProfessionalHandler } = require("../controllers/professionalController");
+const { listProfessionals, addProfessional, showAddForm, showDashboard, showProfile, showEditForm, editProfessional, deleteProfessionalHandler, validatePortfolioCaption, createPortfolioPostHandler, deletePortfolioPostHandler } = require("../controllers/professionalController");
 const { professionalValidationRules, checkValidation } = require("../middleware/validation");
 const { requireLogin, requireProfessionalRole, requireOwnership} = require("../middleware/auth");
 const { showJobLeads} = require("../controllers/requestController");
 const { showNotifications } = require("../controllers/notificationController");
 const upload = require("../config/cloudinary");
+const portfolioUpload = require("../config/portfolioUpload");
 
 
 router.get("/add", requireLogin, requireProfessionalRole, showAddForm);
@@ -15,6 +16,8 @@ router.post("/:id/edit", requireLogin, requireOwnership, upload.single("photo"),
 router.post("/:id/delete", requireLogin, requireOwnership,deleteProfessionalHandler);
 router.get("/leads", requireLogin, showJobLeads);
 router.get("/notifications", requireLogin, showNotifications);
+router.post("/:id/portfolio", requireLogin, requireOwnership, validatePortfolioCaption, portfolioUpload.single("media"), createPortfolioPostHandler);
+router.post("/:id/portfolio/:postId/delete", requireLogin, requireOwnership, deletePortfolioPostHandler);
 router.get("/:id", showProfile);
 router.get("/", listProfessionals);
 router.post("/", requireLogin, requireProfessionalRole, professionalValidationRules(), checkValidation, addProfessional);
