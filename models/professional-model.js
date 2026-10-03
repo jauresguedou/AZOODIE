@@ -10,8 +10,8 @@ async function createProfessional(data, database = pool) {
     const result = await database.query(
         `
         INSERT INTO professionals
-        (name, trade_category, service_radius_km, base_lat, base_lng, verified, availability_status, photo_urls)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        (name, trade_category, service_radius_km, base_lat, base_lng, address_text, verified, availability_status, photo_urls)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
        RETURNING *`,
 
        [
@@ -20,6 +20,7 @@ async function createProfessional(data, database = pool) {
         data.service_radius_km,
         data.base_lat,
         data.base_lng,
+        data.address_text,
         data.verified,
         data.availability_status,
         data.photo_urls,
@@ -108,11 +109,11 @@ async function updateProfessional(id, data) {
 
      `UPDATE professionals
       SET name = $1, trade_category = $2, service_radius_km = $3,
-          base_lat = $4, base_lng = $5, availability_status = $6
+          base_lat = $4, base_lng = $5, address_text = $6, availability_status = $7
 
-      WHERE id = $7
+      WHERE id = $8
       RETURNING *`,
-      [data.name, data.trade_category, data.service_radius_km, data.base_lat, data.base_lng, data.availability_status, id]
+      [data.name, data.trade_category, data.service_radius_km, data.base_lat, data.base_lng, data.address_text, data.availability_status, id]
     );
 
     return result.rows[0];

@@ -1041,6 +1041,30 @@ body {
   box-shadow: 0 8px 20px rgba(31, 41, 55, 0.12);
 }
 
+.address-autocomplete-option {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--gray-light);
+  color: var(--dark);
+  background: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.address-autocomplete-option:last-child {
+  border-bottom: 0;
+}
+
+.address-autocomplete-option:hover,
+.address-autocomplete-option:focus-visible {
+  outline: none;
+  background: var(--teal-light);
+}
+
+.nearby-input-wrap #address_input {
+  padding-right: 14px;
+  padding-left: 14px;
+}
+
 .nearby-filter-panel {
   margin-top: 16px;
   padding: 18px 22px;

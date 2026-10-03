@@ -16,6 +16,8 @@ async function initializeDatabase(database = pool) {
         CREATE INDEX IF NOT EXISTS professional_portfolio_posts_feed_idx
         ON professional_portfolio_posts(professional_id, created_at DESC)
     `);
+
+    await database.query("ALTER TABLE professionals ADD COLUMN IF NOT EXISTS address_text VARCHAR(255)");
 }
 
 module.exports = initializeDatabase;

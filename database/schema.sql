@@ -21,6 +21,7 @@ ALTER TABLE professionals ADD COLUMN IF NOT EXISTS verified BOOLEAN DEFAULT FALS
 ALTER TABLE professionals ADD COLUMN IF NOT EXISTS availability_status VARCHAR(20) DEFAULT 'available';
 ALTER TABLE professionals ADD COLUMN IF NOT EXISTS photo_urls TEXT[];
 ALTER TABLE professionals ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT NOW();
+ALTER TABLE professionals ADD COLUMN IF NOT EXISTS address_text VARCHAR(255);
 
 CREATE TABLE IF NOT EXISTS professional_portfolio_posts (
     id SERIAL PRIMARY KEY,

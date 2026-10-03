@@ -20,22 +20,15 @@
 
 
             </div>
-            <div class="form-group">
-
-               <label for="address_text">Lieu du chantier</label>
-               <input type="text" id="address_text" name="address_text" value="<%= submittedValues.address_text ?? '' %>" required>
-
-
-            </div>
-            <div class="form-group"> 
-                <label for="lat">Latitude</label>
-                <input type="text" id="lat" name="lat" value="<%= submittedValues.lat ?? '' %>" required>
-            </div>
-
-            <div class="form-group">
-                 <label for="lng">Longitude</label>
-                 <input type="text" id="lng" name="lng" value="<%= submittedValues.lng ?? '' %>" required>
-
+            <div class="form-group nearby-location-field">
+                <label for="address_input">Lieu du chantier</label>
+                <div class="nearby-input-wrap">
+                    <input type="text" id="address_input" value="<%= submittedValues.address_text ?? '' %>" placeholder="Ex. : Cotonou, Fidjrossè..." autocomplete="off" required>
+                    <div id="address_suggestions" class="nearby-suggestions"></div>
+                </div>
+                <input type="hidden" id="address_text" name="address_text" value="<%= submittedValues.address_text ?? '' %>">
+                <input type="hidden" id="lat" name="lat" value="<%= submittedValues.lat ?? '' %>">
+                <input type="hidden" id="lng" name="lng" value="<%= submittedValues.lng ?? '' %>">
             </div>
 
             <div class="form-group">
@@ -49,3 +42,13 @@
         </form>
 
     </div>
+    <script src="/js/address-autocomplete.js"></script>
+    <script>
+        initAddressAutocomplete({
+            inputId: "address_input",
+            suggestionsId: "address_suggestions",
+            latId: "lat",
+            lngId: "lng",
+            addressTextId: "address_text",
+        });
+    </script>
