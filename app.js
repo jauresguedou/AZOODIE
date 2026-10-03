@@ -68,13 +68,6 @@ app.use(async (req, res, next) => {
     next();
 });
 
-app.get("/", (req, res) => {
-    res.render("home/index", { title: "AZÔÔDIÉ Localisation", session: req.session });
-});
-
-
-
-
 app.use(routes);
 
 app.use(notFoundHandler);

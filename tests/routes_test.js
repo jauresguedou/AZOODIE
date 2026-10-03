@@ -2,6 +2,17 @@ const http = require("http");
 
 process.env.SESSION_SECRET = process.env.SESSION_SECRET || "route-test-session-secret";
 
+jest.mock("../models/announcement-model", () => ({
+    getPublishedAnnouncements: jest.fn().mockResolvedValue([]),
+    getAnnouncementComments: jest.fn().mockResolvedValue([]),
+    getClientDrafts: jest.fn().mockResolvedValue([]),
+    createAnnouncement: jest.fn(),
+    publishClientDraft: jest.fn(),
+    deleteClientDraft: jest.fn(),
+    toggleAnnouncementLike: jest.fn(),
+    addAnnouncementComment: jest.fn(),
+}));
+
 const app = require("../app");
 
 function request(server, path) {
@@ -42,7 +53,7 @@ describe("application routes", () => {
     });
 
     test.each([
-        ["/", "AZÔÔDIÉ Localisation", "Trouvez un professionnel du bâtiment"],
+        ["/", "Fil des annonces — AZÔÔDIÉ", "Les projets à découvrir"],
         ["/login", "Connexion — AZÔÔDIÉ", "Se connecter"],
         ["/register", "Inscription — AZÔÔDIÉ", "Créer un compte"],
         ["/search", "Recherche — AZÔÔDIÉ", "Des professionnels près de vous"],

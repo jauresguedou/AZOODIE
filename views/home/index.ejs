@@ -1,21 +1,206 @@
-<div class="form-container" style="text-align:center;">
-        <h1>AZÔÔDIÉ</h1>
-
-        <% if (session.userRole === 'professional' && !session.professionalId) { %>
-    <div style="background:#FCEEE1; border:2px solid var(--orange); border-radius:12px; padding:16px; margin-bottom:20px; text-align:center;">
-        <p style="margin:0 0 10px; font-weight:600; color:var(--dark);">
-            Votre compte professionnel n'a pas encore de profil publié.
-        </p>
-        <a href="/professionals/add" class="btn-primary" style="display:inline-block; text-decoration:none; width:auto; padding:12px 24px;">
-            Créer mon profil professionnel
-        </a>
-    </div>
-<% } %>
-        <p>Trouvez un professionnel du bâtiment près de chez vous ou consultez votre profil.</p>
-
-        <div style="display:flex; flex-direction:column; gap:12px; margin-top:24px;">
-            <a href="/search?lat=6.3703&lng=2.3912" class="btn-primary" style="text-decoration:none; display:block;">Rechercher un professionnel</a>
-            <a href="/professionals" class="btn-primary" style="text-decoration:none; display:block; background:var(--teal);">Voir tous les professionnels</a>
-            <a href="/professionals/add" class="btn-primary" style="text-decoration:none; display:block; background:var(--dark);">Ajouter un professionnel</a>
+<%
+    const hasProfessionalProfile = session.userRole === "professional"
+        && Boolean(session.professionalId)
+        && Number.isInteger(Number(session.professionalId));
+%>
+<div class="home-feed-page">
+    <header class="home-feed-hero">
+        <div>
+            <p class="home-feed-kicker">Le réseau des projets et des talents du bâtiment</p>
+            <h1>Des projets concrets.<br><span>Les bons professionnels.</span></h1>
+            <p>Découvrez les annonces de travaux, échangez autour des projets et faites avancer vos réalisations avec AZÔÔDIÉ.</p>
         </div>
+        <a href="/search?lat=6.3703&amp;lng=2.3912" class="home-feed-hero-link">Trouver un professionnel</a>
+    </header>
+
+    <div class="home-feed-columns">
+        <section class="home-feed-stream" id="announcements" aria-label="Fil des annonces">
+            <% if (session.userRole === "client") { %>
+                <section class="home-feed-composer-card" aria-labelledby="composer-title">
+                    <div class="home-feed-card-heading">
+                        <div class="home-feed-user-avatar" aria-hidden="true"><%= (session.userName || "C").trim().charAt(0).toLocaleUpperCase("fr-FR") %></div>
+                        <div>
+                            <p class="home-feed-kicker">Votre projet mérite le bon regard</p>
+                            <h2 id="composer-title">Publier une annonce de travaux</h2>
+                        </div>
+                    </div>
+                    <% if (errors.length > 0) { %>
+                        <div class="home-feed-errors" role="alert">
+                            <ul><% errors.forEach((error) => { %><li><%= error %></li><% }); %></ul>
+                        </div>
+                    <% } %>
+                    <form action="/announcements" method="POST" enctype="multipart/form-data" class="home-feed-composer">
+                        <label for="announcement-title">Titre du projet</label>
+                        <input id="announcement-title" name="title" maxlength="180" value="<%= formValues.title || '' %>" placeholder="Ex. : Rénover la cuisine de ma maison" required>
+                        <div class="home-feed-composer-row">
+                            <div>
+                                <label for="announcement-category">Métier recherché</label>
+                                <input id="announcement-category" name="category" maxlength="80" value="<%= formValues.category || '' %>" placeholder="Ex. : Menuisier, plombier..." required>
+                            </div>
+                            <div>
+                                <label for="announcement-address">Lieu du projet <span>(facultatif)</span></label>
+                                <input id="announcement-address" name="address_text" maxlength="255" value="<%= formValues.address_text || '' %>" placeholder="Ville ou quartier">
+                            </div>
+                        </div>
+                        <label for="announcement-description">Décrivez les travaux et le résultat attendu</label>
+                        <textarea id="announcement-description" name="description" maxlength="5000" rows="4" placeholder="Partagez le contexte, les détails importants et le type d’aide recherché..." required><%= formValues.description || '' %></textarea>
+                        <label for="announcement-media" class="home-feed-media-label">Ajouter une photo ou une courte vidéo <span>(facultatif, 40 Mo maximum)</span></label>
+                        <input id="announcement-media" name="media" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime">
+                        <div class="home-feed-composer-footer">
+                            <span>Photos JPEG, PNG, WebP · Vidéos MP4, WebM, MOV</span>
+                            <div>
+                                <button type="submit" name="action" value="draft" class="home-feed-button home-feed-button-secondary">Enregistrer le brouillon</button>
+                                <button type="submit" name="action" value="publish" class="home-feed-button">Publier</button>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+
+                <% if (drafts.length > 0) { %>
+                    <section class="home-feed-drafts" id="my-drafts" aria-labelledby="drafts-title">
+                        <div class="home-feed-section-title">
+                            <h2 id="drafts-title">Mes brouillons</h2>
+                            <span><%= drafts.length %></span>
+                        </div>
+                        <% drafts.forEach((draft) => { %>
+                            <article class="home-feed-draft">
+                                <div>
+                                    <span class="home-feed-draft-badge">Brouillon</span>
+                                    <h3><%= draft.title %></h3>
+                                    <p><%= draft.category %> · <%= draft.description %></p>
+                                </div>
+                                <div class="home-feed-draft-actions">
+                                    <form action="/announcements/<%= draft.id %>/publish" method="POST">
+                                        <button class="home-feed-button" type="submit">Publier</button>
+                                    </form>
+                                    <form action="/announcements/<%= draft.id %>/delete" method="POST">
+                                        <button class="home-feed-button home-feed-button-text" type="submit">Supprimer</button>
+                                    </form>
+                                </div>
+                            </article>
+                        <% }); %>
+                    </section>
+                <% } %>
+            <% } else if (!session.userId) { %>
+                <section class="home-feed-join-card">
+                    <div class="home-feed-user-avatar" aria-hidden="true">A</div>
+                    <div>
+                        <strong>Un projet en tête ?</strong>
+                        <p>Créez un compte client pour rédiger et publier votre annonce.</p>
+                    </div>
+                    <a href="/register">Créer un compte</a>
+                </section>
+            <% } %>
+
+            <div class="home-feed-section-title">
+                <div>
+                    <p class="home-feed-kicker">La communauté AZÔÔDIÉ</p>
+                    <h2>Les projets à découvrir</h2>
+                </div>
+                <span><%= announcements.length %></span>
+            </div>
+
+            <% announcements.forEach((announcement) => { %>
+                <article class="home-feed-post" id="announcement-<%= announcement.id %>">
+                    <header class="home-feed-post-header">
+                        <% if (announcement.author_photo) { %>
+                            <img class="home-feed-user-avatar" src="<%= announcement.author_photo %>" alt="">
+                        <% } else { %>
+                            <span class="home-feed-user-avatar <%= announcement.is_demo ? 'home-feed-brand-avatar' : '' %>" aria-hidden="true"><%= announcement.author_name.trim().charAt(0).toLocaleUpperCase("fr-FR") %></span>
+                        <% } %>
+                        <div class="home-feed-author">
+                            <strong><%= announcement.author_name %></strong>
+                            <span><%= announcement.is_demo ? "Annonce de démonstration" : "Projet de travaux" %> · <time datetime="<%= new Date(announcement.created_at).toISOString() %>"><%= new Date(announcement.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) %></time></span>
+                        </div>
+                        <span class="home-feed-project-tag"><%= announcement.category %></span>
+                    </header>
+                    <div class="home-feed-post-copy">
+                        <h3><%= announcement.title %></h3>
+                        <p><%= announcement.description %></p>
+                        <% if (announcement.address_text) { %>
+                            <span class="home-feed-location"><span aria-hidden="true">⌖</span> <%= announcement.address_text %></span>
+                        <% } %>
+                    </div>
+                    <% if (announcement.media_url) { %>
+                        <% if (announcement.media_type === "video") { %>
+                            <video class="home-feed-post-media" controls playsinline preload="metadata">
+                                <source src="<%= announcement.media_url %>">
+                                Votre navigateur ne prend pas en charge la lecture vidéo.
+                            </video>
+                        <% } else { %>
+                            <img class="home-feed-post-media" src="<%= announcement.media_url %>" alt="Illustration du projet : <%= announcement.title %>" loading="lazy">
+                        <% } %>
+                    <% } %>
+                    <div class="home-feed-post-stats">
+                        <span><span aria-hidden="true">♥</span> <%= announcement.like_count %> appréciation<%= announcement.like_count === 1 ? "" : "s" %></span>
+                        <span><%= announcement.comment_count %> commentaire<%= announcement.comment_count === 1 ? "" : "s" %></span>
+                    </div>
+                    <% if (hasProfessionalProfile) { %>
+                        <div class="home-feed-post-actions">
+                            <form action="/announcements/<%= announcement.id %>/like" method="POST">
+                                <button type="submit" class="<%= announcement.liked_by_viewer ? 'is-liked' : '' %>"><span aria-hidden="true">♥</span> <%= announcement.liked_by_viewer ? "Aimé" : "J’aime" %></button>
+                            </form>
+                            <a href="#comment-<%= announcement.id %>">Commenter</a>
+                        </div>
+                        <div class="home-feed-comments">
+                            <% announcement.comments.forEach((comment) => { %>
+                                <div class="home-feed-comment">
+                                    <strong><%= comment.author_name %></strong>
+                                    <p><%= comment.body %></p>
+                                </div>
+                            <% }); %>
+                            <form action="/announcements/<%= announcement.id %>/comments" method="POST" class="home-feed-comment-form" id="comment-<%= announcement.id %>">
+                                <label class="sr-only" for="comment-body-<%= announcement.id %>">Votre commentaire</label>
+                                <input id="comment-body-<%= announcement.id %>" name="body" maxlength="1000" placeholder="Partagez un conseil ou posez une question..." required>
+                                <button type="submit">Envoyer</button>
+                            </form>
+                        </div>
+                    <% } else if (session.userRole === "professional") { %>
+                        <p class="home-feed-interaction-note">Complétez votre profil professionnel pour aimer et commenter les projets.</p>
+                    <% } %>
+                </article>
+            <% }); %>
+        </section>
+
+        <aside class="home-feed-sidebar">
+            <% if (session.userRole === "professional" && !session.professionalId) { %>
+                <section class="home-feed-sidebar-card home-feed-profile-prompt">
+                    <span class="home-feed-sidebar-icon" aria-hidden="true">✦</span>
+                    <p class="home-feed-kicker">Professionnel du bâtiment</p>
+                    <h2>Votre expertise mérite d’être visible.</h2>
+                    <p>Créez votre profil pour présenter votre savoir-faire, découvrir les projets et échanger avec les clients.</p>
+                    <a href="/professionals/add">Créer mon profil professionnel</a>
+                </section>
+            <% } else if (hasProfessionalProfile) { %>
+                <section class="home-feed-sidebar-card">
+                    <p class="home-feed-kicker">Développez votre activité</p>
+                    <h2>Montrez ce que vous savez faire.</h2>
+                    <p>Enrichissez votre portfolio avec des photos et vidéos de vos réalisations.</p>
+                    <a href="/professionals/<%= session.professionalId %>">Voir mon profil professionnel</a>
+                </section>
+            <% } else if (session.userRole === "client") { %>
+                <section class="home-feed-sidebar-card">
+                    <p class="home-feed-kicker">À vous de jouer</p>
+                    <h2>Faites avancer votre projet.</h2>
+                    <p>Présentez clairement les travaux souhaités pour aider les bons professionnels à se manifester.</p>
+                    <a href="#composer-title">Rédiger une annonce</a>
+                </section>
+            <% } else { %>
+                <section class="home-feed-sidebar-card">
+                    <p class="home-feed-kicker">AZÔÔDIÉ</p>
+                    <h2>Le bâtiment avance ensemble.</h2>
+                    <p>Une plateforme pour rapprocher les projets des compétences locales.</p>
+                    <a href="/register">Rejoindre la communauté</a>
+                </section>
+            <% } %>
+            <section class="home-feed-sidebar-card home-feed-guidelines">
+                <p class="home-feed-kicker">Pour un bon échange</p>
+                <ul>
+                    <li>Décrivez le besoin et le résultat attendu.</li>
+                    <li>Restez courtois et constructif dans les commentaires.</li>
+                    <li>Ne publiez pas d’informations personnelles sensibles.</li>
+                </ul>
+            </section>
+        </aside>
     </div>
+</div>

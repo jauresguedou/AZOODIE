@@ -1,5 +1,6 @@
 const express = require("express");
 const adminRoute = require("./adminRoute");
+const announcementRoute = require("./announcementRoute");
 const apiRoute = require("./apiRoute");
 const authRoute = require("./authRoute");
 const favoriteRoute = require("./favoriteRoute");
@@ -10,6 +11,7 @@ const searchRoute = require("./searchRoute");
 
 const router = express.Router();
 
+router.use("/", announcementRoute);
 router.use("/professionals", professionalRoute);
 router.use("/search", searchRoute);
 router.use("/requests", requestRoute);
