@@ -118,19 +118,6 @@
                 <% } %>
             </section>
 
-            <section class="professional-profile-section">
-                <p class="professional-profile-eyebrow">À propos</p>
-                <h2>Présentation</h2>
-                <p class="professional-profile-intro">
-                    <%= professional.name %> propose des services en <strong><%= professional.trade_category %></strong>.
-                    <% if (professional.availability_status === "available") { %>
-                        Ce professionnel est actuellement disponible pour de nouvelles demandes.
-                    <% } else { %>
-                        Ce professionnel est actuellement occupé.
-                    <% } %>
-                </p>
-            </section>
-
             <section class="professional-profile-section professional-profile-rating-section">
                 <p class="professional-profile-eyebrow">Avis clients</p>
                 <h2>Évaluations</h2>
