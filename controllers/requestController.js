@@ -4,6 +4,7 @@ const { getAllOpenAnnouncements } = require("../models/request-model");
 const { notifyProfessionalsForRequest } = require("../services/controllers/matchingService");
 const pool = require("../config/database");
 const withTransaction = require("../utils/withTransaction");
+const tradeCategories = require("../config/tradeCategories");
 
 
 async function showContactForm(req, res) {
@@ -77,8 +78,82 @@ async function submitRequest(req, res) {
     res.redirect(`/professionals/${professional.id}`);
 }
 
-async function showAnnouncementFeed (req,res) {
-    const announcements = await getAllOpenAnnouncements()
-    res.render("requests/feed", { title: "Annonces — AZÔÔDIÉ", announcements });
+async function renderAnnouncementFeed(req, res, options = {}) {
+    const announcements = await getAllOpenAnnouncements();
+    res.status(options.status || 200).render("requests/feed", {
+        title: "Annonces de travaux — AZÔÔDIÉ",
+        announcements,
+        tradeCategories,
+        formValues: options.formValues || {},
+        errors: options.errors || [],
+        headContent: '<script src="/js/announcement-composer.js" defer></script>',
+    });
 }
-module.exports = { showContactForm, submitRequest, showJobLeads, showAnnouncementFeed };
+
+async function showAnnouncementFeed(req, res) {
+    return renderAnnouncementFeed(req, res);
+}
+
+async function publishAnnouncement(req, res) {
+    if (req.session.userRole !== "client") {
+        return res.status(403).send("La publication d’annonces est réservée aux clients.");
+    }
+
+    const fields = ["category", "work_title", "description", "address_text", "lat", "lng"];
+    const formValues = Object.fromEntries(fields.concat([
+        "professional_requirements",
+        "project_timeline",
+        "budget_estimate",
+    ]).map((field) => [field, typeof req.body[field] === "string" ? req.body[field].trim() : ""]));
+    const errors = [];
+    const knownTrades = tradeCategories.flatMap((group) => group.trades);
+
+    if (!knownTrades.includes(formValues.category)) errors.push("Choisissez un métier dans la liste des professionnels.");
+    if (!formValues.work_title) errors.push("Donnez un intitulé précis à votre mission.");
+    if (formValues.work_title.length > 150) errors.push("L’intitulé ne peut pas dépasser 150 caractères.");
+    if (!formValues.description) errors.push("Décrivez les travaux à réaliser.");
+    if (formValues.description.length > 5000) errors.push("La description ne peut pas dépasser 5 000 caractères.");
+    if (formValues.professional_requirements.length > 2000) errors.push("Les critères professionnels ne peuvent pas dépasser 2 000 caractères.");
+    if (formValues.project_timeline.length > 100) errors.push("Le délai ne peut pas dépasser 100 caractères.");
+    if (!formValues.address_text) errors.push("Sélectionnez le lieu des travaux dans les suggestions.");
+
+    const lat = Number(formValues.lat);
+    const lng = Number(formValues.lng);
+    if (!formValues.lat || !formValues.lng
+        || !Number.isFinite(lat) || lat < -90 || lat > 90
+        || !Number.isFinite(lng) || lng < -180 || lng > 180) {
+        errors.push("Sélectionnez une adresse valide dans les suggestions.");
+    }
+
+    let budgetEstimate = null;
+    if (formValues.budget_estimate) {
+        budgetEstimate = Number(formValues.budget_estimate);
+        if (!Number.isFinite(budgetEstimate) || budgetEstimate < 0) {
+            errors.push("Le budget doit être un montant positif.");
+        }
+    }
+
+    if (errors.length) {
+        return renderAnnouncementFeed(req, res, { status: 400, errors, formValues });
+    }
+
+    await withTransaction(pool, async (client) => {
+        await createRequest({
+            client_id: req.session.userId,
+            category: formValues.category,
+            work_title: formValues.work_title,
+            description: formValues.description,
+            professional_requirements: formValues.professional_requirements,
+            project_timeline: formValues.project_timeline,
+            address_text: formValues.address_text,
+            lat,
+            lng,
+            budget_estimate: budgetEstimate,
+        }, client);
+
+        await notifyProfessionalsForRequest({ lat, lng, category: formValues.category }, client);
+    });
+
+    return res.redirect("/requests/feed");
+}
+module.exports = { showContactForm, submitRequest, showJobLeads, showAnnouncementFeed, publishAnnouncement };

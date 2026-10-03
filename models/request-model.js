@@ -6,8 +6,9 @@ async function createRequest(data, database = pool) {
     const result = await database.query(
         `
         INSERT INTO requests
-          (client_id, category, description, address_text, lat, lng, budget_estimate)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+          (client_id, category, description, address_text, lat, lng, budget_estimate,
+           work_title, professional_requirements, project_timeline)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         RETURNING *`,
 
         [
@@ -18,6 +19,9 @@ async function createRequest(data, database = pool) {
           data.lat,
           data.lng,
           data.budget_estimate || null,
+          data.work_title || null,
+          data.professional_requirements || null,
+          data.project_timeline || null,
         ]
     );
     return result.rows[0];

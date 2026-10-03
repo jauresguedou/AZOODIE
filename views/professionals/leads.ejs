@@ -9,9 +9,16 @@
              <% leads.forEach(function(lead) { %>
                 <div class="result-card">
                     <div>
-                        <strong><%= lead.category %></strong>
+                        <strong><%= lead.work_title || lead.category %></strong>
+                        <p>Professionnel recherché : <%= lead.category %></p>
                         <br>
                         <small><%= lead.description %></small>
+                        <% if (lead.professional_requirements) { %>
+                            <p><small><strong>Critères recherchés :</strong> <%= lead.professional_requirements %></small></p>
+                        <% } %>
+                        <% if (lead.project_timeline) { %>
+                            <p><small><strong>Démarrage souhaité :</strong> <%= lead.project_timeline %></small></p>
+                        <% } %>
                         <br>
                         <small style="color:var(--gray);"><%= lead.address_text %></small>
 

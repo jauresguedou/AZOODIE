@@ -1,33 +1,149 @@
-<div class="form-container" style="margin-top:32px; max-width:700px;">
-        <h1>Annonces</h1>
-        <p style="color:var(--gray); margin-top: -8px;">Toutes les opportunités publiées par les clients</p>
+<main class="announcement-feed-page">
+    <header class="announcement-feed-intro">
+        <p class="announcement-feed-eyebrow">Le réseau des projets AZÔÔDIÉ</p>
+        <h1>Fil des annonces</h1>
+        <p>Découvrez les projets de travaux et les professionnels recherchés près de chez vous.</p>
+    </header>
 
-        <% if (announcements.length === 0) { %>
-            <p>Aucune annonce  publiée pour le moment.</p>
-         
-        <% } else { %>
-            <% announcements.forEach(function(a) { %>
+    <div class="announcement-feed-layout">
+        <section class="announcement-feed-stream" aria-label="Annonces de travaux">
+            <% if (session.userRole === "client") { %>
+                <details class="announcement-composer" open>
+                    <summary>
+                        <span class="announcement-composer-icon" aria-hidden="true">＋</span>
+                        <span>Décrivez le professionnel et les travaux que vous recherchez</span>
+                    </summary>
 
-                <div class="result-card" style="align-items:flex-start;">
-                    <img src="<%= a.client_photo || 'https://via.placeholder.com/48?text=?' %>"
-                         style="width:48px; height:48px; border-radius: 50%; object-fit:cover; margin-right:14px;">
+                    <form action="/requests/feed" method="POST" class="announcement-composer-form">
+                        <% if (errors.length > 0) { %>
+                            <div class="announcement-form-errors" role="alert">
+                                <strong>Veuillez vérifier votre annonce :</strong>
+                                <ul>
+                                    <% errors.forEach((error) => { %><li><%= error %></li><% }); %>
+                                </ul>
+                            </div>
+                        <% } %>
 
-                        <div style="flex:1;">
-                            <strong><%= a.client_name %></strong>
-                            <br>
-                            <span style="color:var(--teal); font-weight: 600;"><%= a.category %></span>
-                            <br>
-                            <small><%= a.description %></small>
-                            <br>
-                            <small style="color:var(--gray);"><%= a.address_text %></small>
-
+                        <div class="announcement-form-field">
+                            <label for="announcement-category">Quel professionnel recherchez-vous ?</label>
+                            <select id="announcement-category" name="category" required>
+                                <option value="">Choisir un métier</option>
+                                <% tradeCategories.forEach((group) => { %>
+                                    <optgroup label="<%= group.label %>">
+                                        <% group.trades.forEach((trade) => { %>
+                                            <option value="<%= trade %>" <%= formValues.category === trade ? "selected" : "" %>><%= trade %></option>
+                                        <% }); %>
+                                    </optgroup>
+                                <% }); %>
+                            </select>
                         </div>
 
+                        <div class="announcement-form-field">
+                            <label for="announcement-work-title">Quel travail doit être réalisé ?</label>
+                            <input id="announcement-work-title" type="text" name="work_title" maxlength="150" value="<%= formValues.work_title || '' %>" placeholder="Ex. Rénover la plomberie d’une cuisine" required>
+                        </div>
 
+                        <div class="announcement-form-field">
+                            <label for="announcement-description">Décrivez le projet et les travaux attendus</label>
+                            <textarea id="announcement-description" name="description" maxlength="5000" rows="5" placeholder="Précisez le contexte, les dimensions, les matériaux ou le résultat souhaité..." required><%= formValues.description || '' %></textarea>
+                        </div>
+
+                        <div class="announcement-form-field">
+                            <label for="announcement-requirements">Compétences ou critères recherchés <span>(facultatif)</span></label>
+                            <textarea id="announcement-requirements" name="professional_requirements" maxlength="2000" rows="3" placeholder="Ex. Expérience en rénovation, outils fournis, références de chantiers similaires..."><%= formValues.professional_requirements || '' %></textarea>
+                        </div>
+
+                        <div class="announcement-form-row">
+                            <div class="announcement-form-field">
+                                <label for="announcement-timeline">Quand souhaitez-vous commencer ?</label>
+                                <input id="announcement-timeline" type="text" name="project_timeline" maxlength="100" value="<%= formValues.project_timeline || '' %>" placeholder="Ex. Dès que possible, novembre 2026">
+                            </div>
+                            <div class="announcement-form-field">
+                                <label for="announcement-budget">Budget estimé <span>(facultatif)</span></label>
+                                <input id="announcement-budget" type="number" name="budget_estimate" min="0" step="100" value="<%= formValues.budget_estimate || '' %>" placeholder="Ex. 250000">
+                            </div>
+                        </div>
+
+                        <div class="announcement-form-field announcement-location-field">
+                            <label for="announcement-address">Où se dérouleront les travaux ?</label>
+                            <input id="announcement-address" type="text" name="address_text" value="<%= formValues.address_text || '' %>" autocomplete="off" aria-autocomplete="list" aria-controls="announcement-location-suggestions" placeholder="Commencez à saisir une ville ou une adresse" required>
+                            <div id="announcement-location-suggestions" class="announcement-location-suggestions" role="listbox" hidden></div>
+                            <input type="hidden" name="lat" value="<%= formValues.lat || '' %>">
+                            <input type="hidden" name="lng" value="<%= formValues.lng || '' %>">
+                            <span class="announcement-location-status" aria-live="polite"></span>
+                        </div>
+
+                        <div class="announcement-composer-footer">
+                            <p>Votre annonce sera visible par les professionnels et les autres membres.</p>
+                            <button type="submit" class="announcement-publish-button">Publier l’annonce</button>
+                        </div>
+                    </form>
+                </details>
+            <% } %>
+
+            <% if (announcements.length === 0) { %>
+                <div class="announcement-feed-empty">
+                    <span aria-hidden="true">✦</span>
+                    <h2>Le fil commence ici</h2>
+                    <p>Aucune annonce n’a été publiée pour le moment.</p>
+                    <% if (session.userRole === "client") { %>
+                        <p>Partagez les détails de votre projet pour trouver le professionnel qui vous convient.</p>
+                    <% } %>
                 </div>
-             
-            <% }) %>
+            <% } else { %>
+                <% announcements.forEach(function(a) { %>
+                    <article class="announcement-post">
+                        <header class="announcement-post-header">
+                            <% if (a.client_photo) { %>
+                                <img class="announcement-post-avatar" src="<%= a.client_photo %>" alt="">
+                            <% } else { %>
+                                <span class="announcement-post-avatar announcement-post-avatar-fallback" aria-hidden="true"><%= a.client_name.trim().charAt(0).toLocaleUpperCase("fr-FR") %></span>
+                            <% } %>
+                            <div class="announcement-post-author">
+                                <strong><%= a.client_name %></strong>
+                                <span>Membre AZÔÔDIÉ · <time datetime="<%= new Date(a.created_at).toISOString() %>"><%= new Date(a.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) %></time></span>
+                            </div>
+                            <span class="announcement-status"><%= a.status === "open" ? "Recherche active" : "Terminée" %></span>
+                        </header>
 
-        <% } %>
+                        <div class="announcement-post-content">
+                            <p class="announcement-post-eyebrow">Professionnel recherché · <%= a.category %></p>
+                            <h2><%= a.work_title || a.category %></h2>
+                            <p class="announcement-post-description"><%= a.description %></p>
 
+                            <% if (a.professional_requirements) { %>
+                                <div class="announcement-post-detail">
+                                    <strong>Compétences et critères</strong>
+                                    <p><%= a.professional_requirements %></p>
+                                </div>
+                            <% } %>
+
+                            <div class="announcement-post-meta">
+                                <span><strong>Lieu</strong><%= a.address_text %></span>
+                                <% if (a.project_timeline) { %>
+                                    <span><strong>Démarrage souhaité</strong><%= a.project_timeline %></span>
+                                <% } %>
+                                <% if (a.budget_estimate) { %>
+                                    <span><strong>Budget estimé</strong><%= Number(a.budget_estimate).toLocaleString("fr-FR") %></span>
+                                <% } %>
+                            </div>
+                        </div>
+                    </article>
+                <% }); %>
+            <% } %>
+        </section>
+
+        <aside class="announcement-feed-sidebar">
+            <section class="announcement-feed-info-card">
+                <p class="announcement-feed-eyebrow">Un brief utile</p>
+                <h2>Une annonce claire attire les bons profils</h2>
+                <ul>
+                    <li>Choisissez le métier qui correspond aux travaux.</li>
+                    <li>Décrivez le résultat attendu et les détails importants.</li>
+                    <li>Ajoutez vos critères, votre délai et votre budget si vous les connaissez.</li>
+                </ul>
+            </section>
+            <a class="announcement-feed-profile-link" href="/profile">Voir mon profil et mes annonces</a>
+        </aside>
     </div>
+</main>

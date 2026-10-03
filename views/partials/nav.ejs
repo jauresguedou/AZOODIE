@@ -27,6 +27,8 @@
 
             <% } else if (session.userRole === 'professional') { %>
                 <a href="/professionals/add" style="color:var(--orange); font-weight:700;">⚠ Compléter mon profil pro</a>
+            <% } else if (session.userRole === 'client') { %>
+                <a href="/requests/feed">Fil des annonces</a>
             <% } %>
 
             <% if (session.userRole === 'professional') { %>

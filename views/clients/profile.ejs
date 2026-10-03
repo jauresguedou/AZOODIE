@@ -72,8 +72,12 @@
                                 <%= announcement.category.trim().charAt(0).toLocaleUpperCase("fr-FR") %>
                             </div>
                             <div class="profile-announcement-content">
-                                <h3><%= announcement.category %></h3>
+                                <h3><%= announcement.work_title || announcement.category %></h3>
+                                <p>Professionnel recherché : <strong><%= announcement.category %></strong></p>
                                 <p><%= announcement.description %></p>
+                                <% if (announcement.professional_requirements) { %>
+                                    <p><strong>Critères :</strong> <%= announcement.professional_requirements %></p>
+                                <% } %>
                                 <% if (announcement.address_text) { %>
                                     <span class="profile-announcement-location"><%= announcement.address_text %></span>
                                 <% } %>
