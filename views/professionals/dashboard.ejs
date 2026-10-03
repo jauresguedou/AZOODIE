@@ -16,12 +16,8 @@
             <% recentLeads.forEach(function(lead) { %>
                 <article class="result-card">
                     <div>
-                        <strong><%= lead.work_title || lead.category %></strong>
-                        <p>Professionnel recherché : <%= lead.category %></p>
+                        <strong><%= lead.category %></strong>
                         <p><%= lead.description %></p>
-                        <% if (lead.professional_requirements) { %>
-                            <small><strong>Critères recherchés :</strong> <%= lead.professional_requirements %></small>
-                        <% } %>
                         <small><%= lead.address_text %></small>
                     </div>
                     <span class="distance-chip"><%= Number(lead.distance_km).toFixed(1) %> km</span>
