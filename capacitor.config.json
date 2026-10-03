@@ -1,5 +1,8 @@
 {
   "appId": "com.example.app",
-  "appName": "azoodie",
-  "webDir": "www"
+  "appName": "AZÔÔDIÉ",
+  "webDir": "www",
+  "server": {
+    "url": "https://azoodie.onrender.com"
+  }
 }
