@@ -14,7 +14,6 @@
   "type": "commonjs",
   "dependencies": {
     "@capacitor/android": "^8.5.2",
-    "@capacitor/cli": "^8.4.3",
     "@capacitor/core": "^8.5.2",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.10.0",
@@ -31,6 +30,7 @@
     "sib-api-v3-sdk": "^8.5.0"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.2",
     "jest": "^30.4.2",
     "nodemon": "^3.1.14"
   },

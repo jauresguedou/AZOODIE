@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">azoodie</string>
-    <string name="title_activity_main">azoodie</string>
-    <string name="package_name">com.example.app</string>
-    <string name="custom_url_scheme">com.example.app</string>
+    <string name="app_name">AZÔÔDIÉ</string>
+    <string name="title_activity_main">AZÔÔDIÉ</string>
+    <string name="package_name">com.azoodie.app</string>
+    <string name="custom_url_scheme">com.azoodie.app</string>
 </resources>
