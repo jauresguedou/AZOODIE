@@ -39,14 +39,19 @@ jobs:
 
       - name: Make Gradle executable
         run: chmod +x android/gradlew
-        
 
       - name: Build Android release
         working-directory: android
         run: ./gradlew assembleRelease
 
+      # ADD THIS STEP HERE
+      - name: Find generated APK
+        run: |
+          echo "Looking for APK files..."
+          find android -type f -name "*.apk" -print
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: AZOODIE-release-apk
-          path: android/app/build/outputs/apk/release/app-release.apk
+          path: android/app/build/outputs/apk/release/
