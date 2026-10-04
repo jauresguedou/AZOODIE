@@ -429,3 +429,4 @@ FodyWeavers.xsd
 *.msp
 .env
 azoodie-release-key.p12
+azoodie-keystore-base64.txt
