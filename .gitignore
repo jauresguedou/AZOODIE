@@ -430,3 +430,4 @@ FodyWeavers.xsd
 .env
 azoodie-release-key.p12
 azoodie-keystore-base64.txt
+.vscode/
