@@ -36,6 +36,73 @@ body {
   text-align: center;
 }
 
+
+
+
+.announcement-owner-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #edf0f2;
+}
+
+.announcement-owner-actions form {
+    margin: 0;
+}
+
+.announcement-delete-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 44px;
+    padding: 10px 16px;
+    border: 1px solid #f1c7cb;
+    border-radius: 10px;
+    background: #fff5f5;
+    color: #b42332;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background-color 160ms ease,
+        border-color 160ms ease,
+        color 160ms ease,
+        box-shadow 160ms ease;
+}
+
+.announcement-delete-btn:hover {
+    background: #b42332;
+    border-color: #b42332;
+    color: #fff;
+}
+
+.announcement-delete-btn:focus-visible {
+    outline: 3px solid #f3a6ad;
+    outline-offset: 3px;
+}
+
+.announcement-delete-btn:active {
+    transform: translateY(1px);
+}
+
+@media (max-width: 480px) {
+    .announcement-owner-actions {
+        justify-content: stretch;
+    }
+
+    .announcement-owner-actions form {
+        width: 100%;
+    }
+
+    .announcement-delete-btn {
+        width: 100%;
+    }
+}
+
+
 .site-footer p {
   margin: 0;
 }

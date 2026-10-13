@@ -196,15 +196,35 @@
                             currentUserId &&
                             Number(currentUserId) === Number(announcement.author_id)
                             ) { %>
+                                <div class="announcement-owner-actions">
                                 <form
                                     action="/announcements/<%= announcement.id %>/delete"
                                     method="POST"
-                                    onsubmit="return confirm('Voulez-vous vraiment supprimer cette annonce ?');"
+                                    onsubmit="return confirm('Voulez-vous vraiment supprimer cette annonce ? Cette action est irréversible.');"
                                 >
-                                    <button type="submit" class="delete-announcement-button">
-                                        Supprimer l'annonce
+                                    <button type="submit" class="announcement-delete-btn">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="17"
+                                            height="17"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            aria-hidden="true"
+                                        >
+                                            <path d="M3 6h18" />
+                                            <path d="M8 6V4h8v2" />
+                                            <path d="m19 6-1 14H6L5 6" />
+                                            <path d="M10 11v5" />
+                                            <path d="M14 11v5" />
+                                        </svg>
+                                        <span>Supprimer l'annonce</span>
                                     </button>
                                 </form>
+                            </div>
                     <% } %>
                 </article>
             <% }); %>
