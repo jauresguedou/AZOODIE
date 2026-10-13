@@ -11,6 +11,7 @@ const {
     addComment,
 } = require("../controllers/announcementController");
 const { requireLogin } = require("../middleware/auth");
+const { requireAnnouncementAuthor} = require("../middleware/announcementAuth");
 
 const router = express.Router();
 
@@ -25,8 +26,9 @@ function uploadAnnouncementMedia(req, res, next) {
     });
 }
 
+
 router.get("/", showHomeFeed);
-router.post("/announcements", requireLogin, requireClient, uploadAnnouncementMedia, createAnnouncement);
+router.post("/announcements", requireLogin, requireAnnouncementAuthor, uploadAnnouncementMedia, createAnnouncement);
 router.post("/announcements/:id/publish", requireLogin, requireClient, publishDraft);
 router.post("/announcements/:id/delete", requireLogin, requireClient, deleteDraft);
 router.post("/announcements/:id/like", requireLogin, requireProfessional, toggleLike);

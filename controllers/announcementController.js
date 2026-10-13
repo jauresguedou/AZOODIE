@@ -41,30 +41,48 @@ async function showHomeFeed(req, res) {
     });
 }
 
-function renderFeedWithErrors(req, res, errors) {
-    return Promise.all([
-        announcementModel.getPublishedAnnouncements(req.session.userId || null),
-        announcementModel.getClientDrafts(req.session.userId),
-    ]).then(async ([announcements, drafts]) => {
-        const comments = await announcementModel.getAnnouncementComments(announcements.map((post) => post.id));
-        const commentsByAnnouncement = new Map();
-        comments.forEach((comment) => {
-            const group = commentsByAnnouncement.get(comment.announcement_id) || [];
-            group.push(comment);
-            commentsByAnnouncement.set(comment.announcement_id, group);
-        });
-        res.status(400).render("home/index", {
-            title: "Fil des annonces — AZÔÔDIÉ",
-            announcements: announcements.map((post) => ({
-                ...post,
-                comments: commentsByAnnouncement.get(post.id) || [],
-            })),
-            drafts,
-            formValues: req.body,
-            errors,
-        });
+
+async function renderFeedWithErrors(req, res, errors) {
+    const isClient =
+        req.session.userRole === "client" &&
+        Boolean(req.session.userId);
+
+    const [announcements, drafts] = await Promise.all([
+        announcementModel.getPublishedAnnouncements(
+            req.session.userId || null
+        ),
+        isClient
+            ? announcementModel.getClientDrafts(req.session.userId)
+            : Promise.resolve([]),
+    ]);
+
+    const comments =
+        await announcementModel.getAnnouncementComments(
+            announcements.map((post) => post.id)
+        );
+
+    const commentsByAnnouncement = new Map();
+
+    comments.forEach((comment) => {
+        const group =
+            commentsByAnnouncement.get(comment.announcement_id) || [];
+
+        group.push(comment);
+        commentsByAnnouncement.set(comment.announcement_id, group);
+    });
+
+    return res.status(400).render("home/index", {
+        title: "Fil des annonces — AZÔÔDIÉ",
+        announcements: announcements.map((post) => ({
+            ...post,
+            comments: commentsByAnnouncement.get(post.id) || [],
+        })),
+        drafts,
+        formValues: req.body,
+        errors,
     });
 }
+
 
 async function createAnnouncement(req, res) {
     const title = typeof req.body.title === "string" ? req.body.title.trim() : "";
@@ -84,6 +102,13 @@ async function createAnnouncement(req, res) {
     const status = req.body.action;
     if (status !== "draft" && status !== "publish") {
         errors.push("Choisissez d’enregistrer le brouillon ou de publier l’annonce.");
+    }
+
+    if (
+        req.session.userRole === "professional" &&
+        status !== "publish"
+    ) {
+        errors.push("Les professionnels doivent publier directement leurs annonces.");
     }
     if (errors.length) return renderFeedWithErrors(req, res, errors);
 
