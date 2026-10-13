@@ -86,6 +86,16 @@ async function deleteClientDraft(userId, announcementId) {
     return result.rowCount;
 }
 
+async function deleteAnnouncement(userId, announcementId) {
+    const result = await pool.query(
+        `DELETE FROM announcements
+         WHERE id = $1 AND author_id = $2 
+         RETURNING id`,
+         [announcementId, userId]
+    );
+    return result.rowCount;
+}
+
 async function toggleAnnouncementLike(userId, announcementId) {
     const target = await pool.query(
         "SELECT id FROM announcements WHERE id = $1 AND status = 'published'",
@@ -130,6 +140,7 @@ module.exports = {
     createAnnouncement,
     publishClientDraft,
     deleteClientDraft,
+    deleteAnnouncement,
     toggleAnnouncementLike,
     addAnnouncementComment,
 };

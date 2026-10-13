@@ -36,6 +36,7 @@ async function showHomeFeed(req, res) {
             comments: commentsByAnnouncement.get(post.id) || [],
         })),
         drafts,
+        currentUserId: req.session.userId || null,
         formValues: {},
         errors: [],
     });
@@ -139,6 +140,22 @@ async function deleteDraft(req, res) {
     res.redirect("/#my-drafts");
 }
 
+
+async function deleteAnnouncement(req, res) {
+    const userId = req.session.userId;
+    const announcementId = req.params.id;
+    const deleted = await announcementModel.deleteAnnouncement(
+        userId,
+        announcementId
+    );
+    if(!deleted) {
+        return res.status(404).send(
+            "Annonce introuvable ou vous n'êtes pas autorisé à la supprimer."
+        )
+    }
+    return res.redirect("/#announcements");
+}
+
 async function toggleLike(req, res) {
     const result = await announcementModel.toggleAnnouncementLike(req.session.userId, req.params.id);
     if (!result.exists) return res.status(404).send("Annonce introuvable.");
@@ -166,6 +183,7 @@ module.exports = {
     createAnnouncement,
     publishDraft,
     deleteDraft,
+    deleteAnnouncement,
     toggleLike,
     addComment,
 };

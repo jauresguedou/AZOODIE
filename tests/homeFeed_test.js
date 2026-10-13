@@ -42,6 +42,7 @@ describe("home announcement feed", () => {
     test("lets clients publish photos or short videos and manage their drafts", async () => {
         const html = await ejs.renderFile(homeTemplate, {
             session: { userId: 3, userRole: "client", userName: "Aïcha" },
+            currentUserId: 3,
             announcements: [announcement],
             drafts: [{
                 id: 8,

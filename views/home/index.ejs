@@ -96,9 +96,19 @@
                                     <form action="/announcements/<%= draft.id %>/publish" method="POST">
                                         <button class="home-feed-button" type="submit">Publier</button>
                                     </form>
-                                    <form action="/announcements/<%= draft.id %>/delete" method="POST">
-                                        <button class="home-feed-button home-feed-button-text" type="submit">Supprimer</button>
+                                    <form
+                                        action="/announcements/<%= draft.id %>/delete"
+                                        method="POST"
+                                        onsubmit="return confirm('Voulez-vous vraiment supprimer cette annonce ?');"
+                                    >
+                                        <button
+                                            class="home-feed-button home-feed-button-secondary"
+                                            type="submit"
+                                        >
+                                            Supprimer
+                                        </button>
                                     </form>
+
                                 </div>
                             </article>
                         <% }); %>
@@ -180,6 +190,21 @@
                         </div>
                     <% } else if (session.userRole === "professional") { %>
                         <p class="home-feed-interaction-note">Complétez votre profil professionnel pour aimer et commenter les projets.</p>
+                    <% } %>
+                    <% if (
+                            typeof currentUserId !== "undefined" &&
+                            currentUserId &&
+                            Number(currentUserId) === Number(announcement.author_id)
+                            ) { %>
+                                <form
+                                    action="/announcements/<%= announcement.id %>/delete"
+                                    method="POST"
+                                    onsubmit="return confirm('Voulez-vous vraiment supprimer cette annonce ?');"
+                                >
+                                    <button type="submit" class="delete-announcement-button">
+                                        Supprimer l'annonce
+                                    </button>
+                                </form>
                     <% } %>
                 </article>
             <% }); %>

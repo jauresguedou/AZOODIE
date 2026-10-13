@@ -7,6 +7,7 @@ const {
     createAnnouncement,
     publishDraft,
     deleteDraft,
+    deleteAnnouncement,
     toggleLike,
     addComment,
 } = require("../controllers/announcementController");
@@ -30,7 +31,7 @@ function uploadAnnouncementMedia(req, res, next) {
 router.get("/", showHomeFeed);
 router.post("/announcements", requireLogin, requireAnnouncementAuthor, uploadAnnouncementMedia, createAnnouncement);
 router.post("/announcements/:id/publish", requireLogin, requireClient, publishDraft);
-router.post("/announcements/:id/delete", requireLogin, requireClient, deleteDraft);
+router.post("/announcements/:id/delete", requireLogin, requireAnnouncementAuthor, deleteAnnouncement, deleteDraft);
 router.post("/announcements/:id/like", requireLogin, requireProfessional, toggleLike);
 router.post("/announcements/:id/comments", requireLogin, requireProfessional, addComment);
 
