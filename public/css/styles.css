@@ -39,11 +39,14 @@ body {
 
 
 
+
+
 .announcement-owner-actions {
     display: flex;
     justify-content: flex-end;
-    margin-top: 16px;
-    padding-top: 14px;
+    align-items: center;
+    margin-top: 8px;
+    padding-top: 8px;
     border-top: 1px solid #edf0f2;
 }
 
@@ -56,8 +59,8 @@ body {
     align-items: center;
     justify-content: center;
     gap: 9px;
-    min-height: 44px;
-    padding: 10px 16px;
+    min-height: 40px;
+    padding: 8px 14px;
     border: 1px solid #f1c7cb;
     border-radius: 10px;
     background: #fff5f5;
@@ -101,7 +104,6 @@ body {
         width: 100%;
     }
 }
-
 
 .site-footer p {
   margin: 0;
