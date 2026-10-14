@@ -40,32 +40,74 @@ document.addEventListener("DOMContentLoaded", function() {
                 && Number.isFinite(professional.distance);
         });
 
-    const map = L.map(mapElement).setView([clientLat, clientLng], 13);
+    
+const map = L.map(mapElement);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; OpenStreetMap contributors",
-    }).addTo(map);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OpenStreetMap contributors",
+}).addTo(map);
 
-    L.circleMarker([clientLat, clientLng], {
-        radius: 10,
-        fillColor: "#E8853B",
+// Display the client
+const markers = [];
+
+const clientMarker = L.circleMarker([clientLat, clientLng], {
+    radius: 10,
+    fillColor: "#E8853B",
+    color: "#fff",
+    weight: 2,
+    fillOpacity: 1,
+}).addTo(map).bindPopup("Vous êtes ici");
+
+markers.push(clientMarker);
+
+// Display every professional with valid coordinates in Benin.
+// Adjust the geographic bounds if AZÔÔDIÉ expands to other countries.
+professionals.forEach(function(professional) {
+    const { latitude, longitude, distance } = professional;
+
+    if (
+        latitude < 6 || latitude > 13 ||
+        longitude < 0 || longitude > 5 ||
+        !Number.isFinite(distance) ||
+        distance < 0
+    ) {
+        console.warn(
+            "Professional excluded because coordinates are invalid for Benin:",
+            professional.name,
+            latitude,
+            longitude
+        );
+        return;
+    }
+
+    const popup = document.createElement("div");
+    popup.textContent =
+        `${professional.name} — ${professional.trade_category} ` +
+        `(${distance.toFixed(1)} km à vol d'oiseau)`;
+
+    const marker = L.circleMarker([latitude, longitude], {
+        radius: 9,
+        fillColor: "#0F6E6E",
         color: "#fff",
         weight: 2,
         fillOpacity: 1,
-    }).addTo(map).bindPopup("Vous êtes ici");
+    }).addTo(map).bindPopup(popup);
 
-    professionals.forEach(function(professional) {
-        const popup = document.createElement("div");
-        popup.textContent = `${professional.name} — ${professional.trade_category} (${professional.distance.toFixed(1)} km)`;
+    markers.push(marker);
+});
 
-        L.circleMarker([professional.latitude, professional.longitude], {
-            radius: 9,
-            fillColor: "#0F6E6E",
-            color: "#fff",
-            weight: 2,
-            fillOpacity: 1,
-        }).addTo(map).bindPopup(popup);
+// Automatically frame the client and all displayed professionals.
+const bounds = L.latLngBounds(
+    markers.map(marker => marker.getLatLng())
+);
+
+if (bounds.isValid()) {
+    map.fitBounds(bounds, {
+        padding: [40, 40],
+        maxZoom: 13,
     });
+}
+
 
     const nearest = professionals[0];
     if (nearest) {
