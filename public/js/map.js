@@ -252,48 +252,52 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Switch to list view.
-    listButton.addEventListener("click", function () {
-        listView.style.display = "block";
-        mapView.style.display = "none";
+    
+listButton.addEventListener("click", function (event) {
+    event.preventDefault();
 
-        listButton.classList.add("active");
-        mapButton.classList.remove("active");
+    listView.style.display = "block";
+    mapView.style.display = "none";
 
-        listButton.setAttribute("aria-pressed", "true");
-        mapButton.setAttribute("aria-pressed", "false");
+    listButton.classList.add("active");
+    mapButton.classList.remove("active");
+
+    listButton.setAttribute("aria-pressed", "true");
+    mapButton.setAttribute("aria-pressed", "false");
+});
+
+mapButton.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    listView.style.display = "none";
+    mapView.style.display = "block";
+
+    mapButton.classList.add("active");
+    listButton.classList.remove("active");
+
+    mapButton.setAttribute("aria-pressed", "true");
+    listButton.setAttribute("aria-pressed", "false");
+
+    requestAnimationFrame(function () {
+        map.invalidateSize();
+
+        if (markers.length > 1) {
+            map.fitBounds(
+                L.latLngBounds(
+                    markers.map(function (marker) {
+                        return marker.getLatLng();
+                    })
+                ),
+                {
+                    padding: [40, 40],
+                    maxZoom: 15
+                }
+            );
+        } else {
+            map.setView(clientLocation, 13);
+        }
     });
-
-    // Switch to map view and recalculate its dimensions.
-    mapButton.addEventListener("click", function () {
-        listView.style.display = "none";
-        mapView.style.display = "block";
-
-        mapButton.classList.add("active");
-        listButton.classList.remove("active");
-
-        mapButton.setAttribute("aria-pressed", "true");
-        listButton.setAttribute("aria-pressed", "false");
-
-        requestAnimationFrame(function () {
-            map.invalidateSize();
-
-            if (markers.length > 1) {
-                map.fitBounds(
-                    L.latLngBounds(
-                        markers.map(function (marker) {
-                            return marker.getLatLng();
-                        })
-                    ),
-                    {
-                        padding: [40, 40],
-                        maxZoom: 15
-                    }
-                );
-            } else {
-                map.setView(clientLocation, 13);
-            }
-        });
-    });
+});
 
     console.log("AZOODIE map initialized.", {
         clientCoordinates: [clientLat, clientLng],
