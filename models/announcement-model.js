@@ -5,6 +5,8 @@ async function getPublishedAnnouncements(userId = null) {
         `SELECT a.*,
                 COALESCE(u.name, a.author_label) AS author_name,
                 u.photo_url AS author_photo,
+                u.role AS author_role,
+                u.professional_id AS author_professional_id,
                 (SELECT COUNT(*)::integer FROM announcement_likes l WHERE l.announcement_id = a.id) AS like_count,
                 (SELECT COUNT(*)::integer FROM announcement_comments c WHERE c.announcement_id = a.id) AS comment_count,
                 CASE WHEN $1::integer IS NULL THEN FALSE

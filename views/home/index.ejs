@@ -136,15 +136,49 @@
             <% announcements.forEach((announcement) => { %>
                 <article class="home-feed-post" id="announcement-<%= announcement.id %>">
                     <header class="home-feed-post-header">
-                        <% if (announcement.author_photo) { %>
-                            <img class="home-feed-user-avatar" src="<%= announcement.author_photo %>" alt="">
+                        <%
+                            const authorProfileUrl =
+                                !announcement.is_demo &&
+                                announcement.author_role === "professional" &&
+                                announcement.author_professional_id
+                                    ? `/professionals/${announcement.author_professional_id}`
+                                    : null;
+                        %>
+                        <% if (authorProfileUrl) { %>
+                            <a
+                                href="<%= authorProfileUrl %>"
+                                class="home-feed-avatar-link"
+                                aria-label="Voir le profil de <%= announcement.author_name %>"
+                            >
+                                <% if (announcement.author_photo) { %>
+                                    <img
+                                        class="home-feed-user-avatar"
+                                        src="<%= announcement.author_photo %>"
+                                        alt=""
+                                    >
+                                <% } else { %>
+                                    <span class="home-feed-user-avatar" aria-hidden="true">
+                                        <%= announcement.author_name.trim().charAt(0).toLocaleUpperCase("fr-FR") %>
+                                    </span>
+                                <% } %>
+                            </a>
+                        <% } else if (announcement.author_photo) { %>
+                            <img
+                                class="home-feed-user-avatar"
+                                src="<%= announcement.author_photo %>"
+                                alt=""
+                            >
                         <% } else { %>
-                            <span class="home-feed-user-avatar <%= announcement.is_demo ? 'home-feed-brand-avatar' : '' %>" aria-hidden="true"><%= announcement.author_name.trim().charAt(0).toLocaleUpperCase("fr-FR") %></span>
+                            <span
+                                class="home-feed-user-avatar <%= announcement.is_demo ? 'home-feed-brand-avatar' : '' %>"
+                                aria-hidden="true"
+                            ><%= announcement.author_name.trim().charAt(0).toLocaleUpperCase("fr-FR") %></span>
                         <% } %>
-                        <div class="home-feed-author">
-                            <strong><%= announcement.author_name %></strong>
-                            <span><%= announcement.is_demo ? "Annonce de démonstration" : "Projet de travaux" %> · <time datetime="<%= new Date(announcement.created_at).toISOString() %>"><%= new Date(announcement.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) %></time></span>
-                        </div>
+
+                    <div class="home-feed-author">
+                        <strong><%= announcement.author_name %></strong>
+                        <span><%= announcement.is_demo ? "Annonce de démonstration" : "Projet de travaux" %> · <time datetime="<%= new Date(announcement.created_at).toISOString() %>"><%= new Date(announcement.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) %></time></span>
+                    </div>
                         <span class="home-feed-project-tag"><%= announcement.category %></span>
                     </header>
                     <div class="home-feed-post-copy">
