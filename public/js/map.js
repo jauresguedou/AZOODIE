@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     
 const map = L.map(mapElement);
-
+window.AZOODIE_MAP = map;
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "&copy; OpenStreetMap contributors",
 }).addTo(map);
