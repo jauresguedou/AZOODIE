@@ -51,7 +51,7 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 const markers = [];
 
 const clientMarker = L.circleMarker([clientLat, clientLng], {
-    radius: 10,
+    radius: 14,
     fillColor: "#E8853B",
     color: "#fff",
     weight: 2,
@@ -86,7 +86,7 @@ professionals.forEach(function(professional) {
         `(${distance.toFixed(1)} km à vol d'oiseau)`;
 
     const marker = L.circleMarker([latitude, longitude], {
-        radius: 9,
+        radius: 6,
         fillColor: "#0F6E6E",
         color: "#fff",
         weight: 2,
