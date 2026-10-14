@@ -243,6 +243,22 @@ body {
   margin-bottom: 3px;
 }
 
+
+.home-feed-avatar-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  text-decoration: none;
+  border-radius: 50%;
+}
+
+.home-feed-avatar-link:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 3px;
+}
+
+
 .home-feed-user-avatar {
   display: grid;
   flex: 0 0 auto;
