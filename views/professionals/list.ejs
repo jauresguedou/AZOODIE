@@ -1,15 +1,51 @@
-<div class="form-container">
 
-        <h1>Professionnels enregistrés</h1>
+<div class="form-container professionals-directory">
+    <h1>Professionnels enregistrés</h1>
 
+    <div class="professionals-grid">
         <% professionals.forEach(function(pro) { %>
+            <article class="professional-card">
+                <a
+                    class="professional-card-photo"
+                    href="/professionals/<%= pro.id %>"
+                    aria-label="Voir le profil de <%= pro.name %>"
+                >
+                    <img
+                        src="<%= pro.photo_url || '/images/default-avatar.png' %>"
+                        alt="Photo de <%= pro.name %>"
+                        loading="lazy"
+                    >
+                </a>
 
-            <div class="form-group">
-                <strong><a href="/professionals/<%= pro.id %>" style="color:var(--dark); text-decoration:none;"><%= pro.name %></a></strong> — <%= pro.trade_category %>
-                <br>
-                <small><%= pro.base_lat %>, <%= pro.base_lng %> . Rayon: <%= pro.service_radius_km %> km</small>
-            </div>
+                <div class="professional-card-info">
+                    <h2>
+                        <a href="/professionals/<%= pro.id %>">
+                            <%= pro.name %>
+                        </a>
+                    </h2>
 
-       <% }); %>
-       <a href="/professionals/add" class="btn-primary" style="display:inline-block; text-decoration:none; text-align:center; margin-top:12px;">Ajouter un Professionel</a>
+                    <p class="professional-card-trade">
+                        <%= pro.trade_category %>
+                    </p>
+
+                    <a
+                        class="professional-contact-button"
+                        href="/requests/new/<%= pro.id %>"
+                    >
+                        Contacter
+                    </a>
+                </div>
+            </article>
+        <% }); %>
     </div>
+
+    <a
+        href="/professionals/add"
+        class="btn-primary professionals-add-button"
+    >
+        Ajouter un professionnel
+    </a>
+</div>
+
+
+    
