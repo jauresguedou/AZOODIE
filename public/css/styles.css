@@ -39,6 +39,128 @@ body {
 
 
 
+/* Professional name search */
+.professional-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 620px;
+    min-height: 54px;
+    margin: 0 0 28px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    border: 1px solid #dbe4e8;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.professional-search:focus-within {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(15, 110, 110, 0.12);
+}
+
+.professional-search-icon {
+    display: flex;
+    flex-shrink: 0;
+    color: var(--teal);
+}
+
+.professional-search input {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    padding: 14px 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: var(--dark);
+    font: inherit;
+    font-size: 0.9rem;
+}
+
+.professional-search input::placeholder {
+    color: #87949d;
+}
+
+.professional-search input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.professional-search-submit-icon {
+    display: flex;
+    flex-shrink: 0;
+    color: #71808b;
+    pointer-events: none;
+}
+
+.professional-search-status {
+    min-height: 0;
+    margin: -16px 0 20px;
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+.professional-search-status:empty {
+    display: none;
+}
+
+.professional-card[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 480px) {
+    .professional-search {
+        max-width: none;
+        min-height: 50px;
+        gap: 9px;
+        margin-bottom: 20px;
+        padding: 0 12px;
+    }
+
+    .professional-search input {
+        font-size: 0.82rem;
+    }
+
+    .professional-search-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .professional-card-photo {
     display: block;
     width: 100%;
