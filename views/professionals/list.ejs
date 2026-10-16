@@ -11,9 +11,9 @@
                     aria-label="Voir le profil de <%= pro.name %>"
                 >
                     <img
-                        src="<%= pro.photo_url || '/images/default-avatar.png' %>"
-                        alt="Photo de <%= pro.name %>"
-                        loading="lazy"
+                       src="<%= Array.isArray(pro.photo_urls) && pro.photo_urls.length > 0
+                       ?pro.photo_urls[pro.photo_urls.length - 1]
+                       : '/images/default-avatar.png' %>"
                     >
                 </a>
 
