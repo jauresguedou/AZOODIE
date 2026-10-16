@@ -37,129 +37,278 @@ body {
 }
 
 
-.professionals-directory {
-        max-width: 1000px;
-        margin: 32px auto;
-        padding: 24px;
+
+/* =========================================
+   AZÔÔDIÉ — PROFESSIONAL DISCOVERY DIRECTORY
+   ========================================= */
+
+.form-container.professionals-directory {
+    width: calc(100% - 40px);
+    max-width: 1180px;
+    box-sizing: border-box;
+    margin: 32px auto 48px;
+    padding: 28px;
+    background: #f8fafc;
+    border-radius: 18px;
+    box-shadow: none;
+}
+
+/* Directory heading */
+.professionals-directory > h1 {
+    margin: 0 0 8px;
+    color: var(--dark, #153b3b);
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 750;
+    line-height: 1.3;
+    letter-spacing: -0.035em;
+}
+
+.professionals-directory > h1::after {
+    content: "";
+    display: block;
+    width: 54px;
+    height: 4px;
+    margin-top: 12px;
+    background: var(--teal, #0f7775);
+    border-radius: 99px;
+}
+
+/* Responsive card grid */
+.professionals-directory .professionals-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(min(100%, 265px), 1fr)
+    );
+    align-items: stretch;
+    gap: 22px;
+    margin-top: 26px;
+}
+
+/* Professional card */
+.professionals-directory .professional-card {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e6ebef;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.035);
+    text-align: left;
+    transition:
+        transform 180ms ease,
+        box-shadow 180ms ease,
+        border-color 180ms ease;
+}
+
+.professionals-directory .professional-card:hover {
+    transform: translateY(-4px);
+    border-color: #c8e5e1;
+    box-shadow: 0 12px 28px rgba(15, 50, 50, 0.09);
+}
+
+/* Photo */
+.professionals-directory .professional-card-photo {
+    display: block;
+    width: 100%;
+    height: 185px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #edf3f5;
+}
+
+.professionals-directory .professional-card-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 35%;
+    transition: transform 250ms ease;
+}
+
+.professionals-directory .professional-card:hover
+.professional-card-photo img {
+    transform: scale(1.035);
+}
+
+/* Profile details */
+.professionals-directory .professional-card-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 18px;
+}
+
+.professionals-directory .professional-card-info h2 {
+    margin: 0 0 8px;
+    font-size: 1.05rem;
+    font-weight: 750;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.professionals-directory .professional-card-info h2 a {
+    color: var(--dark, #153b3b);
+    text-decoration: none;
+}
+
+.professionals-directory .professional-card-info h2 a:hover {
+    color: var(--teal, #0f7775);
+}
+
+/* Trade category badge */
+.professionals-directory .professional-card-trade {
+    align-self: flex-start;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 0 20px;
+    padding: 6px 10px;
+    color: #176b68;
+    background: #e7f5f2;
+    border: 1px solid #d4eeea;
+    border-radius: 7px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+/* Contact action */
+.professionals-directory .professional-contact-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 44px;
+    margin-top: auto;
+    padding: 11px 14px;
+    color: #fff;
+    background: var(--teal, #0f7775);
+    border: 1px solid var(--teal, #0f7775);
+    border-radius: 9px;
+    font-size: 0.94rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    transition:
+        background 180ms ease,
+        border-color 180ms ease;
+}
+
+.professionals-directory .professional-contact-button:hover {
+    color: #fff;
+    background: #095f5d;
+    border-color: #095f5d;
+}
+
+/* Add professional action */
+.professionals-directory .professionals-add-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    margin-top: 28px;
+    padding: 11px 18px;
+    border-radius: 9px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+}
+
+/* Tablet */
+@media (max-width: 800px) {
+    .form-container.professionals-directory {
+        width: calc(100% - 28px);
+        padding: 22px;
     }
 
-    .professionals-directory > h1 {
-        margin-bottom: 24px;
-        color: var(--dark);
-        font-size: 1.7rem;
+    .professionals-directory .professionals-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
     }
 
-    .professionals-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 20px;
+    .professionals-directory .professional-card-photo {
+        height: 165px;
     }
+}
 
-    .professional-card {
-        overflow: hidden;
-        background: #fff;
-        border: 1px solid #e5e7eb;
+/* Mobile */
+@media (max-width: 520px) {
+    .form-container.professionals-directory {
+        width: calc(100% - 20px);
+        margin: 18px auto 32px;
+        padding: 16px;
         border-radius: 14px;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
-        text-align: center;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .professional-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
+    .professionals-directory .professionals-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 20px;
     }
 
-    .professional-card-photo {
-        display: block;
+    .professionals-directory .professional-card {
+        border-radius: 12px;
+    }
+
+    .professionals-directory .professional-card-photo {
+        height: 135px;
+    }
+
+    .professionals-directory .professional-card-info {
+        padding: 12px;
+    }
+
+    .professionals-directory .professional-card-info h2 {
+        font-size: 0.92rem;
+    }
+
+    .professionals-directory .professional-card-trade {
+        margin-bottom: 14px;
+        padding: 5px 7px;
+        font-size: 0.75rem;
+    }
+
+    .professionals-directory .professional-contact-button {
+        min-height: 40px;
+        padding: 9px 6px;
+        font-size: 0.84rem;
+    }
+
+    .professionals-directory .professionals-add-button {
         width: 100%;
-        height: 210px;
-        overflow: hidden;
-        background: #f1f5f9;
+        box-sizing: border-box;
+    }
+}
+
+/* Very narrow phones */
+@media (max-width: 350px) {
+    .professionals-directory .professionals-grid {
+        grid-template-columns: minmax(0, 1fr);
     }
 
+    .professionals-directory .professional-card-photo {
+        height: 180px;
+    }
+}
+
+/* Respect accessibility preferences */
+@media (prefers-reduced-motion: reduce) {
+    .professionals-directory .professional-card,
+    .professionals-directory .professional-card-photo img,
+    .professionals-directory .professional-contact-button {
+        transition: none;
+    }
+
+    .professionals-directory .professional-card:hover,
+    .professionals-directory .professional-card:hover
     .professional-card-photo img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        transform: none;
     }
-
-    .professional-card-info {
-        padding: 18px;
-    }
-
-    .professional-card-info h2 {
-        margin: 0 0 8px;
-        font-size: 1.1rem;
-        line-height: 1.4;
-    }
-
-    .professional-card-info h2 a {
-        color: var(--dark);
-        text-decoration: none;
-    }
-
-    .professional-card-info h2 a:hover {
-        color: var(--teal);
-    }
-
-    .professional-card-trade {
-        margin: 0 0 18px;
-        color: #64748b;
-        font-size: 0.95rem;
-    }
-
-    .professional-contact-button {
-        display: block;
-        padding: 11px 16px;
-        border-radius: 8px;
-        background: var(--teal);
-        color: #fff;
-        font-weight: 600;
-        text-align: center;
-        text-decoration: none;
-        transition: opacity 0.2s ease;
-    }
-
-    .professional-contact-button:hover {
-        opacity: 0.88;
-    }
-
-    .professionals-add-button {
-        display: inline-block;
-        margin-top: 24px;
-        text-align: center;
-        text-decoration: none;
-    }
-
-    @media (max-width: 480px) {
-        .professionals-directory {
-            padding: 16px;
-        }
-
-        .professionals-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 12px;
-        }
-
-        .professional-card-photo {
-            height: 145px;
-        }
-
-        .professional-card-info {
-            padding: 12px;
-        }
-
-        .professional-card-info h2 {
-            font-size: 0.95rem;
-        }
-    }
-
-
-
-
-
-
+}
 
 
 .announcement-owner-actions {

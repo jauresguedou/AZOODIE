@@ -1,39 +1,41 @@
 
 <div class="form-container professionals-directory">
+
     <h1>Professionnels enregistrés</h1>
 
     <div class="professionals-grid">
+
         <% professionals.forEach(function(pro) { %>
+
             <article class="professional-card">
-                
-                    <a
-                        class="professional-card-photo"
-                        href="/professionals/<%= pro.id %>"
-                        aria-label="Voir le profil de <%= pro.name %>"
+
+                <a
+                    class="professional-card-photo"
+                    href="/professionals/<%= pro.id %>"
+                    aria-label="Voir le profil de <%= pro.name %>"
+                >
+                    <%
+                        const photos = Array.isArray(pro.photo_urls)
+                            ? pro.photo_urls.filter(
+                                url => typeof url === "string" && url.trim() !== ""
+                            )
+                            : [];
+
+                        const photoUrl = photos.length > 0
+                            ? photos[photos.length - 1]
+                            : "/images/default-avatar.svg";
+                    %>
+
+                    <img
+                        src="<%= photoUrl %>"
+                        alt="Photo de <%= pro.name %>"
+                        loading="lazy"
+                        onerror="this.onerror=null; this.src='/images/default-avatar.png';"
                     >
-                       
-                        <%
-                            const photos = Array.isArray(pro.photo_urls)
-                                ? pro.photo_urls.filter(url => typeof url === "string" && url.trim() !== "")
-                                : [];
-
-                            const photoUrl = photos.length > 0
-                                ? photos[photos.length - 1]
-                                : "/images/default-avatar.svg";
-                        %>
-
-
-
-                        <img
-                            src="<%= photoUrl %>"
-                            alt="Photo de <%= pro.name %>"
-                            loading="lazy"
-                            onerror="this.onerror=null; this.src='/images/default-avatar.png';"
-                        >
-                    </a>
-
+                </a>
 
                 <div class="professional-card-info">
+
                     <h2>
                         <a href="/professionals/<%= pro.id %>">
                             <%= pro.name %>
@@ -41,7 +43,7 @@
                     </h2>
 
                     <p class="professional-card-trade">
-                        <%= pro.trade_category %>
+                        <%= pro.trade_category || "Professionnel" %>
                     </p>
 
                     <a
@@ -50,18 +52,20 @@
                     >
                         Contacter
                     </a>
+
                 </div>
+
             </article>
+
         <% }); %>
+
     </div>
 
     <a
         href="/professionals/add"
         class="btn-primary professionals-add-button"
     >
-        Ajouter un professionnel
+        + Ajouter un professionnel
     </a>
+
 </div>
-
-
-    
