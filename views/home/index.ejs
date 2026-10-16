@@ -51,14 +51,14 @@
                         <label for="announcement-media" class="home-feed-media-label">Ajouter une photo ou une courte vidéo <span>(facultatif, 40 Mo maximum)</span></label>
                         <input id="announcement-media" name="media" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime">
                         <div class="home-feed-composer-footer">
-                            <span>Photos JPEG, PNG, WebP · Vidéos MP4, WebM, MOV</span>
+                            <span></span>
                             
                         <div>
                             <% if (session.userRole === "client") { %>
                            <button
                              type="submit"
                               name="action"
-                             value="draft"
+                              value="draft"
                             class="home-feed-button home-feed-button-secondary"
                             >
                               Enregistrer le brouillon
