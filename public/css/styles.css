@@ -84,10 +84,7 @@ body {
 
 .professionals-grid {
     display: grid;
-    grid-template-columns: repeat(
-        auto-fit,
-        minmax(min(100%, 300px), 1fr)
-    );
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 28px;
     align-items: start;
 }
@@ -160,11 +157,8 @@ body {
         padding: 12px;
     }
 
-    .professionals-grid {
-        grid-template-columns: repeat(
-            auto-fit,
-            minmax(min(100%, 260px), 1fr)
-        );
+     .professionals-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 18px;
     }
 }
