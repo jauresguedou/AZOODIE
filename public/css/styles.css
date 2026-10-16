@@ -3179,3 +3179,25 @@ body {
         width: 100%;
     }
 }
+
+@media (max-width: 600px) {
+    .home-feed-composer-footer {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .home-feed-composer-footer > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .home-feed-composer-footer > div .home-feed-button {
+        width: 100%;
+        max-width: 280px;
+        box-sizing: border-box;
+    }
+}
