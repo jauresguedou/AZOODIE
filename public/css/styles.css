@@ -3908,3 +3908,147 @@ body {
         box-sizing: border-box;
     }
 }
+
+/* AZÔÔDIÉ: professional profile editor */
+.form-container.professional-edit-page {
+  width: calc(100% - 32px);
+  max-width: 900px;
+  margin: 32px auto 56px;
+  padding: 0;
+  box-sizing: border-box;
+  background: transparent;
+  box-shadow: none;
+}
+
+.professional-edit-page > .professional-edit-card,
+.professional-edit-page > .credential-manager,
+.professional-edit-page > .professional-delete-section {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0 0 24px;
+  padding: 26px;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid #dce7e5;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgb(24 59 56 / 5%);
+}
+
+.professional-edit-page .credential-manager-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  width: 100%;
+}
+
+.professional-edit-page .credential-manager-card {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.professional-edit-page .credential-manager-card-content {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  writing-mode: horizontal-tb;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.professional-edit-page .credential-manager-card-content h4,
+.professional-edit-page .credential-manager-card-content p,
+.professional-edit-page .credential-manager-card-content small,
+.professional-edit-page .credential-status {
+  max-width: 100%;
+  writing-mode: horizontal-tb;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+.professional-edit-page .credential-manager-actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 0;
+}
+
+.professional-edit-page .credential-manager-actions form {
+  margin: 0;
+}
+
+.professional-edit-page .credential-upload-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  width: 100%;
+}
+
+.professional-edit-page .credential-upload-form .credential-submit {
+  grid-column: 1 / -1;
+  justify-self: end;
+  align-self: end;
+}
+
+.professional-edit-page .profile-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e5eceb;
+}
+
+.professional-edit-page .professional-delete-section {
+  border-color: #f0d2d0;
+  background: #fffafa;
+}
+
+@media (max-width: 640px) {
+  .form-container.professional-edit-page {
+    width: calc(100% - 24px);
+    margin: 20px auto 36px;
+  }
+
+  .professional-edit-page > .professional-edit-card,
+  .professional-edit-page > .credential-manager,
+  .professional-edit-page > .professional-delete-section {
+    padding: 16px;
+  }
+
+  .professional-edit-page .credential-upload-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .professional-edit-page .credential-upload-form .credential-submit {
+    grid-column: 1;
+    justify-self: stretch;
+    width: 100%;
+  }
+
+  .professional-edit-page .credential-manager-card {
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .professional-edit-page .credential-manager-card-content {
+    grid-column: 2;
+  }
+
+  .professional-edit-page .credential-manager-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+
+  .professional-edit-page .profile-form-actions .btn-primary {
+    width: 100%;
+  }
+}
