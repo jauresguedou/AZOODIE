@@ -26,11 +26,11 @@ const upload = multer({storage: storage});
 
 
 const credentialStorage = new CloudinaryStorage({
-    cloudinary: cloudinaryRoot,
+    cloudinary,
     params: {
         folder: "azoodie/credentials",
         allowed_formats: ["jpg", "jpeg", "png", "webp", "pdf"],
-        transformation: [{width: 1600, crop: "limit"}],
+
     }
 });
 
