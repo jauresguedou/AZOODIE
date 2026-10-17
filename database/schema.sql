@@ -206,3 +206,40 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS photo_url VARCHAR(255);
 
 ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified BOOLEAN DEFAULT FALSE;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS verification_token VARCHAR(255);
+
+
+CREATE TABLE IF NOT EXISTS professional_credentials (
+    id               SERIAL PRIMARY KEY,
+    professional_id  INTEGER NOT NULL REFERENCES professionals(id) ON DELETE CASCADE,
+    credential_type  VARCHAR(20) NOT NULL CHECK (credential_type IN ('certification', 'insurance')),
+    title            VARCHAR(150) NOT NULL,
+    issuing_body     VARCHAR(150),
+    document_url     TEXT NOT NULL,
+    expiry_date      DATE,
+    created_at       TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS professional_credentials_idx
+    ON professional_credentials(professional_id, credential_type);
+
+
+
+
+    -- 1. Remove the existing CHECK constraint
+ALTER TABLE professional_credentials
+DROP CONSTRAINT IF EXISTS professional_credentials_credential_type_check;
+
+-- 2. Expand the allowed credential types
+ALTER TABLE professional_credentials
+ADD CONSTRAINT professional_credentials_credential_type_check
+CHECK (
+    credential_type IN (
+        'certification',
+        'insurance',
+        'diploma',
+        'professional_certificate',
+        'technical_diploma',
+        'higher_education',
+        'safety_certificate'
+    )
+);

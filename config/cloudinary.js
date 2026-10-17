@@ -24,4 +24,18 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({storage: storage});
 
-module.exports = upload;
+
+const credentialStorage = new CloudinaryStorage({
+    cloudinary: cloudinaryRoot,
+    params: {
+        folder: "azoodie/credentials",
+        allowed_formats: ["jpg", "jpeg", "png", "webp", "pdf"],
+        transformation: [{width: 1600, crop: "limit"}],
+    }
+});
+
+const uploadCredential = multer({
+    storage: credentialStorage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB file size limit
+})
+module.exports = { upload, uploadCredential };

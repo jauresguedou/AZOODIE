@@ -5,6 +5,7 @@ const pool = require("../config/database");
 const tradeCategories = require("../config/tradeCategories");
 const serializeInlineJson = require("../utils/serializeInlineJson");
 const withTransaction = require("../utils/withTransaction");
+const { getCredentialsByProfessional } = require("../models/credential-model");
 
 const searchHeadContent = [
     '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">',
@@ -134,10 +135,12 @@ async function showProfile(req,res) {
         return res.status(404).send("Professionnel introuvable.");
     }
     const portfolioPosts = await getPortfolioPosts(professional.id);
+    const credentials = await getCredentialsByProfessional(professional.id);
     res.render("professionals/profile", {
         title: `${professional.name} — AZÔÔDIÉ`,
         professional,
         portfolioPosts,
+        credentials,
     });
 }
 
@@ -176,6 +179,8 @@ async function showEditForm(req, res) {
 
     const professional = await getProfessionalById(req.params.id);
 
+    const credentials = await getCredentialsByProfessional(professional.id);
+
     if(!professional) {
          
         return res.status(404).send("Professionel introuvable.");
@@ -183,8 +188,10 @@ async function showEditForm(req, res) {
     res.render("professionals/edit-form", {
         title: `Modifier ${professional.name} — AZÔÔDIÉ`,
         professional,
+        credentials,
         formValues: {},
         errors: [],
+        
     });
 
 }

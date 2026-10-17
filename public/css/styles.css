@@ -38,6 +38,272 @@ body {
 
 
 
+/* =========================================
+   Professional profile: documents & qualifications
+   ========================================= */
+
+.professional-profile-credentials {
+    margin: 24px 0;
+    padding: 24px;
+    border: 1px solid #e5eaf0;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 5px 20px rgba(20, 42, 55, 0.04);
+}
+
+.professional-profile-credentials-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.professional-profile-credentials-icon,
+.professional-profile-credential-file-icon,
+.professional-profile-credentials-empty-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    color: #087f8c;
+    background: #e8f7f7;
+}
+
+.professional-profile-credentials-icon svg,
+.professional-profile-credential-file-icon svg,
+.professional-profile-credentials-empty-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.professional-profile-credentials-title-wrap h2 {
+    margin: 2px 0 7px;
+    color: #17343b;
+    font-size: 1.35rem;
+    line-height: 1.35;
+}
+
+.professional-profile-credentials-title-wrap > p:last-child {
+    margin: 0;
+    line-height: 1.6;
+}
+
+.professional-profile-credentials-list {
+    display: grid;
+    gap: 14px;
+}
+
+.professional-profile-credential {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 18px;
+    border: 1px solid #e9eef2;
+    border-radius: 14px;
+    background: #fbfcfd;
+}
+
+.professional-profile-credential-file-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+}
+
+.professional-profile-credential-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.professional-profile-credential-details h3 {
+    margin: 1px 0 5px;
+    color: #17343b;
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+}
+
+.professional-profile-credential-details > p {
+    margin: 0 0 9px;
+    color: #60747c;
+    font-size: 0.88rem;
+}
+
+.professional-profile-credential-issuer,
+.professional-profile-credential-expiry {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 7px;
+    color: #53666e;
+    font-size: 0.83rem;
+    overflow-wrap: anywhere;
+}
+
+.professional-profile-credential-issuer svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+}
+
+.professional-profile-credential-status {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    padding: 6px 9px;
+    border-radius: 7px;
+    background: #fff5df;
+    color: #875c13;
+    font-size: 0.76rem;
+    line-height: 1.4;
+}
+
+.professional-profile-credential-status > span {
+    font-size: 0.65rem;
+}
+
+.professional-profile-credential-view {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 12px;
+    border: 1px solid #d5e9e9;
+    border-radius: 9px;
+    color: #087f8c;
+    background: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.professional-profile-credential-view svg {
+    width: 17px;
+    height: 17px;
+}
+
+.professional-profile-credential-view:hover {
+    background: #e8f7f7;
+    border-color: #087f8c;
+}
+
+.professional-profile-credentials-empty {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px;
+    border: 1px dashed #d9e4e8;
+    border-radius: 14px;
+    background: #f9fbfc;
+}
+
+.professional-profile-credentials-empty-icon {
+    color: #687f88;
+    background: #edf2f4;
+}
+
+.professional-profile-credentials-empty h3 {
+    margin: 2px 0 8px;
+    color: #17343b;
+    font-size: 1rem;
+}
+
+.professional-profile-credentials-empty p {
+    margin: 0;
+    color: #60747c;
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+.professional-profile-credential-add,
+.professional-profile-credential-manage {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 14px;
+    color: #087f8c;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.professional-profile-credential-add:hover,
+.professional-profile-credential-manage:hover {
+    text-decoration: underline;
+}
+
+.professional-profile-credential-manage {
+    margin-top: 18px;
+}
+
+@media (max-width: 600px) {
+    .professional-profile-credentials {
+        padding: 17px;
+        border-radius: 14px;
+    }
+
+    .professional-profile-credentials-heading {
+        gap: 11px;
+    }
+
+    .professional-profile-credentials-title-wrap h2 {
+        font-size: 1.12rem;
+    }
+
+    .professional-profile-credential {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 14px;
+    }
+
+    .professional-profile-credential-details {
+        flex-basis: calc(100% - 58px);
+    }
+
+    .professional-profile-credential-view {
+        margin-left: 54px;
+    }
+
+    .professional-profile-credentials-empty {
+        gap: 12px;
+        padding: 15px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Professional name search */
 .professional-search {
