@@ -1,36 +1,51 @@
 const { createCredential, getCredentialsByProfessional, deleteCredential } = require("../models/credential-model");
 
+
 async function addCredential(req, res) {
-    if (!req.file || !req.file.secure_url) {
-        return res.status(400).send("Ajoutez un fichier (image ou PDF) pour ce document.");
+    const documentUrl = req.file?.path || req.file?.secure_url;
+
+    if (!documentUrl) {
+        return res.status(400).send(
+            "Ajoutez un fichier valide (image ou PDF) pour ce document."
+        );
     }
-    
+
     const { credential_type, title, issuing_body, expiry_date } = req.body;
 
     const allowedCredentialTypes = [
-    "certification",
-    "insurance",
-    "diploma",
-    "professional_certificate",
-    "technical_diploma",
-    "higher_education",
-    "safety_certificate"
-];
+        "certification",
+        "insurance",
+        "diploma",
+        "professional_certificate",
+        "technical_diploma",
+        "higher_education",
+        "safety_certificate",
+    ];
 
-if (!title?.trim() || !allowedCredentialTypes.includes(credential_type)) {
-    return res.status(400).send("Titre et type de document valides sont requis.");
-}
+    if (
+        typeof title !== "string" ||
+        !title.trim() ||
+        !allowedCredentialTypes.includes(credential_type)
+    ) {
+        return res.status(400).send(
+            "Un titre et un type de document valides sont requis."
+        );
+    }
 
     await createCredential(req.params.id, {
         credentialType: credential_type,
         title: title.trim(),
-        issuingBody: issuing_body ? issuing_body.trim() : null,
-        documentUrl: req.file.secure_url,
+        issuingBody:
+            typeof issuing_body === "string" && issuing_body.trim()
+                ? issuing_body.trim()
+                : null,
+        documentUrl,
         expiryDate: expiry_date || null,
     });
 
-    res.redirect(`/professionals/${req.params.id}/edit`);
+    res.redirect(`/professionals/${req.params.id}/edit#professional-credentials`);
 }
+
 
 async function deleteCredentialHandler(req, res) {
     const deletedCount = await deleteCredential(req.params.id, req.params.credentialId);

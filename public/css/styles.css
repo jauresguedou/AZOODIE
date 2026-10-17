@@ -37,6 +37,325 @@ body {
 }
 
 
+/* Professional credential manager */
+.credential-manager {
+    margin-top: 32px;
+    padding: 24px;
+    border: 1px solid #dce7e5;
+    border-radius: 16px;
+    background: #fff;
+}
+
+.credential-manager-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.credential-manager-icon,
+.credential-manager-card-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    color: #087f75;
+    background: #e8f6f3;
+}
+
+.credential-manager svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+.credential-manager-heading h2 {
+    margin: 0 0 6px;
+    color: #183b38;
+    font-size: 1.25rem;
+}
+
+.credential-manager-heading p,
+.credential-optional-note p {
+    margin: 0;
+    color: #5d6c6a;
+    line-height: 1.6;
+}
+
+.credential-optional-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 24px;
+    padding: 14px;
+    border-radius: 10px;
+    background: #f2f8f7;
+}
+
+.credential-optional-note > svg {
+    margin-top: 2px;
+    color: #087f75;
+}
+
+.credential-upload-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.credential-upload-form .form-group {
+    min-width: 0;
+    margin: 0;
+}
+
+.credential-upload-form label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 600;
+    color: #263c3a;
+}
+
+.credential-upload-form label span {
+    color: #71807e;
+    font-weight: 400;
+}
+
+.credential-upload-form input:not([type="file"]),
+.credential-upload-form select {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid #cbd8d6;
+    border-radius: 8px;
+    background: #fff;
+    font: inherit;
+}
+
+.credential-upload-form input:focus,
+.credential-upload-form select:focus {
+    outline: 2px solid #087f75;
+    outline-offset: 2px;
+}
+
+.credential-file-input {
+    padding: 12px;
+    border: 1px dashed #9dbab5;
+    border-radius: 8px;
+    background: #f8fbfa;
+}
+
+.credential-file-input > svg {
+    display: block;
+    margin-bottom: 8px;
+    color: #087f75;
+}
+
+.credential-file-input input {
+    max-width: 100%;
+    font-size: 0.9rem;
+}
+
+.credential-upload-form small {
+    display: block;
+    margin-top: 7px;
+    color: #667674;
+    line-height: 1.5;
+}
+
+.credential-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    align-self: end;
+    min-height: 44px;
+    padding: 10px 16px;
+}
+
+.credential-submit svg {
+    width: 18px;
+    height: 18px;
+}
+
+.credential-existing {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #e5eceb;
+}
+
+.credential-existing > h3 {
+    margin: 0 0 16px;
+    color: #183b38;
+    font-size: 1.05rem;
+}
+
+.credential-manager-list {
+    display: grid;
+    gap: 12px;
+}
+
+.credential-manager-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid #e0e9e7;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.credential-manager-card-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.credential-manager-card-content h4 {
+    margin: 0 0 5px;
+    color: #203d3a;
+    overflow-wrap: anywhere;
+}
+
+.credential-manager-card-content p {
+    margin: 0 0 8px;
+    color: #60716e;
+}
+
+.credential-status {
+    display: inline-block;
+    margin: 2px 0 8px;
+    color: #596b68;
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+.credential-manager-card-content small {
+    display: block;
+    color: #60716e;
+}
+
+.credential-manager-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+
+.credential-manager-actions a,
+.credential-delete-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 0.9rem;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.credential-view-link {
+    color: #087f75;
+    background: #e8f6f3;
+}
+
+.credential-delete-button {
+    border: 1px solid #f0d2d0;
+    color: #a52e29;
+    background: #fff7f6;
+}
+
+.credential-manager-actions svg {
+    width: 18px;
+    height: 18px;
+}
+
+.credential-empty-state {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    padding: 28px 16px;
+    border: 1px dashed #cbd8d6;
+    border-radius: 12px;
+    text-align: center;
+    color: #667674;
+}
+
+.credential-empty-state > svg {
+    width: 30px;
+    height: 30px;
+    color: #087f75;
+}
+
+.credential-empty-state p,
+.credential-empty-state span {
+    margin: 0;
+}
+
+.credential-empty-state p {
+    color: #304744;
+    font-weight: 600;
+}
+
+@media (max-width: 640px) {
+    .credential-manager {
+        padding: 16px;
+    }
+
+    .credential-upload-form {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .credential-manager-card {
+        flex-wrap: wrap;
+    }
+
+    .credential-manager-card-content {
+        flex-basis: calc(100% - 64px);
+    }
+
+    .credential-manager-actions {
+        width: 100%;
+        padding-left: 0;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* =========================================
    Professional profile: documents & qualifications

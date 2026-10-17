@@ -179,12 +179,12 @@ async function showEditForm(req, res) {
 
     const professional = await getProfessionalById(req.params.id);
 
-    const credentials = await getCredentialsByProfessional(professional.id);
-
     if(!professional) {
-         
         return res.status(404).send("Professionel introuvable.");
     }
+
+    const credentials = await getCredentialsByProfessional(professional.id);
+    
     res.render("professionals/edit-form", {
         title: `Modifier ${professional.name} — AZÔÔDIÉ`,
         professional,
