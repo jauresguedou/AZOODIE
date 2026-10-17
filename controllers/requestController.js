@@ -59,6 +59,7 @@ async function submitRequest(req, res) {
     await withTransaction(pool, async (client) => {
         await createRequest({
             client_id: req.session.userId,
+            professional_id: req.body.professional_id,
             category: req.body.category,
             description: req.body.description,
             address_text: req.body.address_text,

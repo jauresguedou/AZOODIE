@@ -6,6 +6,7 @@ const tradeCategories = require("../config/tradeCategories");
 const serializeInlineJson = require("../utils/serializeInlineJson");
 const withTransaction = require("../utils/withTransaction");
 const { getCredentialsByProfessional } = require("../models/credential-model");
+const { getReviewsForProfessional, hasContactedProfessional, getOwnReview, upsertReview } = require("../models/review-model");
 
 const searchHeadContent = [
     '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">',
@@ -136,11 +137,17 @@ async function showProfile(req,res) {
     }
     const portfolioPosts = await getPortfolioPosts(professional.id);
     const credentials = await getCredentialsByProfessional(professional.id);
+    const reviews = await getReviewsForProfessional(professional.id);
+    const canReview = req.session.userRole === "client"
+        ? await hasContactedProfessional(req.session.userId, professional.id)
+        : false;
     res.render("professionals/profile", {
         title: `${professional.name} — AZÔÔDIÉ`,
         professional,
         portfolioPosts,
         credentials,
+        reviews,
+        canReview,
     });
 }
 
@@ -184,7 +191,7 @@ async function showEditForm(req, res) {
     }
 
     const credentials = await getCredentialsByProfessional(professional.id);
-    
+
     res.render("professionals/edit-form", {
         title: `Modifier ${professional.name} — AZÔÔDIÉ`,
         professional,

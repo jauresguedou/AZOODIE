@@ -37,6 +37,84 @@ body {
 }
 
 
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating label {
+  font-size: 2rem;
+  color: var(--gray-light);
+  cursor: pointer;
+  transition: color 0.1s ease;
+}
+
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: var(--orange);
+}
+
+
+
+/* ============================================
+   Professional profile — reviews section
+   ============================================ */
+.professional-profile-review-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  background: var(--orange);
+  color: #fff;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  transition: filter 0.15s ease;
+}
+
+.professional-profile-review-cta:hover {
+  filter: brightness(0.93);
+}
+
+.professional-profile-review-note {
+  margin-top: 12px;
+  color: var(--gray);
+  font-size: 0.85rem;
+}
+
+.professional-profile-reviews-list {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.professional-profile-review {
+  border: 1px solid var(--gray-light);
+  border-radius: var(--radius);
+  padding: 16px;
+  background: #fff;
+}
+
+.professional-profile-review-stars {
+  margin-left: auto;
+  color: var(--orange);
+  font-size: 1rem;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+
 /* Professional credential manager */
 .credential-manager {
     margin-top: 32px;

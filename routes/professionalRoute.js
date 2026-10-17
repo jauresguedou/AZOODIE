@@ -9,6 +9,10 @@ const { upload }= require("../config/cloudinary");
 const { uploadCredential } = require("../config/cloudinary");
 const portfolioUpload = require("../config/portfolioUpload");
 const { addCredential, deleteCredentialHandler } = require("../controllers/credentialController");
+const { showReviewForm, submitReview } = require("../controllers/reviewController");
+
+router.get("/:id/review", requireLogin, showReviewForm);
+router.post("/:id/review", requireLogin, submitReview);
 
 
 router.get("/add", requireLogin, requireProfessionalRole, showAddForm);

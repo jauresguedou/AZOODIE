@@ -6,12 +6,14 @@ async function createRequest(data, database = pool) {
     const result = await database.query(
         `
         INSERT INTO requests
-          (client_id, category, description, address_text, lat, lng, budget_estimate)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+          (client_id, professional_id, category, description, address_text, lat, lng, budget_estimate)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING *`,
 
         [
           data.client_id,
+          data.category,
+          data.professional_id || null,
           data.category,
           data.description,
           data.address_text,

@@ -243,3 +243,19 @@ CHECK (
         'safety_certificate'
     )
 );
+
+
+
+ALTER TABLE requests ADD COLUMN IF NOT EXISTS professional_id INTEGER REFERENCES professionals(id) ON DELETE SET NULL;
+
+
+CREATE TABLE IF NOT EXISTS reviews (
+    id              SERIAL PRIMARY KEY,
+    professional_id INTEGER NOT NULL REFERENCES professionals(id) ON DELETE CASCADE,
+    client_id       INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    request_id      INTEGER REFERENCES requests(id) ON DELETE SET NULL,
+    rating          SMALLINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    comment         TEXT,
+    created_at      TIMESTAMP DEFAULT NOW(),
+    UNIQUE (client_id, professional_id)
+);

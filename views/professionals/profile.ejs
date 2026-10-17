@@ -268,9 +268,14 @@
                 <% } %>
             </section>
 
-            <section class="professional-profile-section professional-profile-rating-section">
-                <p class="professional-profile-eyebrow">Avis clients</p>
-                <h2>Évaluations</h2>
+                        <section class="professional-profile-section professional-profile-rating-section" id="professional-reviews" aria-labelledby="professional-profile-reviews-title">
+                <div class="professional-profile-feed-heading">
+                    <div>
+                        <p class="professional-profile-eyebrow">Confiance & transparence</p>
+                        <h2 id="professional-profile-reviews-title">Avis clients</h2>
+                    </div>
+                </div>
+
                 <% if (reviewCount > 0) { %>
                     <div class="professional-profile-rating">
                         <span class="professional-profile-rating-number"><%= rating.toFixed(1) %></span>
@@ -280,11 +285,43 @@
                                     <span aria-hidden="true"><%= rating >= star ? "★" : "☆" %></span>
                                 <% } %>
                             </span>
-                            <p>Basé sur <%= reviewCount %> avis</p>
+                            <p>Basé sur <%= reviewCount %> avis<%= reviewCount === 1 ? "" : "" %></p>
                         </div>
                     </div>
                 <% } else { %>
                     <p class="professional-profile-muted">Aucun avis pour le moment.</p>
+                <% } %>
+
+                <% if (typeof canReview !== "undefined" && canReview) { %>
+                    <a href="/professionals/<%= professional.id %>/review" class="professional-profile-review-cta">
+                        <span aria-hidden="true">★</span> Laisser ou modifier mon avis
+                    </a>
+                <% } else if (session.userRole === "client") { %>
+                    <p class="professional-profile-review-note">
+                        Contactez ce professionnel pour pouvoir laisser un avis après votre échange.
+                    </p>
+                <% } %>
+
+                <% if (typeof reviews !== "undefined" && reviews.length > 0) { %>
+                    <div class="professional-profile-reviews-list">
+                        <% reviews.forEach((review) => { %>
+                            <article class="professional-profile-review">
+                                <header class="professional-profile-post-header">
+                                    <div class="professional-profile-post-avatar" aria-hidden="true"><%= review.client_name.trim().charAt(0).toLocaleUpperCase("fr-FR") %></div>
+                                    <div class="professional-profile-post-author">
+                                        <strong><%= review.client_name %></strong>
+                                        <time datetime="<%= new Date(review.created_at).toISOString() %>"><%= new Date(review.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) %></time>
+                                    </div>
+                                    <span class="professional-profile-review-stars" aria-label="Note : <%= review.rating %> sur 5">
+                                        <%= "★".repeat(review.rating) %><%= "☆".repeat(5 - review.rating) %>
+                                    </span>
+                                </header>
+                                <% if (review.comment) { %>
+                                    <p class="professional-profile-post-caption"><%= review.comment %></p>
+                                <% } %>
+                            </article>
+                        <% }); %>
+                    </div>
                 <% } %>
             </section>
         </div>
