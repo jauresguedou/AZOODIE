@@ -3,7 +3,7 @@
     const professionalCredentials =
         typeof credentials === "undefined" ? [] : credentials;
 %>
-<div class="form-container" style="margin-top: 32px;">
+<div class="form-container professional-edit-page">
       <section class="professional-edit-card">
         <h1>Modifier le profil</h1>
 
@@ -258,9 +258,26 @@
 
 
 
-         <form action="/professionals/<%= professional.id%>/delete" method="POST" style="margin-top:12px;" onsubmit="return confirm('Supprimer définitivement ce profil ?');">
-               <button type="submit" class="btn-primary" style="background:#C0392B;">Supprimer ce profil</button>
-         </form>
+
+<section class="professional-delete-section">
+  <h2>Zone de danger</h2>
+  <p>La suppression de votre profil peut être définitive.</p>
+
+  <form
+    action="/professionals/<%= professional.id %>/delete"
+    method="POST"
+    onsubmit="return confirm('Supprimer définitivement ce profil ?');"
+  >
+    <button
+      type="submit"
+      class="btn-primary"
+      style="background: #C0392B;"
+    >
+      Supprimer ce profil
+    </button>
+  </form>
+</section>
+
       </div>
       <script src="/js/address-autocomplete.js"></script>
       <script>
