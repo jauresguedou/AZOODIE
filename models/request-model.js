@@ -12,7 +12,6 @@ async function createRequest(data, database = pool) {
 
         [
           data.client_id,
-          data.category,
           data.professional_id || null,
           data.category,
           data.description,
