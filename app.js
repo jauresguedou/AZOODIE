@@ -4,6 +4,7 @@ const path = require("path");
 const session = require("express-session");
 const PgSession = require("connect-pg-simple")(session);
 const routes = require("./routes");
+const marketRoutes = require("./routes/market");
 const pool = require("./config/database");
 const { getUnreadCount } = require("./models/notification-model");
 const { notFoundHandler, errorHandler } = require("./middleware/errorHandler");
@@ -60,15 +61,20 @@ app.use((req,res,next) => {
 });
 
 app.use(async (req, res, next) => {
+   try { 
     if (req.session.userId && req.session.professionalId){
         res.locals.unreadCount = await getUnreadCount(req.session.userId);
     }else {
         res.locals.unreadCount = 0;
     }
     next();
+   } catch (error) {
+      next(error);
+   }
 });
 
 app.use(routes);
+app.use("/market", marketRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

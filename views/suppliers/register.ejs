@@ -1,0 +1,74 @@
+
+<div class="form-container">
+    <h1>Inscrire mon entreprise</h1>
+    <p>Présentez votre activité aux clients d'AZÔÔDIÉ.</p>
+
+    <%- include('../partials/messages', { errors }) %>
+
+    <form action="/supplier/register" method="POST">
+        <div class="form-group">
+            <label for="business_name">Nom de l'entreprise</label>
+            <input
+                id="business_name"
+                name="business_name"
+                value="<%= formValues.business_name || '' %>"
+                maxlength="150"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Téléphone</label>
+            <input
+                id="phone"
+                name="phone"
+                type="tel"
+                value="<%= formValues.phone || '' %>"
+                maxlength="30"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="department">Département</label>
+            <input
+                id="department"
+                name="department"
+                value="<%= formValues.department || '' %>"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="commune">Commune</label>
+            <input
+                id="commune"
+                name="commune"
+                value="<%= formValues.commune || '' %>"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="address_text">Adresse ou repère</label>
+            <input
+                id="address_text"
+                name="address_text"
+                value="<%= formValues.address_text || '' %>"
+                maxlength="500"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description de l'entreprise</label>
+            <textarea
+                id="description"
+                name="description"
+                maxlength="2000"
+            ><%= formValues.description || '' %></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary">
+            Enregistrer mon entreprise
+        </button>
+    </form>
+</div>

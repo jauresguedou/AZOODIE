@@ -1,60 +1,102 @@
 <nav class="site-nav">
     <a href="/" class="nav-brand">AZÔÔDIÉ</a>
 
-    <button type="button" id="nav-toggle" class="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false">
-        <span> </span>
-        <span> </span>
-        <span> </span>
+    <button
+        type="button"
+        id="nav-toggle"
+        class="nav-toggle"
+        aria-label="Ouvrir le menu"
+        aria-expanded="false"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
     </button>
 
     <div class="nav-links">
+
+        <!-- Shared navigation: available to everyone -->
+        <a href="/market" class="nav-market-link">🛍️ Marché</a>
+
         <% if (session.userRole !== 'professional') { %>
             <a href="/search?lat=6.3703&lng=2.3912">Rechercher</a>
             <a href="/professionals">Professionnels</a>
         <% } %>
 
-        <% if (session.userId) { %>
+        <% if (!session.userId) { %>
 
+            <!-- Visitors who are not logged in -->
+            <a href="/login">Connexion</a>
+            <a href="/register">Inscription</a>
+
+        <% } else { %>
+
+            <!-- Administrator navigation -->
             <% if (session.userRole === 'admin') { %>
                 <a href="/admin/coverage">Admin</a>
             <% } %>
 
-            <% if (session.professionalId) { %>
-                <a href="/professionals/dashboard">Tableau de bord</a>
-                
-                <a href="/professionals/leads">Mes demandes</a>
-                <a href="/requests/feed">Annonces</a>
-
-            <% } else if (session.userRole === 'professional') { %>
-                <a href="/professionals/add" style="color:var(--orange); font-weight:700;">⚠ Compléter mon profil pro</a>
-            <% } %>
-
-            <% if (session.userRole === 'professional') { %>
-                <a href="<%= session.professionalId ? `/professionals/${session.professionalId}` : '/professionals/add' %>">Mon profil</a>
-            <% } else { %>
-                <a href="/profile">Mon profil</a>
-            <% } %>
-            <form action="/logout" method="POST" style="display:inline;">
-                <button type="submit" class="nav-link-btn">Déconnexion</button>
-            </form>
-            <% if (session.professionalId) { %>
-                <a href="/professionals/notifications"
-                    class="nav-notifications"
-                    aria-label="<%= unreadCount > 0 ? 'Notifications, nouvelles notifications' : 'Notifications' %>"
-                    title="<%= unreadCount > 0 ? 'Nouvelles notifications' : 'Notifications' %>">
-                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
-                        <path d="M10 21h4"></path>
-                    </svg>
-                    <% if (unreadCount > 0) { %><span class="nav-notification-dot" aria-hidden="true"></span><% } %>
+            <!-- Supplier navigation -->
+            <% if (session.userRole === 'supplier') { %>
+                <a href="/supplier/dashboard" class="nav-supplier-link">
+                    🏪 Espace fournisseur
                 </a>
             <% } %>
 
-        <% } else { %>
-            <a href="/login">Connexion</a>
-            <a href="/register">Inscription</a>
+            <!-- Professional navigation -->
+            <% if (session.userRole === 'professional') { %>
+
+                <% if (session.professionalId) { %>
+                    <a href="/professionals/dashboard">Tableau de bord</a>
+                    <a href="/professionals/leads">Mes demandes</a>
+                    <a href="/requests/feed">Annonces</a>
+                    <a href="/professionals/<%= session.professionalId %>">Mon profil</a>
+
+                    <a
+                        href="/professionals/notifications"
+                        class="nav-notifications"
+                        aria-label="<%= unreadCount > 0 ? 'Notifications, nouvelles notifications' : 'Notifications' %>"
+                        title="<%= unreadCount > 0 ? 'Nouvelles notifications' : 'Notifications' %>"
+                    >
+                        <svg
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+                            <path d="M10 21h4"></path>
+                        </svg>
+
+                        <% if (unreadCount > 0) { %>
+                            <span class="nav-notification-dot" aria-hidden="true"></span>
+                        <% } %>
+                    </a>
+
+                <% } else { %>
+                    <a href="/professionals/add">Mon profil</a>
+                <% } %>
+
+            <% } else { %>
+
+                <!-- General profile link for non-professional users -->
+                <a href="/profile">Mon profil</a>
+
+            <% } %>
+
+            <!-- Shared authenticated-user action -->
+            <form action="/logout" method="POST" class="nav-logout-form">
+                <button type="submit" class="nav-link-btn">
+                    Déconnexion
+                </button>
+            </form>
+
         <% } %>
 
     </div>
 </nav>
+
 <script src="/js/nav.js"></script>

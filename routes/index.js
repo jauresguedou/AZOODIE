@@ -8,11 +8,13 @@ const professionalRoute = require("./professionalRoute");
 const profileRoute = require("./profileRoute");
 const requestRoute = require("./requestRoute");
 const searchRoute = require("./searchRoute");
+const supplierRoute  = require("./supplierRoute");
 
 const router = express.Router();
 
 router.use("/", announcementRoute);
 router.use("/professionals", professionalRoute);
+router.use("/supplier", supplierRoute);
 router.use("/search", searchRoute);
 router.use("/requests", requestRoute);
 router.use("/favorites", favoriteRoute);

@@ -1,0 +1,330 @@
+
+<%
+    const categories = [
+        { label: "Tous les matériaux", term: "", symbol: "▦" },
+        { label: "Ciment", term: "ciment", symbol: "▤" },
+        { label: "Fer et acier", term: "fer", symbol: "⌁" },
+        { label: "Sable et gravier", term: "sable", symbol: "◈" },
+        { label: "Peinture", term: "peinture", symbol: "◉" },
+        { label: "Plomberie", term: "plomberie", symbol: "↗" },
+        { label: "Électricité", term: "électricité", symbol: "ϟ" }
+    ];
+
+    const formatPrice = (value) =>
+        Number(value).toLocaleString("fr-FR", {
+            maximumFractionDigits: 2
+        });
+
+    const formatDate = (value) => {
+        if (!value) return "Date inconnue";
+
+        return new Date(value).toLocaleDateString("fr-FR", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+    };
+
+    const materialSymbol = (category) => {
+        const value = String(category || "").toLowerCase();
+
+        if (value.includes("ciment")) return "▤";
+        if (value.includes("fer") || value.includes("acier")) return "⌁";
+        if (value.includes("sable") || value.includes("gravier")) return "◈";
+        if (value.includes("peinture")) return "◉";
+        if (value.includes("plomberie")) return "↗";
+        if (value.includes("électricité") || value.includes("electricite")) return "ϟ";
+
+        return "▦";
+    };
+
+    const currentSort = filters.sort || "price_asc";
+%>
+
+<section class="market-page">
+    <div class="market-container">
+
+        <header class="market-heading">
+            <div>
+                <p class="market-eyebrow">AZÔÔDIÉ · CONSTRUCTION</p>
+                <h1>Comparateur de prix</h1>
+                <p class="market-subtitle">
+                    Comparez les prix des matériaux et trouvez des fournisseurs
+                    partout au Bénin.
+                </p>
+            </div>
+
+            <a class="market-supplier-link" href="#market-supplier-info">
+                <span aria-hidden="true">＋</span>
+                Espace fournisseur
+            </a>
+        </header>
+
+        <section class="market-search-panel" aria-label="Recherche de matériaux">
+            <form class="market-search-form" method="GET" action="/market">
+                <input
+                    class="market-field"
+                    type="search"
+                    name="search"
+                    placeholder="Quel matériau recherchez-vous ?"
+                    aria-label="Rechercher un matériau"
+                    value="<%= filters.search || '' %>"
+                >
+
+                <input
+                    class="market-field"
+                    type="text"
+                    name="department"
+                    placeholder="Département"
+                    aria-label="Filtrer par département"
+                    value="<%= filters.department || '' %>"
+                >
+
+                <input
+                    class="market-field"
+                    type="text"
+                    name="commune"
+                    placeholder="Commune"
+                    aria-label="Filtrer par commune"
+                    value="<%= filters.commune || '' %>"
+                >
+
+                <input type="hidden" name="sort" value="<%= currentSort %>">
+
+                <button class="market-search-button" type="submit">
+                    Rechercher
+                </button>
+            </form>
+        </section>
+
+        <div class="market-layout">
+
+            <aside class="market-sidebar">
+                <h2>Explorer le marché</h2>
+
+                <section class="market-sidebar-section">
+                    <p class="market-sidebar-label">Catégories</p>
+
+                    <nav class="market-category-list" aria-label="Catégories de matériaux">
+                        <% categories.forEach(category => {
+                            const active =
+                                String(filters.search || "").toLowerCase() ===
+                                category.term.toLowerCase();
+                        %>
+                            <a
+                                class="market-category-link <%= active ? 'is-active' : '' %>"
+                                href="/market?search=<%= encodeURIComponent(category.term) %>&department=<%= encodeURIComponent(filters.department || '') %>&commune=<%= encodeURIComponent(filters.commune || '') %>&sort=<%= encodeURIComponent(currentSort) %>"
+                                <%= active ? 'aria-current="page"' : '' %>
+                            >
+                                <span class="market-category-symbol" aria-hidden="true">
+                                    <%= category.symbol %>
+                                </span>
+                                <span><%= category.label %></span>
+                            </a>
+                        <% }) %>
+                    </nav>
+                </section>
+
+                <section class="market-sidebar-section">
+                    <p class="market-sidebar-label">Couverture</p>
+                    <p class="market-sidebar-note">
+                        Consultez les offres disponibles dans les différentes
+                        régions du Bénin. Les résultats dépendent des fournisseurs
+                        inscrits et de leurs offres publiées.
+                    </p>
+                </section>
+
+                <section class="market-sidebar-section" id="market-supplier-info">
+                    <p class="market-sidebar-label">Vous êtes fournisseur ?</p>
+                    <p class="market-sidebar-note">
+                        Publiez vos matériaux, actualisez vos prix et présentez
+                        vos offres aux acheteurs.
+                    </p>
+                </section>
+            </aside>
+
+            <main class="market-results">
+                <div class="market-results-toolbar">
+                    <div>
+                        <h2>
+                            <%= filters.search
+                                ? "Résultats pour « " + filters.search + " »"
+                                : "Matériaux disponibles" %>
+                        </h2>
+
+                        <span class="market-results-count">
+                            <%= offers.length %>
+                            <%= offers.length > 1 ? "offres trouvées" : "offre trouvée" %>
+                        </span>
+                    </div>
+
+                    <form
+                        class="market-sort-form"
+                        method="GET"
+                        action="/market"
+                    >
+                        <input
+                            type="hidden"
+                            name="search"
+                            value="<%= filters.search || '' %>"
+                        >
+
+                        <input
+                            type="hidden"
+                            name="department"
+                            value="<%= filters.department || '' %>"
+                        >
+
+                        <input
+                            type="hidden"
+                            name="commune"
+                            value="<%= filters.commune || '' %>"
+                        >
+
+                        <label for="market-sort">Trier par</label>
+
+                        <select
+                            id="market-sort"
+                            name="sort"
+                            class="market-sort-select"
+                            onchange="this.form.submit()"
+                        >
+                            <option
+                                value="price_asc"
+                                <%= currentSort === "price_asc" ? "selected" : "" %>
+                            >
+                                Prix le plus bas
+                            </option>
+
+                            <option
+                                value="price_desc"
+                                <%= currentSort === "price_desc" ? "selected" : "" %>
+                            >
+                                Prix le plus élevé
+                            </option>
+
+                            <option
+                                value="recent"
+                                <%= currentSort === "recent" ? "selected" : "" %>
+                            >
+                                Plus récemment actualisé
+                            </option>
+                        </select>
+                    </form>
+                </div>
+
+                <% if (offers.length > 0) { %>
+                    <div class="market-product-grid">
+                        <% offers.forEach(offer => {
+                            const stockStatus = String(offer.stock_status || "unknown");
+
+                            const stockClass =
+                                stockStatus === "limited"
+                                    ? "is-limited"
+                                    : ["out_of_stock", "unknown"].includes(stockStatus)
+                                        ? "is-unavailable"
+                                        : "";
+
+                            const stockLabel = {
+                                available: "Disponible",
+                                limited: "Stock limité",
+                                out_of_stock: "Rupture de stock",
+                                unknown: "Stock à confirmer"
+                            }[stockStatus] || "Stock à confirmer";
+                        %>
+
+                            <article class="market-product-card">
+                                <div class="market-product-visual">
+                                    <span class="market-stock-badge <%= stockClass %>">
+                                        <%= stockLabel %>
+                                    </span>
+
+                                    <div class="market-product-placeholder" aria-hidden="true">
+                                        <%= materialSymbol(offer.category) %>
+                                    </div>
+                                </div>
+
+                                <div class="market-product-body">
+                                    <p class="market-product-category">
+                                        <%= offer.category %>
+                                    </p>
+
+                                    <h3 class="market-product-title">
+                                        <%= offer.material_name %>
+                                    </h3>
+
+                                    <p class="market-product-spec">
+                                        <%= [offer.brand, offer.specification]
+                                            .filter(Boolean)
+                                            .join(" · ") || "Caractéristiques non précisées" %>
+                                    </p>
+
+                                    <p class="market-product-price">
+                                        <%= formatPrice(offer.price_fcfa) %>
+                                        <small>FCFA / <%= offer.unit %></small>
+                                    </p>
+
+                                    <div class="market-seller">
+                                        <div class="market-seller-avatar" aria-hidden="true">
+                                            <%= String(offer.business_name || "F")
+                                                .trim()
+                                                .charAt(0)
+                                                .toUpperCase() %>
+                                        </div>
+
+                                        <div class="market-seller-info">
+                                            <p class="market-seller-name">
+                                                <%= offer.business_name %>
+                                            </p>
+
+                                            <p class="market-seller-location">
+                                                <%= offer.commune %>, <%= offer.department %>
+                                            </p>
+
+                                            <% if (offer.verified) { %>
+                                                <span class="market-verified">
+                                                    ✓ Fournisseur vérifié
+                                                </span>
+                                            <% } %>
+                                        </div>
+                                    </div>
+
+                                    <div class="market-product-footer">
+                                        <span class="market-delivery-dot" aria-hidden="true"></span>
+
+                                        <span>
+                                            <%= offer.delivery_available
+                                                ? "Livraison proposée"
+                                                : "Retrait au dépôt à confirmer" %>
+                                        </span>
+                                    </div>
+
+                                    <p class="market-product-spec">
+                                        Prix actualisé le <%= formatDate(offer.last_price_update) %>
+                                    </p>
+                                </div>
+                            </article>
+
+                        <% }) %>
+                    </div>
+
+                <% } else { %>
+                    <div class="market-empty">
+                        <div class="market-empty-symbol" aria-hidden="true">⌕</div>
+
+                        <h3>Aucune offre trouvée</h3>
+
+                        <p>
+                            Essayez un autre matériau ou élargissez votre recherche
+                            à un autre département ou à une autre commune.
+                        </p>
+
+                        <a class="market-reset-link" href="/market">
+                            Voir toutes les offres
+                        </a>
+                    </div>
+                <% } %>
+            </main>
+        </div>
+    </div>
+</section>

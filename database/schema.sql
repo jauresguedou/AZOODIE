@@ -259,3 +259,117 @@ CREATE TABLE IF NOT EXISTS reviews (
     created_at      TIMESTAMP DEFAULT NOW(),
     UNIQUE (client_id, professional_id)
 );
+
+
+
+BEGIN;
+
+-- 1. Supplier profiles
+CREATE TABLE IF NOT EXISTS suppliers (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL UNIQUE
+        REFERENCES users(id) ON DELETE RESTRICT,
+
+    business_name VARCHAR(150) NOT NULL,
+    phone VARCHAR(30),
+    description TEXT,
+
+    department VARCHAR(80) NOT NULL,
+    commune VARCHAR(100) NOT NULL,
+    address_text TEXT,
+
+    verified BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 2. Shared materials catalogue
+CREATE TABLE IF NOT EXISTS materials (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    description TEXT,
+    brand VARCHAR(100),
+    specification VARCHAR(150),
+    unit VARCHAR(40) NOT NULL,
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+    UNIQUE (name, brand, specification, unit)
+);
+
+-- 3. Offers published by suppliers
+CREATE TABLE IF NOT EXISTS supplier_offers (
+    id SERIAL PRIMARY KEY,
+
+    supplier_id INTEGER NOT NULL
+        REFERENCES suppliers(id) ON DELETE RESTRICT,
+
+    material_id INTEGER NOT NULL
+        REFERENCES materials(id) ON DELETE RESTRICT,
+
+    price_fcfa NUMERIC(14, 2) NOT NULL
+        CHECK (price_fcfa > 0),
+
+    stock_quantity NUMERIC(14, 2)
+        CHECK (stock_quantity >= 0),
+
+    stock_status VARCHAR(20) NOT NULL DEFAULT 'unknown'
+        CHECK (
+            stock_status IN (
+                'available',
+                'limited',
+                'out_of_stock',
+                'unknown'
+            )
+        ),
+
+    delivery_available BOOLEAN NOT NULL DEFAULT FALSE,
+    delivery_details TEXT,
+
+    offer_status VARCHAR(20) NOT NULL DEFAULT 'active'
+        CHECK (
+            offer_status IN ('active', 'paused', 'expired')
+        ),
+
+    last_price_update TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 4. Indexes for marketplace searches
+CREATE INDEX IF NOT EXISTS idx_materials_category
+    ON materials(category);
+
+CREATE INDEX IF NOT EXISTS idx_suppliers_location
+    ON suppliers(department, commune);
+
+CREATE INDEX IF NOT EXISTS idx_supplier_offers_material_status
+    ON supplier_offers(material_id, offer_status);
+
+CREATE INDEX IF NOT EXISTS idx_supplier_offers_supplier
+    ON supplier_offers(supplier_id);
+
+COMMIT;
+
+
+
+
+INSERT INTO materials
+    (name, category, description, brand, specification, unit)
+VALUES
+    ('Ciment', 'Ciment',
+     'Matériau de construction', NULL, 'Sac de 50 kg', 'sac'),
+
+    ('Fer à béton', 'Fer et acier',
+     'Acier pour béton armé', NULL, 'Diamètre à préciser', 'barre'),
+
+    ('Sable', 'Sable et gravier',
+     'Sable de construction', NULL, 'Granulométrie à préciser', 'm³'),
+
+    ('Gravier', 'Sable et gravier',
+     'Gravier pour travaux de construction', NULL, 'Granulométrie à préciser', 'm³'),
+
+    ('Peinture', 'Peinture',
+     'Peinture pour bâtiment', NULL, 'Type à préciser', 'litre')
+ON CONFLICT (name, brand, specification, unit) DO NOTHING;

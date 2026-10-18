@@ -7,6 +7,17 @@ function requireLogin(req, res, next) {
 
 }
 
+
+function requireSupplierRole(req, res, next) {
+    if (!req.session.userId) {
+        return res.redirect("/login");
+    }
+    if (req.session.userRole !== "supplier") {
+        return res.status(403).send("Accès réservé aux fournisseurs de matériaux.");
+    }
+    next();
+}
+
 function requireProfessionalRole(req, res, next) {
 
     if(!req.session.userId || req.session.userRole !== "professional") {
@@ -43,4 +54,4 @@ function requireAdmin(req, res, next){
 
 
 
-module.exports = { requireLogin, requireProfessionalRole, requireOwnership, requireAdmin };
+module.exports = { requireLogin, requireProfessionalRole, requireSupplierRole, requireOwnership, requireAdmin };

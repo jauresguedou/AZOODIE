@@ -1,0 +1,157 @@
+
+<div class="supplier-workspace supplier-dashboard">
+  <!-- Welcome header -->
+  <header class="supplier-dashboard-header">
+    <div class="supplier-dashboard-welcome">
+      <span class="supplier-eyebrow">VOTRE ESPACE PROFESSIONNEL</span>
+      <h1>Bienvenue, <%= supplier.business_name %> !</h1>
+      <p>Gérez votre entreprise et présentez vos matériaux aux clients d'AZÔÔDIÉ.</p>
+    </div>
+
+    
+  </header>
+
+  <!-- Account status -->
+  <section class="supplier-account-banner <%= supplier.verified ? 'is-verified' : 'is-pending' %>">
+    <div class="supplier-account-status-icon" aria-hidden="true">
+      <%= supplier.verified ? '✓' : '!' %>
+    </div>
+
+    <div class="supplier-account-status-copy">
+      <strong>
+        <%= supplier.verified ? 'Entreprise vérifiée' : 'Vérification en attente' %>
+      </strong>
+      <p>
+        <%= supplier.verified
+          ? 'Votre entreprise est vérifiée sur AZÔÔDIÉ.'
+          : 'Votre profil est enregistré. La vérification de votre entreprise reste à effectuer.' %>
+      </p>
+    </div>
+
+    <span class="supplier-status-pill">
+      <%= supplier.verified ? 'Vérifié' : 'En attente' %>
+    </span>
+  </section>
+
+  <!-- Main dashboard grid -->
+  <div class="supplier-dashboard-grid">
+    <main class="supplier-dashboard-main">
+      <!-- Company profile -->
+      <section class="supplier-panel supplier-company-panel">
+        <div class="supplier-dashboard-section-heading">
+          <div>
+            <h2>Mon entreprise</h2>
+            <p>Les informations de votre établissement.</p>
+          </div>
+          <span class="supplier-company-symbol" aria-hidden="true">▦</span>
+        </div>
+
+        <div class="supplier-company-identity">
+          <div class="supplier-company-avatar" aria-hidden="true">
+            <%= supplier.business_name.substring(0, 1).toUpperCase() %>
+          </div>
+          <div class="supplier-company-name">
+            <h3><%= supplier.business_name %></h3>
+            <p>Fournisseur de matériaux de construction</p>
+          </div>
+        </div>
+
+        <div class="supplier-company-details">
+          <div class="supplier-detail-item">
+            <span class="supplier-detail-icon" aria-hidden="true">⌖</span>
+            <div>
+              <span class="supplier-detail-label">Localisation</span>
+              <strong><%= supplier.commune %>, <%= supplier.department %></strong>
+            </div>
+          </div>
+
+          <div class="supplier-detail-item">
+            <span class="supplier-detail-icon" aria-hidden="true">☎</span>
+            <div>
+              <span class="supplier-detail-label">Téléphone</span>
+              <strong><%= supplier.phone || 'Non renseigné' %></strong>
+            </div>
+          </div>
+
+          <div class="supplier-detail-item supplier-detail-full">
+            <span class="supplier-detail-icon" aria-hidden="true">⌂</span>
+            <div>
+              <span class="supplier-detail-label">Adresse ou repère</span>
+              <strong><%= supplier.address_text || 'Aucune adresse renseignée' %></strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Getting started -->
+      <section class="supplier-panel supplier-getting-started">
+        <div class="supplier-dashboard-section-heading">
+          <div>
+            <h2>Développez votre activité</h2>
+            <p>Quelques actions pour démarrer sur AZÔÔDIÉ.</p>
+          </div>
+        </div>
+
+        <a href="/supplier/offers/new" class="supplier-action-card">
+          <span class="supplier-action-icon supplier-action-teal" aria-hidden="true">＋</span>
+          <span class="supplier-action-copy">
+            <strong>Publier un matériau</strong>
+            <small>Ajoutez un produit, son prix et sa disponibilité.</small>
+          </span>
+          <span class="supplier-action-arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a href="/supplier/offers" class="supplier-action-card">
+          <span class="supplier-action-icon supplier-action-orange" aria-hidden="true">▤</span>
+          <span class="supplier-action-copy">
+            <strong>Gérer mes offres</strong>
+            <small>Consultez les offres associées à votre entreprise.</small>
+          </span>
+          <span class="supplier-action-arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a href="/market" class="supplier-action-card">
+          <span class="supplier-action-icon supplier-action-blue" aria-hidden="true">⌕</span>
+          <span class="supplier-action-copy">
+            <strong>Explorer le Marché</strong>
+            <small>Consultez les offres de matériaux disponibles.</small>
+          </span>
+          <span class="supplier-action-arrow" aria-hidden="true">→</span>
+        </a>
+      </section>
+    </main>
+
+    <!-- Right sidebar -->
+    <aside class="supplier-dashboard-sidebar">
+      <section class="supplier-panel supplier-next-step-panel">
+        <div class="supplier-next-step-icon" aria-hidden="true">✦</div>
+        <span class="supplier-eyebrow">PROCHAINE ÉTAPE</span>
+        <h2>Présentez vos matériaux</h2>
+        <p>Publiez vos prix et indiquez votre stock pour permettre aux clients de comparer les offres.</p>
+        <a href="/supplier/offers/new" class="supplier-publish-button supplier-full-button">
+          Créer ma première offre
+        </a>
+      </section>
+
+      <section class="supplier-panel supplier-dashboard-help">
+        <h3>Conseils pour votre boutique</h3>
+        <div class="supplier-help-item">
+          <span aria-hidden="true">✓</span>
+          <p>Maintenez vos prix à jour.</p>
+        </div>
+        <div class="supplier-help-item">
+          <span aria-hidden="true">✓</span>
+          <p>Précisez vos conditions de livraison.</p>
+        </div>
+        <div class="supplier-help-item">
+          <span aria-hidden="true">✓</span>
+          <p>Actualisez votre disponibilité en stock.</p>
+        </div>
+      </section>
+
+      <a href="/market" class="supplier-market-link">
+        Découvrir le Marché AZÔÔDIÉ <span aria-hidden="true">→</span>
+      </a>
+    </aside>
+  </div>
+</div>

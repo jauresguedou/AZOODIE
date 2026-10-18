@@ -13,7 +13,7 @@ function showRegisterForm(req,res) {
 
 async function register(req, res) {
    const { name, email, password } = req.body;
-   const allowedRoles = ["client", "professional"];
+   const allowedRoles = ["client", "professional", "supplier"];
    const role = req.body.role || "client";
 
    if (!allowedRoles.includes(role)) {

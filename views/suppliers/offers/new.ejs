@@ -1,0 +1,183 @@
+
+<div class="supplier-workspace">
+  <div class="supplier-page-top">
+    <a href="/supplier/dashboard" class="supplier-back-link">
+      <span aria-hidden="true">←</span> Espace fournisseur
+    </a>
+
+    <div class="supplier-page-heading">
+      <div>
+        <span class="supplier-eyebrow">VOTRE BOUTIQUE AZÔÔDIÉ</span>
+        <h1>Publier une offre</h1>
+        <p>Présentez vos matériaux et partagez vos prix avec les clients.</p>
+      </div>
+
+      <div class="supplier-heading-icon" aria-hidden="true">＋</div>
+    </div>
+  </div>
+
+  <div class="supplier-offer-layout">
+    <main class="supplier-panel supplier-form-panel">
+      <div class="supplier-panel-heading">
+        <div>
+          <h2>Informations sur le produit</h2>
+          <p>Les champs marqués d'un * sont obligatoires.</p>
+        </div>
+        <span class="supplier-step-indicator">1 étape</span>
+      </div>
+
+      <div class="supplier-form-divider"></div>
+
+      <%- include('../../partials/messages', { errors }) %>
+
+      <form action="/supplier/offers" method="POST" class="supplier-modern-form">
+        <div class="supplier-field">
+          <label for="material_id">Matériau <span>*</span></label>
+          <select id="material_id" name="material_id" required>
+            <option value="">Sélectionner un matériau</option>
+            <% materials.forEach(function(material) { %>
+              <option
+                value="<%= material.id %>"
+                <%= String(formValues.material_id || '') === String(material.id) ? 'selected' : '' %>
+              >
+                <%= material.name %> — <%= material.specification %> (par <%= material.unit %>)
+              </option>
+            <% }) %>
+          </select>
+          <small>Choisissez le matériau correspondant exactement à votre produit.</small>
+        </div>
+
+        <div class="supplier-field">
+          <label for="price_fcfa">Prix de vente (FCFA) <span>*</span></label>
+          <div class="supplier-price-input">
+            <input
+              id="price_fcfa"
+              name="price_fcfa"
+              type="number"
+              min="1"
+              step="1"
+              value="<%= formValues.price_fcfa || '' %>"
+              placeholder="Ex. : 4500"
+              required
+            >
+            <span>FCFA</span>
+          </div>
+          <small>Entrez le prix pour une unité du matériau sélectionné.</small>
+        </div>
+
+        <div class="supplier-form-row">
+          <div class="supplier-field">
+            <label for="stock_quantity">Quantité en stock</label>
+            <input
+              id="stock_quantity"
+              name="stock_quantity"
+              type="number"
+              min="0"
+              step="any"
+              value="<%= formValues.stock_quantity ?? '' %>"
+              placeholder="Ex. : 100"
+            >
+            <small>Facultatif. Utilisez l'unité du matériau.</small>
+          </div>
+
+          <div class="supplier-field">
+            <label for="stock_status">Disponibilité <span>*</span></label>
+            <select id="stock_status" name="stock_status" required>
+              <option value="unknown" <%= formValues.stock_status === 'unknown' ? 'selected' : '' %>>
+                Non précisée
+              </option>
+              <option value="available" <%= formValues.stock_status === 'available' ? 'selected' : '' %>>
+                En stock
+              </option>
+              <option value="limited" <%= formValues.stock_status === 'limited' ? 'selected' : '' %>>
+                Stock limité
+              </option>
+              <option value="out_of_stock" <%= formValues.stock_status === 'out_of_stock' ? 'selected' : '' %>>
+                Rupture de stock
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="supplier-delivery-card">
+          <label class="supplier-checkbox-label" for="delivery_available">
+            <input
+              id="delivery_available"
+              type="checkbox"
+              name="delivery_available"
+              value="true"
+              <%= formValues.delivery_available ? 'checked' : '' %>
+            >
+            <span class="supplier-checkbox-custom" aria-hidden="true"></span>
+            <span class="supplier-delivery-copy">
+              <strong>Livraison disponible</strong>
+              <small>Indiquez si vous pouvez livrer les matériaux aux clients.</small>
+            </span>
+          </label>
+
+          <div class="supplier-field supplier-delivery-details">
+            <label for="delivery_details">Conditions de livraison</label>
+            <textarea
+              id="delivery_details"
+              name="delivery_details"
+              maxlength="1000"
+              rows="3"
+              placeholder="Ex. : Livraison possible à Bohicon selon la quantité commandée."
+            ><%= formValues.delivery_details || '' %></textarea>
+          </div>
+        </div>
+
+        <div class="supplier-form-actions">
+          <a href="/supplier/dashboard" class="supplier-secondary-button">
+            Annuler
+          </a>
+          <button type="submit" class="supplier-publish-button">
+            <span aria-hidden="true">＋</span> Publier mon offre
+          </button>
+        </div>
+      </form>
+    </main>
+
+    <aside class="supplier-sidebar">
+      <section class="supplier-panel supplier-preview-panel">
+        <div class="supplier-preview-top">
+          <span class="supplier-preview-icon" aria-hidden="true">◇</span>
+          <span class="supplier-preview-label">CONSEIL</span>
+        </div>
+        <h3>Une offre claire inspire confiance.</h3>
+        <p>Donnez aux clients les informations nécessaires pour comparer votre prix et prendre contact avec vous.</p>
+
+        <div class="supplier-tip-list">
+          <div class="supplier-tip">
+            <span class="supplier-tip-check" aria-hidden="true">✓</span>
+            <div>
+              <strong>Un prix précis</strong>
+              <p>Vérifiez que le prix correspond à la bonne unité.</p>
+            </div>
+          </div>
+
+          <div class="supplier-tip">
+            <span class="supplier-tip-check" aria-hidden="true">✓</span>
+            <div>
+              <strong>Un stock à jour</strong>
+              <p>Modifiez la disponibilité si votre stock change.</p>
+            </div>
+          </div>
+
+          <div class="supplier-tip">
+            <span class="supplier-tip-check" aria-hidden="true">✓</span>
+            <div>
+              <strong>Une livraison expliquée</strong>
+              <p>Précisez les zones desservies et les conditions.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="supplier-privacy-note">
+        <span aria-hidden="true">ⓘ</span>
+        <p>Votre offre sera publiée sous votre entreprise dans le Marché AZÔÔDIÉ après son enregistrement.</p>
+      </div>
+    </aside>
+  </div>
+</div>

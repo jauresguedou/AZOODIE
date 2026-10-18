@@ -1,0 +1,91 @@
+
+<div class="supplier-workspace supplier-offers-page">
+  <header class="supplier-dashboard-header">
+    <div class="supplier-dashboard-welcome">
+      <span class="supplier-eyebrow">VOTRE BOUTIQUE</span>
+      <h1>Mes offres</h1>
+      <p>Consultez les matériaux que vous proposez et les prix publiés sur AZÔÔDIÉ.</p>
+    </div>
+
+    <a href="/supplier/offers/new" class="supplier-publish-button supplier-header-action">
+      <span>＋</span> Publier une offre
+    </a>
+  </header>
+
+  <section class="supplier-panel">
+    <div class="supplier-dashboard-section-heading">
+      <div>
+        <h2>Mes matériaux publiés</h2>
+        <p>Entreprise : <strong><%= supplier.business_name %></strong></p>
+      </div>
+      <span class="supplier-status-pill">
+        <%= offers.length %> offre(s)
+      </span>
+    </div>
+
+    <% if (offers.length === 0) { %>
+      <div class="supplier-empty-state">
+        <div class="supplier-next-step-icon">▤</div>
+        <h3>Aucune offre pour le moment</h3>
+        <p>Publiez votre premier matériau pour commencer à présenter vos prix aux clients.</p>
+        <a href="/supplier/offers/new" class="supplier-publish-button">
+          Publier mon premier matériau
+        </a>
+      </div>
+    <% } else { %>
+      <div class="supplier-offers-list">
+        <% offers.forEach((offer) => { %>
+          <article class="supplier-offer-card">
+            <div class="supplier-offer-main">
+              <h3><%= offer.material_name || offer.name || "Matériau" %></h3>
+
+              <% if (offer.category) { %>
+                <p><%= offer.category %></p>
+              <% } %>
+
+              <% if (offer.specification) { %>
+                <p><%= offer.specification %></p>
+              <% } %>
+
+              <p>
+                Stock :
+                <strong>
+                  <%= ({
+                    available: "Disponible",
+                    limited: "Stock limité",
+                    out_of_stock: "Rupture de stock",
+                    unknown: "Non précisé"
+                  })[offer.stock_status] || offer.stock_status %>
+                </strong>
+              </p>
+
+              <p>
+                Livraison :
+                <strong><%= offer.delivery_available ? "Proposée" : "Non proposée" %></strong>
+              </p>
+            </div>
+
+            <div class="supplier-offer-price">
+              <strong>
+                <%= Number(offer.price_fcfa).toLocaleString("fr-FR") %> FCFA
+              </strong>
+              <span>par <%= offer.unit || "unité" %></span>
+              <small>
+                Statut :
+                <%= offer.offer_status === "active" ? "Active" :
+                    offer.offer_status === "paused" ? "En pause" :
+                    offer.offer_status === "expired" ? "Expirée" :
+                    offer.offer_status %>
+              </small>
+            </div>
+          </article>
+        <% }); %>
+      </div>
+    <% } %>
+
+    <div class="supplier-offers-footer">
+      <a href="/supplier/dashboard">← Retour au tableau de bord</a>
+      <a href="/market">Voir le Marché →</a>
+    </div>
+  </section>
+</div>
