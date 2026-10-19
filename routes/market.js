@@ -9,8 +9,21 @@ const allowedSortOptions = [
     "recent"
 ];
 
+
+
+
+function parsePrice(value) {
+    const number = Number(value);
+    return Number.isFinite(number) && number >= 0 && String(value).trim() !== ""
+        ? number
+        : "";
+}
+
 router.get("/", async (req, res, next) => {
     try {
+
+
+
         const requestedSort = (req.query.sort || "price_asc").trim();
         
 

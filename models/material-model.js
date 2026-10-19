@@ -1,4 +1,3 @@
-
 const pool = require("../config/database");
 
 const sortOptions = {
@@ -66,6 +65,7 @@ async function getActiveOffers(filters = {}) {
         JOIN suppliers s ON s.id = o.supplier_id
         WHERE ${conditions.join(" AND ")}
         ORDER BY ${orderBy}
+        LIMIT 1
     `;
 
     const result = await pool.query(query, params);
