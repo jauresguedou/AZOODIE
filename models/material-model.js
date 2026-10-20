@@ -25,13 +25,13 @@ async function getActiveOffers(filters = {}) {
     }
 
     if (filters.department) {
-        conditions.push(`s.department = $${paramIndex}`);
+        conditions.push(`s.department ILIKE $${paramIndex}`);
         params.push(filters.department);
         paramIndex++;
     }
 
     if (filters.commune) {
-        conditions.push(`s.commune = $${paramIndex}`);
+        conditions.push(`s.commune ILIKE $${paramIndex}`);
         params.push(filters.commune);
         paramIndex++;
     }
