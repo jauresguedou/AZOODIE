@@ -1,5 +1,6 @@
 const express = require("express");
 const adminRoute = require("./adminRoute");
+const constructionProjectRoute = require("./constructionProjectRoute");
 const announcementRoute = require("./announcementRoute");
 const apiRoute = require("./apiRoute");
 const authRoute = require("./authRoute");
@@ -21,6 +22,7 @@ router.use("/favorites", favoriteRoute);
 router.use("/", authRoute);
 router.use("/api", apiRoute);
 router.use("/admin", adminRoute);
+router.use("/chantiers", constructionProjectRoute);
 router.use("/profile", profileRoute);
 
 module.exports = router;

@@ -51,3 +51,55 @@
         min-width: 0;
     }
 }
+.market-unverified {
+    display: inline-block;
+    margin-top: 4px;
+    color: #8a5a00;
+    font-size: 0.78rem;
+    font-weight: 500;
+}
+
+
+.market-card-contact {
+    margin-top: 16px;
+    width: 100%;
+}
+
+.market-contact-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 44px;
+    padding: 11px 14px;
+    box-sizing: border-box;
+    border: 1px solid #0F6E6E;
+    border-radius: 8px;
+    background: #0F6E6E;
+    color: #fff;
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.2s ease,
+                border-color 0.2s ease;
+}
+
+.market-contact-btn:hover {
+    background: #0b5555;
+    border-color: #0b5555;
+    color: #fff;
+}
+
+.market-contact-btn:focus-visible {
+    outline: 3px solid #E8853B;
+    outline-offset: 3px;
+}
+
+.market-contact-unavailable {
+    display: block;
+    color: #777;
+    font-size: 0.85rem;
+    text-align: center;
+}

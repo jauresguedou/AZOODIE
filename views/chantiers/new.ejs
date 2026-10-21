@@ -1,0 +1,147 @@
+<div class="chantiers-page chantiers-form-page">
+    <div class="chantiers-header">
+        <div>
+            <p class="chantiers-eyebrow">GESTION DE PROJETS</p>
+            <h1>Créer un chantier</h1>
+            <p class="chantiers-subtitle">
+                Renseignez les informations essentielles de votre projet.
+            </p>
+        </div>
+
+        <a href="/chantiers" class="chantiers-back-link">
+            ← Mes chantiers
+        </a>
+    </div>
+
+    <% if (errors && errors.length > 0) { %>
+        <div class="chantiers-error-list" role="alert">
+            <strong>Veuillez corriger les points suivants :</strong>
+            <ul>
+                <% errors.forEach(function(error) { %>
+                    <li><%= error %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+
+    <form action="/chantiers" method="POST" class="chantiers-form">
+        <section class="chantiers-form-section">
+            <h2>Informations générales</h2>
+
+            <div class="form-group">
+                <label for="title">Nom du chantier *</label>
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    maxlength="180"
+                    required
+                    value="<%= formValues.title || '' %>"
+                    placeholder="Ex. Construction d'une maison familiale">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description du projet</label>
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="4"
+                    maxlength="5000"
+                    placeholder="Décrivez brièvement les travaux prévus..."><%= formValues.description || '' %></textarea>
+            </div>
+        </section>
+
+        <section class="chantiers-form-section">
+            <h2>Localisation du chantier</h2>
+
+            <div class="form-group">
+                <label for="address_text">Adresse ou lieu précis *</label>
+                <input
+                    type="text"
+                    id="address_text"
+                    name="address_text"
+                    maxlength="255"
+                    required
+                    value="<%= formValues.address_text || '' %>"
+                    placeholder="Ex. Fidjrossè, près de la route des pêches">
+            </div>
+
+            <div class="chantiers-form-row">
+                <div class="form-group">
+                    <label for="department">Département</label>
+                    <select id="department" name="department">
+                        <option value="">Choisir un département</option>
+                        <% departments.forEach(function(department) { %>
+                            <option
+                                value="<%= department %>"
+                                <%= formValues.department === department ? "selected" : "" %>>
+                                <%= department %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="commune">Commune</label>
+                    <input
+                        type="text"
+                        id="commune"
+                        name="commune"
+                        maxlength="100"
+                        value="<%= formValues.commune || '' %>"
+                        placeholder="Ex. Abomey-Calavi">
+                </div>
+            </div>
+
+            <p class="chantiers-field-note">
+                Vous pourrez renseigner des lieux dans toutes les régions du Bénin.
+            </p>
+        </section>
+
+        <section class="chantiers-form-section">
+            <h2>Budget et calendrier</h2>
+
+            <div class="form-group">
+                <label for="budget_estimate">Budget prévisionnel (FCFA)</label>
+                <input
+                    type="number"
+                    id="budget_estimate"
+                    name="budget_estimate"
+                    min="0"
+                    max="999999999999.99"
+                    step="0.01"
+                    value="<%= formValues.budget_estimate || '' %>"
+                    placeholder="Ex. 5000000">
+            </div>
+
+            <div class="chantiers-form-row">
+                <div class="form-group">
+                    <label for="start_date">Date de début</label>
+                    <input
+                        type="date"
+                        id="start_date"
+                        name="start_date"
+                        value="<%= formValues.start_date || '' %>">
+                </div>
+
+                <div class="form-group">
+                    <label for="target_end_date">Date de fin prévue</label>
+                    <input
+                        type="date"
+                        id="target_end_date"
+                        name="target_end_date"
+                        value="<%= formValues.target_end_date || '' %>">
+                </div>
+            </div>
+        </section>
+
+        <div class="chantiers-form-actions">
+            <a href="/chantiers" class="chantiers-cancel-btn">Annuler</a>
+            <button type="submit" class="btn-primary">
+                Créer le chantier
+            </button>
+        </div>
+    </form>
+
+    <p class="chantiers-required-note">* Champs obligatoires</p>
+</div>

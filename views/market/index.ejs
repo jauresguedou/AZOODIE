@@ -53,11 +53,6 @@
                     partout au Bénin.
                 </p>
             </div>
-
-            <a class="market-supplier-link" href="#market-supplier-info">
-                <span aria-hidden="true">＋</span>
-                Espace fournisseur
-            </a>
         </header>
 
         <section class="market-search-panel" aria-label="Recherche de matériaux">
@@ -285,7 +280,55 @@
                                                 <span class="market-verified">
                                                     ✓ Fournisseur vérifié
                                                 </span>
+                                            <% } else { %>
+                                            <span class="market-unverified">
+                                                Fournisseur non vérifié
+                                            </span>
                                             <% } %>
+
+                                                <%
+                                                    const rawPhone = String(offer.supplier_phone || "").trim();
+                                                    let whatsappPhone = rawPhone.replace(/\D/g, "");
+
+                                                    // Remove the international dialing prefix if present.
+                                                    if (whatsappPhone.startsWith("00")) {
+                                                        whatsappPhone = whatsappPhone.slice(2);
+                                                    }
+
+                                                    // Accept Benin numbers in these formats:
+                                                    // +229 01 XX XX XX XX
+                                                    // 22901XXXXXXXX
+                                                    // 01XXXXXXXX
+                                                    if (whatsappPhone.startsWith("22901") && whatsappPhone.length === 13) {
+                                                        // Already in international format.
+                                                    } else if (whatsappPhone.startsWith("01") && whatsappPhone.length === 10) {
+                                                        whatsappPhone = "229" + whatsappPhone;
+                                                    } else {
+                                                        // Invalid or unsupported phone number.
+                                                        whatsappPhone = "";
+                                                    }
+
+                                                    const contactMessage =
+                                                        `Bonjour ${offer.business_name}, je vous contacte via AZÔÔDIÉ au sujet de votre offre : ${offer.material_name} (${offer.specification || ""}), au prix de ${offer.price_fcfa} FCFA/${offer.unit}. Cette offre est-elle toujours disponible ?`;
+                                                %>
+
+                                                <div class="market-card-contact">
+                                                    <% if (whatsappPhone) { %>
+                                                        <a
+                                                            class="market-contact-btn"
+                                                            href="https://wa.me/<%= whatsappPhone %>?text=<%= encodeURIComponent(contactMessage) %>"
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                        >
+                                                            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                                                            Contacter le fournisseur
+                                                        </a>
+                                                    <% } else { %>
+                                                        <span class="market-contact-unavailable">
+                                                            Contact non disponible
+                                                        </span>
+                                                    <% } %>
+                                                </div>
                                         </div>
                                     </div>
 

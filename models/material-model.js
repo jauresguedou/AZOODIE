@@ -57,6 +57,7 @@ async function getActiveOffers(filters = {}) {
             o.last_price_update,
             s.id AS supplier_id,
             s.business_name,
+            s.phone AS supplier_phone,
             s.department,
             s.commune,
             s.verified
@@ -64,8 +65,8 @@ async function getActiveOffers(filters = {}) {
         JOIN materials m ON m.id = o.material_id
         JOIN suppliers s ON s.id = o.supplier_id
         WHERE ${conditions.join(" AND ")}
-        ORDER BY ${orderBy}
-        LIMIT 1
+        ORDER BY ${orderBy}, o.id ASC
+
     `;
 
     const result = await pool.query(query, params);

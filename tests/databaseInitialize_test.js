@@ -6,7 +6,7 @@ describe("database initialization", () => {
 
         await initializeDatabase(database);
 
-        expect(database.query).toHaveBeenCalledTimes(11);
+        expect(database.query).toHaveBeenCalledTimes(15);
         expect(database.query.mock.calls[0][0]).toContain("CREATE TABLE IF NOT EXISTS professional_portfolio_posts");
         expect(database.query.mock.calls[0][0]).toContain("REFERENCES professionals(id) ON DELETE CASCADE");
         expect(database.query.mock.calls[0][0]).toContain("CHECK (media_type IN ('image', 'video'))");
@@ -17,6 +17,18 @@ describe("database initialization", () => {
         expect(database.query.mock.calls[7][0]).toContain("CREATE TABLE IF NOT EXISTS announcement_likes");
         expect(database.query.mock.calls[8][0]).toContain("CREATE TABLE IF NOT EXISTS announcement_comments");
         expect(database.query.mock.calls[10][0]).toContain("ON CONFLICT (is_demo) WHERE is_demo = TRUE DO NOTHING");
+
+        expect(database.query.mock.calls[11][0]).toContain("CREATE TABLE IF NOT EXISTS construction_projects");
+
+        expect(database.query.mock.calls[11][0]).toContain("REFERENCES users(id) ON DELETE RESTRICT");
+
+        expect(database.query.mock.calls[12][0]).toContain("construction_projects_owner_idx");
+
+        expect(database.query.mock.calls[13][0]).toContain("CREATE TABLE IF NOT EXISTS construction_project_members");
+
+        expect(database.query.mock.calls[13][0]).toContain("member_role IN ('site_manager', 'viewer')");
+
+        expect(database.query.mock.calls[14][0]).toContain("construction_project_members_user_idx");
     });
 
     test("propagates schema initialization errors", async () => {

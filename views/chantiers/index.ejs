@@ -1,0 +1,124 @@
+<div class="chantiers-page">
+    <div class="chantiers-header">
+        <div>
+            <p class="chantiers-eyebrow">GESTION DE PROJETS</p>
+            <h1>Mes chantiers</h1>
+            <p class="chantiers-subtitle">
+                Organisez vos projets de construction et suivez leur avancement
+                depuis AZÔÔDIÉ.
+            </p>
+        </div>
+    </div>
+
+    <% if (projects.length === 0) { %>
+        <section class="chantiers-empty">
+            <div class="chantiers-empty-icon">🏗️</div>
+            <h2>Votre premier chantier commence ici</h2>
+            <p>
+                Créez votre projet pour centraliser son lieu, son budget
+                prévisionnel et ses dates.
+            </p>
+            <button
+                type="button"
+                class="btn-primary"
+                onclick="window.location.href='/chantiers/nouveau'">
+                Créer mon premier chantier
+            </button>
+        </section>
+    <% } else { %>
+        <div class="chantiers-summary">
+            <span>
+                <strong><%= projects.length %></strong>
+                <%= projects.length > 1 ? "chantiers" : "chantier" %>
+            </span>
+        </div>
+
+        <div class="chantiers-grid">
+            <% projects.forEach(function(project) { %>
+                <article class="chantier-card">
+                    <div class="chantier-card-top">
+                        <span class="chantier-status chantier-status-<%= project.status %>">
+                            <% const statusLabels = {
+                                planning: "À planifier",
+                                in_progress: "En cours",
+                                paused: "En pause",
+                                completed: "Terminé",
+                                cancelled: "Annulé"
+                            }; %>
+                            <%= statusLabels[project.status] || project.status %>
+                        </span>
+
+                        <span class="chantier-access">
+                            <% const accessLabels = {
+                                owner: "Propriétaire",
+                                site_manager: "Responsable",
+                                viewer: "Lecture seule"
+                            }; %>
+                            <%= accessLabels[project.access_role] || "Membre" %>
+                        </span>
+                    </div>
+
+                    <h2><%= project.title %></h2>
+
+                    <% if (project.description) { %>
+                        <p class="chantier-description"><%= project.description %></p>
+                    <% } %>
+
+                    <div class="chantier-details">
+                        <p>
+                            <span aria-hidden="true">📍</span>
+                            <span>
+                                <%= project.address_text %>
+                                <% if (project.commune) { %>
+                                    — <%= project.commune %>
+                                <% } %>
+                                <% if (project.department) { %>
+                                    (<%= project.department %>)
+                                <% } %>
+                            </span>
+                        </p>
+
+                        <p>
+                            <span aria-hidden="true">💰</span>
+                            <span>
+                                Budget prévisionnel :
+                                <% if (project.budget_estimate !== null && project.budget_estimate !== undefined) { %>
+                                    <strong>
+                                        <%= Number(project.budget_estimate).toLocaleString("fr-FR") %> FCFA
+                                    </strong>
+                                <% } else { %>
+                                    Non renseigné
+                                <% } %>
+                            </span>
+                        </p>
+
+                        <p>
+                            <span aria-hidden="true">📅</span>
+                            <span>
+                                Début :
+                                <%= project.start_date
+                                    ? new Date(project.start_date).toLocaleDateString("fr-FR", { timeZone: "UTC" })
+                                    : "Non défini" %>
+                            </span>
+                        </p>
+
+                        <p>
+                            <span aria-hidden="true">🏁</span>
+                            <span>
+                                Fin prévue :
+                                <%= project.target_end_date
+                                    ? new Date(project.target_end_date).toLocaleDateString("fr-FR", { timeZone: "UTC" })
+                                    : "Non définie" %>
+                            </span>
+                        </p>
+                    </div>
+
+                    <div class="chantier-card-footer">
+                        <span>Créé le <%= new Date(project.created_at).toLocaleDateString("fr-FR") %></span>
+                        <span class="chantier-id">N° <%= project.id %></span>
+                    </div>
+                </article>
+            <% }); %>
+        </div>
+    <% } %>
+</div>
