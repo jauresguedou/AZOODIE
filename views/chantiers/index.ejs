@@ -112,6 +112,16 @@
                             </span>
                         </p>
                     </div>
+                    <div class="chantier-card-actions">
+                        <button
+                            type="button"
+                            class="btn-primary"
+                            onclick="window.location.href='/chantiers/<%= project.id %>'">
+                            Voir le chantier
+
+                        </button>
+
+                    </div>
 
                     <div class="chantier-card-footer">
                         <span>Créé le <%= new Date(project.created_at).toLocaleDateString("fr-FR") %></span>

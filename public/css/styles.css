@@ -6677,3 +6677,257 @@ body {
     font-size: 0.78rem;
     font-weight: 500;
 }
+/* AZÔÔDIÉ — Daily reports navigation */
+.daily-reports-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 20px 0 24px;
+}
+
+.daily-reports-actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: background-color 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.2s ease;
+}
+
+.daily-reports-actions .btn-secondary {
+    color: #374151;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+}
+
+.daily-reports-actions .btn-secondary:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.daily-reports-actions .btn-primary:hover {
+    filter: brightness(0.95);
+}
+
+.daily-reports-actions button:focus-visible {
+    outline: 3px solid rgba(13, 148, 136, 0.35);
+    outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+    .daily-reports-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .daily-reports-actions button {
+        width: 100%;
+    }
+}
+
+/* AZÔÔDIÉ — Daily report form */
+.daily-report-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.daily-report-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.daily-report-form .form-group label {
+    display: block;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.daily-report-form input[type="text"],
+.daily-report-form input[type="date"],
+.daily-report-form input[type="number"],
+.daily-report-form textarea {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-height: 46px;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    color: #1f2937;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.5;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.daily-report-form textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.daily-report-form input::placeholder,
+.daily-report-form textarea::placeholder {
+    color: #9ca3af;
+    opacity: 1;
+}
+
+.daily-report-form input:focus,
+.daily-report-form textarea:focus {
+    outline: none;
+    border-color: #0d9488;
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+}
+
+.daily-report-form .chantier-card-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.daily-report-form .chantier-card-actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 11px 20px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.daily-report-form .chantier-card-actions .btn-secondary {
+    color: #374151;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+}
+
+.daily-report-form .chantier-card-actions .btn-secondary:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.daily-report-form .chantier-card-actions button:focus-visible {
+    outline: 3px solid rgba(13, 148, 136, 0.35);
+    outline-offset: 3px;
+}
+
+.report-errors {
+    margin-bottom: 20px;
+    padding: 16px 20px;
+    color: #991b1b;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+}
+
+.report-errors h2 {
+    margin-top: 0;
+    font-size: 16px;
+}
+
+@media (max-width: 480px) {
+    .daily-report-form .chantier-card-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .daily-report-form .chantier-card-actions button {
+        width: 100%;
+    }
+}
+
+
+/* AZOODIE — Daily report media gallery */
+.daily-report-media-section {
+    margin-top: 22px;
+}
+
+.daily-report-media-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.daily-report-media-item {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #f8fafc;
+}
+
+.daily-report-image-link {
+    aspect-ratio: 4 / 3;
+}
+
+.daily-report-image-link img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s ease;
+}
+
+.daily-report-image-link:hover img {
+    transform: scale(1.03);
+}
+
+.daily-report-video-item video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 180px;
+    max-height: 320px;
+    object-fit: contain;
+    background: #111827;
+}
+
+@media (max-width: 768px) {
+    .daily-report-media-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .daily-report-video-item video {
+        min-height: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .daily-report-media-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .daily-report-image-link {
+        aspect-ratio: 4 / 3;
+    }
+
+    .daily-report-video-item video {
+        min-height: 200px;
+    }
+}

@@ -6,7 +6,7 @@ describe("database initialization", () => {
 
         await initializeDatabase(database);
 
-        expect(database.query).toHaveBeenCalledTimes(15);
+        expect(database.query).toHaveBeenCalledTimes(19);
         expect(database.query.mock.calls[0][0]).toContain("CREATE TABLE IF NOT EXISTS professional_portfolio_posts");
         expect(database.query.mock.calls[0][0]).toContain("REFERENCES professionals(id) ON DELETE CASCADE");
         expect(database.query.mock.calls[0][0]).toContain("CHECK (media_type IN ('image', 'video'))");
@@ -29,6 +29,25 @@ describe("database initialization", () => {
         expect(database.query.mock.calls[13][0]).toContain("member_role IN ('site_manager', 'viewer')");
 
         expect(database.query.mock.calls[14][0]).toContain("construction_project_members_user_idx");
+
+
+        expect(database.query.mock.calls[15][0]).toContain("CREATE TABLE IF NOT EXISTS construction_daily_reports");
+
+        expect(database.query.mock.calls[15][0]).toContain("REFERENCES construction_projects(id) ON DELETE CASCADE");
+
+        expect(database.query.mock.calls[15][0]).toContain("REFERENCES users(id) ON DELETE RESTRICT");
+
+        expect(database.query.mock.calls[16][0]).toContain("construction_daily_reports_project_date_idx");
+
+        expect(database.query.mock.calls[17][0]).toContain(
+            "CREATE TABLE IF NOT EXISTS construction_daily_report_media"
+        );
+        expect(database.query.mock.calls[17][0]).toContain(
+            "REFERENCES construction_daily_reports(id) ON DELETE CASCADE"
+        );
+        expect(database.query.mock.calls[18][0]).toContain(
+            "construction_daily_report_media_report_idx"
+        );
     });
 
     test("propagates schema initialization errors", async () => {

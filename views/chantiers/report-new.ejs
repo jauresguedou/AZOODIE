@@ -1,0 +1,145 @@
+<div class="chantiers-page">
+    <div class="chantiers-header">
+        <div>
+            <p class="chantiers-eyebrow">SUIVI DES TRAVAUX</p>
+            <h1>Nouveau rapport journalier</h1>
+            <p class="chantiers-subtitle">
+                Chantier : <strong><%= project.title %></strong>
+            </p>
+        </div>
+    </div>
+
+    <section class="chantier-card">
+        <% if (errors && errors.length > 0) { %>
+            <div class="report-errors" role="alert">
+                <h2>Veuillez corriger les erreurs suivantes</h2>
+                <ul>
+                    <% errors.forEach(function(error) { %>
+                        <li><%= error %></li>
+                    <% }); %>
+                </ul>
+            </div>
+        <% } %>
+
+        <form
+            action="/chantiers/<%= project.id %>/rapports"
+            method="POST"
+            enctype="multipart/form-data"
+            class="daily-report-form"
+        >
+            <div class="form-group">
+                <label for="report_date">Date du rapport *</label>
+                <input
+                    type="date"
+                    id="report_date"
+                    name="report_date"
+                    value="<%= formValues.report_date %>"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="work_completed">Travaux réalisés *</label>
+                <textarea
+                    id="work_completed"
+                    name="work_completed"
+                    rows="5"
+                    maxlength="10000"
+                    required
+                    placeholder="Décrivez les travaux effectués aujourd'hui..."
+                ><%= formValues.work_completed %></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="workers_count">Nombre d'ouvriers présents</label>
+                <input
+                    type="number"
+                    id="workers_count"
+                    name="workers_count"
+                    min="0"
+                    max="1000000"
+                    step="1"
+                    value="<%= formValues.workers_count %>"
+                    placeholder="Ex. : 8"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="materials_used">Matériaux utilisés</label>
+                <textarea
+                    id="materials_used"
+                    name="materials_used"
+                    rows="3"
+                    maxlength="5000"
+                    placeholder="Ex. : ciment, sable, gravier, fer..."
+                ><%= formValues.materials_used %></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="difficulties">Difficultés rencontrées</label>
+                <textarea
+                    id="difficulties"
+                    name="difficulties"
+                    rows="3"
+                    maxlength="5000"
+                    placeholder="Retards, météo, manque de matériaux..."
+                ><%= formValues.difficulties %></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Notes complémentaires</label>
+                <textarea
+                    id="notes"
+                    name="notes"
+                    rows="3"
+                    maxlength="5000"
+                    placeholder="Informations complémentaires..."
+                ><%= formValues.notes %></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="photos">Photos du chantier (10 maximum)</label>
+                <input
+                    type="file"
+                    id="photos"
+                    name="photos"
+                    accept="image/jpeg,image/png,image/webp"
+                    multiple
+                >
+                <small>
+                    Formats acceptés : JPEG, PNG ou WebP.
+                    10 photos maximum, 25 Mo par fichier.
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="videos">Vidéos du chantier (3 maximum)</label>
+                <input
+                    type="file"
+                    id="videos"
+                    name="videos"
+                    accept="video/mp4,video/webm,video/quicktime"
+                    multiple
+                >
+                <small>
+                    Formats acceptés : MP4, WebM ou MOV.
+                    3 vidéos maximum, 25 Mo par fichier.
+                </small>
+            </div>
+
+            <div class="chantier-card-actions">
+                <button type="submit" class="btn-primary">
+                    Enregistrer le rapport
+                </button>
+
+                <button
+                    type="button"
+                    class="btn-secondary"
+                    onclick="window.location.href='/chantiers/<%= project.id %>/rapports'"
+                >
+                    Annuler
+                </button>
+            </div>
+        </form>
+    </section>
+</div>

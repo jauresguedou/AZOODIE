@@ -35,6 +35,30 @@ async function listProjects(req, res) {
     });
 }
 
+async function showProject(req, res) {
+    const projectId = Number(req.params.id);
+
+    if (!Number.isSafeInteger(projectId) || projectId <= 0) {
+        return res.status(404).render("404", {
+            title: "Chantier introuvable — AZÔÔDIÉ"
+        });
+    }
+
+    const project = await constructionProjectModel.getProjectForUser(
+        projectId,
+        req.session.userId
+    );
+
+    if (!project) {
+       return res.status(404).send("Chantier introuvable - AZÔÔDIÉ")
+    }
+
+    return res.render("chantiers/show", {
+        title: `${project.title} — AZÔÔDIÉ`,
+        project
+    });
+}
+
 function showNewProjectForm(req, res) {
     return renderNewProject(res);
 }
@@ -184,5 +208,6 @@ async function createProject(req, res) {
 module.exports = {
     listProjects,
     showNewProjectForm,
-    createProject
+    createProject,
+    showProject
 };

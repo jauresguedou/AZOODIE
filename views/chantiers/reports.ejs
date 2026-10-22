@@ -1,0 +1,134 @@
+<div class="chantiers-page">
+    <div class="chantiers-header">
+        <div>
+            <p class="chantiers-eyebrow">SUIVI DES TRAVAUX</p>
+            <h1>Rapports journaliers</h1>
+            <p class="chantiers-subtitle">
+                Chantier : <strong><%= project.title %></strong>
+            </p>
+        </div>
+    </div>
+
+    <div class="daily-reports-actions">
+        <button
+            type="button"
+            class="btn-secondary"
+            onclick="window.location.href='/chantiers/<%= project.id %>'"
+        >
+            Retour au chantier
+        </button>
+
+        <% if (["owner", "site_manager"].includes(project.access_role)) { %>
+            <button
+                type="button"
+                class="btn-primary"
+                onclick="window.location.href='/chantiers/<%= project.id %>/rapports/nouveau'"
+            >
+                 Nouveau rapport
+            </button>
+        <% } %>
+    </div>
+
+    <% if (!reports || reports.length === 0) { %>
+        <section class="chantier-card">
+            <h2>Aucun rapport pour le moment</h2>
+            <p>
+                Les rapports journaliers enregistrés pour ce chantier
+                apparaîtront ici.
+            </p>
+        </section>
+    <% } else { %>
+        <div class="daily-reports-list">
+            <% reports.forEach(function(report) { %>
+                <article class="chantier-card daily-report-card">
+                    <div class="daily-report-heading">
+                        <div>
+                            <p class="chantiers-eyebrow">RAPPORT JOURNALIER</p>
+                            <h2>
+                                <%= new Date(report.report_date).toLocaleDateString(
+                                    "fr-FR",
+                                    { timeZone: "UTC" }
+                                ) %>
+                            </h2>
+                        </div>
+
+                        <% if (report.workers_count !== null &&
+                               report.workers_count !== undefined) { %>
+                            <span class="chantier-access">
+                                <%= report.workers_count %>
+                                ouvrier<%= Number(report.workers_count) > 1 ? "s" : "" %>
+                            </span>
+                        <% } %>
+                    </div>
+
+                    <div class="daily-report-section">
+                        <h3>Travaux réalisés</h3>
+                        <p class="daily-report-text"><%= report.work_completed %></p>
+                    </div>
+
+                    <% if (report.materials_used) { %>
+                        <div class="daily-report-section">
+                            <h3>Matériaux utilisés</h3>
+                            <p class="daily-report-text"><%= report.materials_used %></p>
+                        </div>
+                    <% } %>
+
+                    <% if (report.difficulties) { %>
+                        <div class="daily-report-section">
+                            <h3>Difficultés rencontrées</h3>
+                            <p class="daily-report-text"><%= report.difficulties %></p>
+                        </div>
+                    <% } %>
+
+                    <% if (report.notes) { %>
+                        <div class="daily-report-section">
+                            <h3>Notes complémentaires</h3>
+                            <p class="daily-report-text"><%= report.notes %></p>
+                        </div>
+                    <% } %>
+
+                    <% if (report.media && report.media.length > 0) { %>
+                        <section class="daily-report-section daily-report-media-section">
+                            <h3>Photos et vidéos du chantier</h3>
+
+                            <div class="daily-report-media-grid">
+                                <% report.media.forEach(function(media) { %>
+                                    <% if (media.media_type === "image") { %>
+                                        <a
+                                            class="daily-report-media-item daily-report-image-link"
+                                            href="<%= media.media_url %>"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            aria-label="Ouvrir la photo dans un nouvel onglet"
+                                        >
+                                            <img
+                                                src="<%= media.media_url %>"
+                                                alt="Photo du chantier du <%= new Date(report.report_date).toLocaleDateString('fr-FR', { timeZone: 'UTC' }) %>"
+                                                loading="lazy"
+                                            >
+                                        </a>
+                                    <% } else if (media.media_type === "video") { %>
+                                        <div class="daily-report-media-item daily-report-video-item">
+                                            <video controls playsinline preload="metadata">
+                                                <source src="<%= media.media_url %>">
+                                                Votre navigateur ne prend pas en charge la lecture vidéo.
+                                            </video>
+                                        </div>
+                                    <% } %>
+                                <% }); %>
+                            </div>
+                        </section>
+                    <% } %>
+
+                    <p class="daily-report-meta">
+                        Enregistré le
+                        <%= new Date(report.created_at).toLocaleString(
+                            "fr-FR",
+                            { timeZone: "UTC" }
+                        ) %>
+                    </p>
+                </article>
+            <% }); %>
+        </div>
+    <% } %>
+</div>

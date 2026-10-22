@@ -1,0 +1,115 @@
+
+<div class="chantiers-page">
+    <div class="chantiers-header">
+        <div>
+            <p class="chantiers-eyebrow">GESTION DE PROJETS</p>
+            <h1><%= project.title %></h1>
+            <p class="chantiers-subtitle">
+                Tableau de bord de votre chantier.
+            </p>
+        </div>
+    </div>
+
+    <section class="chantier-card">
+        <div class="chantier-card-top">
+            <span class="chantier-status chantier-status-<%= project.status %>">
+                <% const statusLabels = {
+                    planning: "À planifier",
+                    in_progress: "En cours",
+                    paused: "En pause",
+                    completed: "Terminé",
+                    cancelled: "Annulé"
+                }; %>
+                <%= statusLabels[project.status] || project.status %>
+            </span>
+
+            <span class="chantier-access">
+                <% const accessLabels = {
+                    owner: "Propriétaire",
+                    site_manager: "Responsable",
+                    viewer: "Lecture seule"
+                }; %>
+                <%= accessLabels[project.access_role] || "Membre" %>
+            </span>
+        </div>
+
+        <h2>Informations générales</h2>
+
+        <div class="chantier-details">
+            <p>
+                <strong>Lieu :</strong>
+                <%= project.address_text %>
+            </p>
+
+            <% if (project.commune) { %>
+                <p>
+                    <strong>Commune :</strong>
+                    <%= project.commune %>
+                </p>
+            <% } %>
+
+            <% if (project.department) { %>
+                <p>
+                    <strong>Département :</strong>
+                    <%= project.department %>
+                </p>
+            <% } %>
+
+            <p>
+                <strong>Budget prévisionnel :</strong>
+                <% if (project.budget_estimate !== null &&
+                       project.budget_estimate !== undefined) { %>
+                    <%= Number(project.budget_estimate).toLocaleString("fr-FR") %>
+                    FCFA
+                <% } else { %>
+                    Non renseigné
+                <% } %>
+            </p>
+
+            <p>
+                <strong>Date de début :</strong>
+                <%= project.start_date
+                    ? new Date(project.start_date).toLocaleDateString(
+                        "fr-FR",
+                        { timeZone: "UTC" }
+                    )
+                    : "Non définie" %>
+            </p>
+
+            <p>
+                <strong>Fin prévue :</strong>
+                <%= project.target_end_date
+                    ? new Date(project.target_end_date).toLocaleDateString(
+                        "fr-FR",
+                        { timeZone: "UTC" }
+                    )
+                    : "Non définie" %>
+            </p>
+        </div>
+
+        <% if (project.description) { %>
+            <h2>Description</h2>
+            <p><%= project.description %></p>
+        <% } %>
+
+        <button
+           type="button"
+           class="btn-primary"
+           onclick="window.location.href='/chantiers'">
+            
+           Mes chantiers
+
+        </button>
+    </section>
+
+    <section class="chantier-card">
+        <h2>Suivi des travaux</h2>
+        <p>
+            Les rapports journaliers, les photos du chantier et le suivi
+            des dépenses seront disponibles dans cette section.
+        </p>
+        <p>
+            <em>Fonctionnalités en cours de développement.</em>
+        </p>
+    </section>
+</div>

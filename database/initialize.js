@@ -146,6 +146,54 @@ async function initializeDatabase(database = pool) {
         ON construction_project_members(user_id, project_id)
     `);
 
+    // Daily reports for construction projects
+    await database.query(`
+        CREATE TABLE IF NOT EXISTS construction_daily_reports (
+            id SERIAL PRIMARY KEY,
+            project_id INTEGER NOT NULL
+                REFERENCES construction_projects(id) ON DELETE CASCADE,
+            author_id INTEGER NOT NULL
+                REFERENCES users(id) ON DELETE RESTRICT,
+            report_date DATE NOT NULL DEFAULT CURRENT_DATE,
+            work_completed TEXT NOT NULL
+                CHECK (length(trim(work_completed)) > 0),
+            workers_count INTEGER
+                CHECK (workers_count IS NULL OR workers_count >= 0),
+            materials_used TEXT,
+            difficulties TEXT,
+            notes TEXT,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
+
+    await database.query(`
+        CREATE INDEX IF NOT EXISTS construction_daily_reports_project_date_idx
+        ON construction_daily_reports(project_id, report_date DESC, id DESC)
+    `);
+
+
+
+    // Photos and videos attached to daily construction reports
+    await database.query(`
+        CREATE TABLE IF NOT EXISTS construction_daily_report_media (
+            id SERIAL PRIMARY KEY,
+            report_id INTEGER NOT NULL
+                REFERENCES construction_daily_reports(id) ON DELETE CASCADE,
+            media_url TEXT NOT NULL,
+            public_id TEXT NOT NULL,
+            media_type VARCHAR(10) NOT NULL
+                CHECK (media_type IN ('image', 'video')),
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
+
+    await database.query(`
+        CREATE INDEX IF NOT EXISTS construction_daily_report_media_report_idx
+        ON construction_daily_report_media(report_id, created_at ASC, id ASC)
+    `);
+
+
  }
 
 module.exports = initializeDatabase;
