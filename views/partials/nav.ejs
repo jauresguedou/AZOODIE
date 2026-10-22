@@ -16,7 +16,7 @@
     <div class="nav-links">
 
         <!-- Shared navigation: available to everyone -->
-        <a href="/market" class="nav-market-link">🛍️ Marché</a>
+        <a href="/market" class="nav-market-link"> Marché</a>
 
         <% if (session.userRole !== 'professional') { %>
             <a href="/search?lat=6.3703&lng=2.3912">Rechercher</a>
@@ -33,7 +33,7 @@
 
             <!-- Construction project management -->
             <a href="/chantiers" class="nav-chantiers-link">
-                🏗️ Chantiers
+                 Chantiers
             </a>
 
             <!-- Administrator navigation -->
@@ -44,7 +44,7 @@
             <!-- Supplier navigation -->
             <% if (session.userRole === 'supplier') { %>
                 <a href="/supplier/dashboard" class="nav-supplier-link">
-                    🏪 Espace fournisseur
+                    Espace fournisseur
                 </a>
             <% } %>
 
