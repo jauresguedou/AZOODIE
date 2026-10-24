@@ -61,6 +61,29 @@
                         <% } %>
                     </div>
 
+                    <div class="daily-report-section daily-report-progress">
+                        <h3>Avancement du chantier</h3>
+
+                        <div class="chantier-progress-header">
+                            <span>Avancement à cette date</span>
+                            <strong><%= Number(report.progress_percentage ?? 0) %> %</strong>
+                        </div>
+
+                        <div
+                            class="chantier-progress-track"
+                            role="progressbar"
+                            aria-label="Avancement du chantier au moment de ce rapport"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            aria-valuenow="<%= Number(report.progress_percentage ?? 0) %>"
+                        >
+                            <div
+                                class="chantier-progress-fill"
+                                style="width: <%= Number(report.progress_percentage ?? 0) %>%"
+                            ></div>
+                        </div>
+                    </div>
+
                     <div class="daily-report-section">
                         <h3>Travaux réalisés</h3>
                         <p class="daily-report-text"><%= report.work_completed %></p>

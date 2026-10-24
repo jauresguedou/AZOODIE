@@ -1,4 +1,5 @@
 const constructionProjectModel = require("../models/construction-project-model");
+const dailyReportModel = require("../models/construction-daily-report-model");
 
 const BENIN_DEPARTMENTS = [
     "Alibori",
@@ -53,9 +54,19 @@ async function showProject(req, res) {
        return res.status(404).send("Chantier introuvable - AZÔÔDIÉ")
     }
 
+    const reports = await dailyReportModel.getReportsForProject(
+        project.id,
+        req.session.userId
+    );
+
+    if (reports === null) {
+        return res.status(404).send("Chantier introuvable - AZÔÔDIÉ");
+    }
+
     return res.render("chantiers/show", {
         title: `${project.title} — AZÔÔDIÉ`,
-        project
+        project,
+        reports
     });
 }
 
@@ -204,6 +215,7 @@ async function createProject(req, res) {
 
     return res.redirect("/chantiers");
 }
+
 
 module.exports = {
     listProjects,

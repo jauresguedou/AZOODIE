@@ -18,6 +18,7 @@ async function getProjectsForUser(userId) {
             p.start_date,
             p.target_end_date,
             p.status,
+            p.progress_percentage,
             p.created_at,
             p.updated_at,
             CASE
@@ -28,6 +29,7 @@ async function getProjectsForUser(userId) {
         LEFT JOIN construction_project_members AS m
             ON m.project_id = p.id
             AND m.user_id = $1
+            AND m.invitation_status = 'accepted'
         WHERE p.owner_id = $1
            OR m.user_id = $1
         ORDER BY p.created_at DESC, p.id DESC
@@ -90,6 +92,7 @@ async function getProjectForUser(projectId, userId) {
         LEFT JOIN construction_project_members AS m
             ON m.project_id = p.id
             AND m.user_id = $2
+            AND m.invitation_status = 'accepted'
         WHERE p.id = $1
           AND (
               p.owner_id = $2
@@ -101,6 +104,8 @@ async function getProjectForUser(projectId, userId) {
 
     return result.rows[0] || null;
 }
+
+
 
 module.exports = {
     getProjectsForUser,

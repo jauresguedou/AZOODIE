@@ -124,6 +124,16 @@ async function initializeDatabase(database = pool) {
         ON construction_projects(owner_id, created_at DESC)
     `);
 
+
+    // Add construction progress to existing projects safely.
+    await database.query(`
+        ALTER TABLE construction_projects
+        ADD COLUMN IF NOT EXISTS progress_percentage INTEGER
+        NOT NULL DEFAULT 0
+        CHECK (progress_percentage BETWEEN 0 AND 100)
+    `);
+
+
     // Users assigned to a project, with project-specific permissions
     await database.query(`
         CREATE TABLE IF NOT EXISTS construction_project_members (
@@ -140,6 +150,45 @@ async function initializeDatabase(database = pool) {
             UNIQUE (project_id, user_id)
         )
     `);
+
+
+
+    
+    // Add invitation status without removing existing project members.
+    // Existing members remain active; new invitations must explicitly use "pending".
+    await database.query(`
+        ALTER TABLE construction_project_members
+        ADD COLUMN IF NOT EXISTS invitation_status VARCHAR(20)
+        NOT NULL DEFAULT 'accepted'
+        CHECK (
+            invitation_status IN ('pending', 'accepted', 'revoked')
+        )
+    `);
+
+    await database.query(`
+        ALTER TABLE construction_project_members
+        DROP CONSTRAINT IF EXISTS construction_project_members_invitation_status_check
+    `);
+
+    await database.query(`
+        ALTER TABLE construction_project_members
+        ADD CONSTRAINT construction_project_members_invitation_status_check
+        CHECK (invitation_status IN ('pending', 'accepted', 'declined', 'revoked'))
+    `);
+
+    await database.query(`
+        ALTER TABLE construction_project_members
+        ADD COLUMN IF NOT EXISTS accepted_at TIMESTAMPTZ
+    `);
+
+    // Preserve existing access and record when legacy memberships began.
+    await database.query(`
+        UPDATE construction_project_members
+        SET accepted_at = created_at
+        WHERE invitation_status = 'accepted'
+          AND accepted_at IS NULL
+    `);
+
 
     await database.query(`
         CREATE INDEX IF NOT EXISTS construction_project_members_user_idx
@@ -162,9 +211,19 @@ async function initializeDatabase(database = pool) {
             materials_used TEXT,
             difficulties TEXT,
             notes TEXT,
+            progress_percentage INTEGER NOT NULL DEFAULT 0
+                CHECK (progress_percentage BETWEEN 0 AND 100),
             created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
             updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
         )
+    `);
+
+    // Add progress to existing daily reports without deleting data.
+    await database.query(`
+        ALTER TABLE construction_daily_reports
+        ADD COLUMN IF NOT EXISTS progress_percentage INTEGER
+        NOT NULL DEFAULT 0
+        CHECK (progress_percentage BETWEEN 0 AND 100)
     `);
 
     await database.query(`

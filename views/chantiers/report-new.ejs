@@ -27,6 +27,7 @@
             enctype="multipart/form-data"
             class="daily-report-form"
         >
+            <input type="hidden" name="_csrf" value="<%= constructionCsrfToken %>">
             <div class="form-group">
                 <label for="report_date">Date du rapport *</label>
                 <input
@@ -36,6 +37,28 @@
                     value="<%= formValues.report_date %>"
                     required
                 >
+            </div>
+
+            <div class="form-group">
+                <label for="progress_percentage">
+                    Avancement total du chantier (%) *
+                </label>
+
+                <input
+                    type="number"
+                    id="progress_percentage"
+                    name="progress_percentage"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value="<%= formValues.progress_percentage ?? (project.progress_percentage ?? 0) %>"
+                    required
+                >
+
+                <small>
+                    Indiquez le pourcentage total atteint à la date de ce rapport,
+                    entre 0 et 100 %.
+                </small>
             </div>
 
             <div class="form-group">

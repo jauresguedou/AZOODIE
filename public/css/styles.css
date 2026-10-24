@@ -61,6 +61,43 @@ body {
   color: var(--orange);
 }
 
+
+/* AZÔÔDIÉ — Progression des chantiers */
+.chantier-progress {
+    margin-top: 20px;
+}
+
+.chantier-progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 9px;
+    color: #475569;
+    font-size: 0.9rem;
+}
+
+.chantier-progress-header strong {
+    color: #0f766e;
+    font-size: 1rem;
+    white-space: nowrap;
+}
+
+.chantier-progress-track {
+    width: 100%;
+    height: 10px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e2e8f0;
+}
+
+.chantier-progress-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: #0d9488;
+    transition: width 0.3s ease;
+}
+
 /* ==========================================
    AZÔÔDIÉ — Construction projects (Chantiers)
    ========================================== */
@@ -4260,7 +4297,7 @@ body {
 }
 
 .nav-links a {
- 
+
   color: var(--dark);
   text-decoration: none;
   font-size: 0.9;
@@ -4413,7 +4450,7 @@ body {
   .nav-links.open {
     display: flex;
   }
-  
+
   .site-nav {
     position: relative;
   }
@@ -4436,8 +4473,8 @@ body {
 
   .result-card {
     flex-direction: column;
-    align-items: flex-start; 
-    gap:8px; 
+    align-items: flex-start;
+    gap:8px;
   }
 
   .distance-chip {
@@ -6931,3 +6968,862 @@ body {
         min-height: 200px;
     }
 }
+
+/* AZÔÔDIÉ — Espacement et largeur de la progression des chantiers */
+.chantiers-grid .chantier-progress {
+    width: 100%;
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.chantiers-grid .chantier-progress-track {
+    width: 100%;
+    height: 12px;
+}
+
+.chantiers-grid .chantier-card-actions {
+    margin-top: 0;
+    padding-top: 4px;
+}
+
+
+/* AZÔÔDIÉ — Bouton de création d'un chantier */
+.chantiers-header .chantiers-create-btn {
+    width: auto;
+    min-width: 190px;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+    .chantiers-header .chantiers-create-btn {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+}
+
+/* AZÔÔDIÉ — Professional construction dashboard */
+.chantier-dashboard {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 28px 24px 48px;
+    color: #1f2937;
+}
+
+.chantier-dashboard *,
+.chantier-dashboard *::before,
+.chantier-dashboard *::after {
+    box-sizing: border-box;
+}
+
+.chantier-dashboard .chantier-dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+    padding: 8px 0 22px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.chantier-dashboard .chantier-dashboard-header h1 {
+    margin: 5px 0 8px;
+    color: #111827;
+    font-size: clamp(25px, 3vw, 34px);
+    font-weight: 750;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.chantier-dashboard .chantiers-eyebrow {
+    margin: 0 0 8px;
+    color: #0f766e;
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 1px;
+}
+
+.chantier-dashboard .chantiers-subtitle {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.chantier-dashboard-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.chantier-dashboard-header-actions button {
+    min-height: 42px;
+    padding: 10px 16px;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 650;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.chantier-dashboard-header-actions button:hover {
+    transform: translateY(-1px);
+}
+
+.chantier-dashboard .chantier-card {
+    margin: 0 0 20px;
+    padding: 24px;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.035);
+}
+
+.chantier-dashboard-overview {
+    border-top: 3px solid #0d9488 !important;
+}
+
+.chantier-dashboard-status-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 26px;
+}
+
+.chantier-dashboard .chantier-status,
+.chantier-dashboard .chantier-access {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    max-width: 100%;
+    padding: 6px 11px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 650;
+    line-height: 1.4;
+}
+
+.chantier-dashboard .chantier-access {
+    color: #475569;
+    background: #f1f5f9;
+}
+
+.chantier-dashboard-progress {
+    margin-bottom: 26px;
+}
+
+.chantier-dashboard-progress-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.chantier-dashboard-progress-heading h2 {
+    margin: 0;
+    color: #0f766e;
+    font-size: 34px;
+    font-weight: 750;
+    line-height: 1.15;
+}
+
+.chantier-dashboard-progress-heading > span {
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.chantier-dashboard .chantier-progress-track {
+    width: 100%;
+    height: 10px;
+    overflow: hidden;
+    background: #e5e7eb;
+    border-radius: 999px;
+}
+
+.chantier-dashboard .chantier-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #0d9488, #14b8a6);
+    border-radius: inherit;
+    transition: width 0.35s ease;
+}
+
+.chantier-dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.chantier-dashboard-stat {
+    min-width: 0;
+    padding: 17px;
+    background: #f8fafc;
+    border: 1px solid #edf0f3;
+    border-radius: 11px;
+}
+
+.chantier-dashboard-stat-label {
+    display: block;
+    margin-bottom: 9px;
+    color: #6b7280;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.chantier-dashboard-stat strong {
+    display: block;
+    color: #1f2937;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.chantier-dashboard .chantier-dashboard-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.chantier-dashboard .chantier-dashboard-section-heading h2 {
+    margin: 0 0 6px;
+    color: #111827;
+    font-size: 21px;
+    font-weight: 730;
+    line-height: 1.35;
+}
+
+.chantier-dashboard-information .chantier-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 28px;
+    margin: 0;
+}
+
+.chantier-dashboard-information .chantier-details p {
+    margin: 0;
+    padding: 15px 0;
+    color: #4b5563;
+    font-size: 14px;
+    line-height: 1.65;
+    border-bottom: 1px solid #f0f2f5;
+    overflow-wrap: anywhere;
+}
+
+.chantier-dashboard-information .chantier-details strong {
+    color: #374151;
+    font-weight: 650;
+}
+
+.chantier-dashboard-description {
+    margin-top: 20px;
+    padding: 17px 18px;
+    background: #f8fafc;
+    border-radius: 10px;
+}
+
+.chantier-dashboard-description h3 {
+    margin: 0 0 8px;
+    color: #374151;
+    font-size: 14px;
+}
+
+.chantier-dashboard-description p {
+    margin: 0;
+    color: #4b5563;
+    font-size: 14px;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+}
+
+.chantier-dashboard-reports {
+    margin-top: 30px;
+}
+
+.chantier-dashboard-reports > .chantier-dashboard-section-heading {
+    margin-bottom: 20px;
+}
+
+.chantier-dashboard-report-list {
+    display: grid;
+    gap: 18px;
+}
+
+.chantier-dashboard .chantier-dashboard-report {
+    margin: 0;
+    padding: 24px;
+}
+
+.chantier-dashboard .daily-report-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #edf0f3;
+}
+
+.chantier-dashboard .daily-report-heading h3 {
+    margin: 4px 0 6px;
+    color: #111827;
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.chantier-dashboard .daily-report-meta {
+    margin: 0;
+    color: #9ca3af;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.chantier-dashboard .daily-report-section {
+    margin-top: 20px;
+}
+
+.chantier-dashboard .daily-report-section h4 {
+    margin: 0 0 8px;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.chantier-dashboard .daily-report-section p {
+    color: #4b5563;
+    font-size: 14px;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+}
+
+.chantier-dashboard .chantier-dashboard-empty {
+    padding: 36px 24px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px dashed #cbd5e1;
+    box-shadow: none;
+}
+
+.chantier-dashboard-empty h3 {
+    margin: 0 0 8px;
+    color: #374151;
+    font-size: 18px;
+}
+
+.chantier-dashboard-empty p {
+    max-width: 480px;
+    margin: 0 auto;
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.chantier-dashboard-report img,
+.chantier-dashboard-report video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.chantier-dashboard-report a:focus-visible,
+.chantier-dashboard button:focus-visible {
+    outline: 3px solid rgba(13, 148, 136, 0.35);
+    outline-offset: 3px;
+}
+
+@media (max-width: 900px) {
+    .chantier-dashboard-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .chantier-dashboard .chantier-dashboard-header {
+        align-items: flex-start;
+    }
+
+    .chantier-dashboard-header-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+@media (max-width: 600px) {
+    .chantier-dashboard {
+        padding: 18px 12px 32px;
+    }
+
+    .chantier-dashboard .chantier-dashboard-header {
+        flex-direction: column;
+        gap: 18px;
+        padding-bottom: 18px;
+    }
+
+    .chantier-dashboard-header-actions {
+        width: 100%;
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+
+    .chantier-dashboard-header-actions button {
+        flex: 1 1 auto;
+    }
+
+    .chantier-dashboard .chantier-card,
+    .chantier-dashboard .chantier-dashboard-report {
+        padding: 18px;
+        border-radius: 12px;
+    }
+
+    .chantier-dashboard-stats {
+        gap: 9px;
+    }
+
+    .chantier-dashboard-stat {
+        padding: 13px;
+    }
+
+    .chantier-dashboard-stat strong {
+        font-size: 14px;
+    }
+
+    .chantier-dashboard-information .chantier-details {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .chantier-dashboard .chantier-dashboard-section-heading h2 {
+        font-size: 19px;
+    }
+
+    .chantier-dashboard .daily-report-heading {
+        flex-direction: column;
+    }
+
+    .chantier-dashboard-progress-heading h2 {
+        font-size: 30px;
+    }
+}
+
+
+/* AZÔÔDIÉ — Fix media clipping in construction dashboards */
+.chantier-dashboard .chantier-dashboard-report {
+    overflow: visible;
+}
+
+.chantier-dashboard .daily-report-media-section {
+    min-width: 0;
+    height: auto;
+    overflow: visible;
+}
+
+.chantier-dashboard .daily-report-media-grid {
+    align-items: start;
+    grid-auto-rows: auto;
+    overflow: visible;
+}
+
+.chantier-dashboard .daily-report-media-item {
+    min-width: 0;
+    height: auto;
+    overflow: hidden;
+}
+
+.chantier-dashboard .daily-report-image-link {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+}
+
+.chantier-dashboard .daily-report-image-link img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+.chantier-dashboard .daily-report-video-item video {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: 360px;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+    object-position: center;
+}
+
+@media (max-width: 480px) {
+    .chantier-dashboard .daily-report-video-item video {
+        max-height: 280px;
+    }
+}
+
+
+/* AZÔÔDIÉ — Final media frame sizing */
+.chantier-dashboard .daily-report-media-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 12px;
+}
+
+.chantier-dashboard a.daily-report-media-item.daily-report-image-link {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+}
+
+.chantier-dashboard .daily-report-image-link img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    object-fit: contain;
+    object-position: center;
+}
+
+.chantier-dashboard .daily-report-video-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #111827;
+}
+
+.chantier-dashboard .daily-report-video-item video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    object-fit: contain;
+}
+
+@media (max-width: 768px) {
+    .chantier-dashboard .daily-report-media-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .chantier-dashboard .daily-report-media-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* AZÔÔDIÉ — Boutons de navigation de la page des invitations */
+.chantiers-invitations-header > button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-width: 150px;
+    min-height: 44px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: filter 0.2s ease, background-color 0.2s ease;
+}
+
+.chantiers-invitations-header > button:hover {
+    filter: brightness(0.93);
+}
+
+.chantiers-invitations-header > button:focus-visible {
+    outline: 3px solid var(--teal);
+    outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+    .chantiers-invitations-header > button {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+/* AZÔÔDIÉ — Navigation entre Mes chantiers et Mes invitations */
+.chantiers-header > button.btn-secondary,
+.chantiers-header > a.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-width: 150px;
+    min-height: 44px;
+    padding: 12px 20px;
+    color: var(--teal, #087f8c);
+    background: #ffffff;
+    border: 2px solid var(--teal, #087f8c);
+    border-radius: 12px;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.chantiers-header > button.btn-secondary:hover,
+.chantiers-header > a.btn-secondary:hover {
+    color: #ffffff;
+    background: var(--teal, #087f8c);
+}
+
+.chantiers-header > button.btn-secondary:focus-visible,
+.chantiers-header > a.btn-secondary:focus-visible {
+    outline: 3px solid var(--orange, #f28c28);
+    outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+    .chantiers-header > button.btn-secondary,
+    .chantiers-header > a.btn-secondary {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+
+/* ==========================================
+   AZÔÔDIÉ — Barre latérale repliable des chantiers
+   ========================================== */
+
+.chantiers-layout {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    align-items: start;
+    gap: 24px;
+}
+
+.chantiers-sidebar {
+    position: sticky;
+    top: 20px;
+    min-width: 0;
+    padding: 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 5px 18px rgb(15 23 42 / 5%);
+}
+
+.chantiers-sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px;
+    border: 0;
+    border-radius: 10px;
+    background: #f1f5f9;
+    color: #263238;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.chantiers-sidebar-toggle:hover {
+    background: #e2e8f0;
+}
+
+.chantiers-sidebar-toggle:focus-visible,
+.chantiers-sidebar-action:focus-visible {
+    outline: 3px solid var(--orange, #f28c28);
+    outline-offset: 3px;
+}
+
+.chantiers-sidebar-toggle-icon {
+    flex: 0 0 24px;
+    text-align: center;
+    font-size: 1.25rem;
+}
+
+.chantiers-sidebar-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.chantiers-sidebar-heading {
+    margin: 0 0 4px;
+    color: #64748b;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.chantiers-sidebar-action {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    width: 100%;
+    min-height: 46px;
+    padding: 12px;
+    border: 2px solid var(--teal, #087f8c);
+    border-radius: 11px;
+    background: #fff;
+    color: var(--teal, #087f8c);
+    font: inherit;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.chantiers-sidebar-action:hover {
+    background: var(--teal, #087f8c);
+    color: #fff;
+}
+
+.chantiers-sidebar-create {
+    background: var(--teal, #087f8c);
+    color: #fff;
+}
+
+.chantiers-sidebar-create:hover {
+    background: #066873;
+}
+
+.chantiers-sidebar-action > span:first-child {
+    flex: 0 0 20px;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.chantiers-main {
+    min-width: 0;
+}
+
+.chantiers-main .chantiers-header {
+    display: block;
+    margin-bottom: 28px;
+}
+
+.chantiers-layout.is-collapsed {
+    grid-template-columns: 64px minmax(0, 1fr);
+}
+
+.chantiers-layout.is-collapsed .chantiers-sidebar {
+    padding: 8px;
+}
+
+.chantiers-layout.is-collapsed .chantiers-sidebar-toggle {
+    justify-content: center;
+    padding: 10px 4px;
+}
+
+.chantiers-layout.is-collapsed .chantiers-sidebar-toggle-label,
+.chantiers-layout.is-collapsed .chantiers-sidebar-content {
+    display: none;
+}
+
+@media (max-width: 760px) {
+    .chantiers-layout,
+    .chantiers-layout.is-collapsed {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .chantiers-sidebar {
+        position: static;
+    }
+
+    .chantiers-layout.is-collapsed .chantiers-sidebar {
+        padding: 8px;
+    }
+
+    .chantiers-layout.is-collapsed .chantiers-sidebar-toggle {
+        justify-content: flex-start;
+        padding: 10px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .chantiers-sidebar-action {
+        transition: none;
+    }
+}
+
+
+/* AZÔÔDIÉ — Barre latérale de la page détail d'un chantier */
+.chantier-dashboard-layout {
+    grid-template-columns: 250px minmax(0, 1fr);
+    align-items: start;
+    gap: 24px;
+}
+
+.chantier-dashboard-sidebar {
+    z-index: 1;
+}
+
+.chantier-dashboard-main {
+    min-width: 0;
+}
+
+.chantier-dashboard-main > .chantier-dashboard-header {
+    margin-top: 0;
+}
+
+.chantier-dashboard-sidebar .chantiers-sidebar-content {
+    overflow-wrap: anywhere;
+}
+
+.chantier-dashboard-sidebar .chantiers-sidebar-action > span:last-child {
+    min-width: 0;
+}
+
+.chantier-dashboard-layout.is-collapsed {
+    grid-template-columns: 64px minmax(0, 1fr);
+}
+
+@media (max-width: 760px) {
+    .chantier-dashboard-layout,
+    .chantier-dashboard-layout.is-collapsed {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .chantier-dashboard-sidebar {
+        position: static;
+        width: 100%;
+    }
+
+    .chantier-dashboard-main > .chantier-dashboard-header {
+        margin-bottom: 20px;
+    }
+}
+

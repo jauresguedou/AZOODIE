@@ -1,0 +1,84 @@
+<div class="chantiers-page">
+    <header class="chantiers-header chantiers-invitations-header">
+        <div>
+            <p class="chantiers-eyebrow">AZÔÔDIÉ · COLLABORATION</p>
+            <h1>Mes invitations</h1>
+            <p class="chantiers-subtitle">
+                Consultez les invitations reçues pour participer à des chantiers.
+            </p>
+        </div>
+
+        <button
+            type="button"
+            class="btn-secondary"
+            onclick="window.location.href='/chantiers'">
+            Mes chantiers
+        </button>
+    </header>
+
+    <% if (!invitations || invitations.length === 0) { %>
+        <section class="chantier-card chantier-dashboard-empty">
+            <h2>Aucune invitation en attente</h2>
+            <p>
+                Les nouvelles invitations apparaîtront ici.
+            </p>
+        </section>
+    <% } else { %>
+        <div class="daily-reports-list">
+            <% invitations.forEach(function(invitation) { %>
+                <article class="chantier-card">
+                    <p class="chantiers-eyebrow">INVITATION À PARTICIPER</p>
+
+                    <h2><%= invitation.project_title %></h2>
+
+                    <p>
+                        <strong>Propriétaire :</strong>
+                        <%= invitation.owner_name || invitation.owner_email %>
+                    </p>
+
+                    <p>
+                        <strong>Lieu :</strong>
+                        <%= invitation.address_text || "Non renseigné" %>
+                    </p>
+
+                    <p>
+                        <strong>Rôle proposé :</strong>
+                        <%= invitation.member_role === "site_manager"
+                            ? "Responsable du chantier"
+                            : "Lecteur — consultation uniquement" %>
+                    </p>
+
+                    <p>
+                        <strong>Reçue le :</strong>
+                        <%= invitation.invited_at
+                            ? new Date(invitation.invited_at).toLocaleDateString("fr-FR")
+                            : "Date non renseignée" %>
+                    </p>
+
+                    <div class="chantiers-form-actions">
+                        <form
+                            action="/chantiers/invitations/<%= invitation.membership_id %>/reponse"
+                            method="POST">
+    <input type="hidden" name="_csrf" value="<%= constructionCsrfToken %>">
+                            <input type="hidden" name="decision" value="accepted">
+                            <button type="submit" class="btn-primary">
+                                Accepter
+                            </button>
+                        </form>
+
+                        <form
+                            action="/chantiers/invitations/<%= invitation.membership_id %>/reponse"
+                            method="POST"
+                            onsubmit="return confirm('Voulez-vous vraiment refuser cette invitation ?');">
+                            <input type="hidden" name="_csrf" value="<%= constructionCsrfToken %>">
+                            <input type="hidden" name="decision" value="declined">
+                            <button type="submit" class="btn-secondary">
+                                Refuser
+                            </button>
+                        </form>
+                    </div>
+                </article>
+            <% }); %>
+        </div>
+    <% } %>
+</div>

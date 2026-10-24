@@ -3,7 +3,7 @@ const pool = require("../config/database");
 const withTransaction = require("../utils/withTransaction");
 
 /**
- * Get daily reports only if the user can access the project.
+ * Get daily reports if the user can access the project.
  * Owners, site managers, and viewers can read reports.
  * Returns null when the project is not accessible.
  */
@@ -20,6 +20,7 @@ async function getReportsForProject(projectId, userId) {
                   FROM construction_project_members AS m
                   WHERE m.project_id = p.id
                     AND m.user_id = $2
+                    AND m.invitation_status = 'accepted'
               )
           )
         `,
@@ -42,6 +43,7 @@ async function getReportsForProject(projectId, userId) {
             materials_used,
             difficulties,
             notes,
+            progress_percentage,
             created_at,
             updated_at
         FROM construction_daily_reports
@@ -92,15 +94,13 @@ async function getReportsForProject(projectId, userId) {
         media: mediaByReport.get(report.id) || []
     }));
 }
-/**
- * Create a report only when the user owns the project
- * or is a site manager assigned to it.
- * Returns null if the user is not authorized.
- */
 
 /**
- * Create a daily report and its media references in one SQL transaction.
- * Returns null when the user is not authorized to create the report.
+ * Create a daily report, save its media references, and update
+ * project progress within one SQL transaction.
+ *
+ * Only the owner or an assigned site manager can create reports.
+ * Returns null when the user is not authorized.
  */
 async function createDailyReportWithMedia(report, media = []) {
     return withTransaction(pool, async (client) => {
@@ -114,7 +114,8 @@ async function createDailyReportWithMedia(report, media = []) {
                 workers_count,
                 materials_used,
                 difficulties,
-                notes
+                notes,
+                progress_percentage
             )
             SELECT
                 p.id,
@@ -124,7 +125,8 @@ async function createDailyReportWithMedia(report, media = []) {
                 $5,
                 $6,
                 $7,
-                $8
+                $8,
+                $9
             FROM construction_projects AS p
             WHERE p.id = $1
               AND (
@@ -135,6 +137,7 @@ async function createDailyReportWithMedia(report, media = []) {
                       WHERE m.project_id = p.id
                         AND m.user_id = $2
                         AND m.member_role = 'site_manager'
+                        AND m.invitation_status = 'accepted'
                   )
               )
             RETURNING *
@@ -147,13 +150,41 @@ async function createDailyReportWithMedia(report, media = []) {
                 report.workersCount ?? null,
                 report.materialsUsed || null,
                 report.difficulties || null,
-                report.notes || null
+                report.notes || null,
+                report.progressPercentage
             ]
         );
 
         const savedReport = result.rows[0];
-        if (!savedReport) return null;
 
+        if (!savedReport) {
+            return null;
+        }
+
+        // Keep the project's progress synchronized with this report.
+        const progressUpdate = await client.query(
+            `
+            UPDATE construction_projects
+            SET
+                progress_percentage = $2,
+                status = CASE
+                    WHEN $2 = 0 THEN 'planning'
+                    WHEN $2 = 100 THEN 'completed'
+                    ELSE 'in_progress'
+                END,
+                updated_at = NOW()
+            WHERE id = $1
+            RETURNING id
+            `,
+            [report.projectId, report.progressPercentage]
+        );
+        if (progressUpdate.rowCount !== 1) {
+            throw new Error(
+                "Impossible de mettre à jour l'avancement du chantier."
+            );
+        }
+
+        // Save the media references in the same transaction.
         for (const item of media) {
             await client.query(
                 `

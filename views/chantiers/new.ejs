@@ -8,9 +8,7 @@
             </p>
         </div>
 
-        <a href="/chantiers" class="chantiers-back-link">
-            ← Mes chantiers
-        </a>
+        
     </div>
 
     <% if (errors && errors.length > 0) { %>
@@ -25,6 +23,7 @@
     <% } %>
 
     <form action="/chantiers" method="POST" class="chantiers-form">
+        <input type="hidden" name="_csrf" value="<%= constructionCsrfToken %>">
         <section class="chantiers-form-section">
             <h2>Informations générales</h2>
 

@@ -1,16 +1,51 @@
 <div class="chantiers-page">
-    <div class="chantiers-header">
-        <div>
-            <p class="chantiers-eyebrow">GESTION DE PROJETS</p>
-            <h1>Mes chantiers</h1>
-            <p class="chantiers-subtitle">
-                Organisez vos projets de construction et suivez leur avancement
-                depuis AZÔÔDIÉ.
-            </p>
-        </div>
-    </div>
+    <div class="chantiers-layout" id="chantiers-layout">
+        <aside class="chantiers-sidebar" aria-label="Actions des chantiers">
+            <button
+                type="button"
+                class="chantiers-sidebar-toggle"
+                id="chantiers-sidebar-toggle"
+                aria-expanded="true"
+                aria-controls="chantiers-sidebar-content"
+                aria-label="Replier le menu des chantiers">
+                <span class="chantiers-sidebar-toggle-icon" aria-hidden="true">☰</span>
+                <span class="chantiers-sidebar-toggle-label">Replier le menu</span>
+            </button>
 
-    <% if (projects.length === 0) { %>
+            <div class="chantiers-sidebar-content" id="chantiers-sidebar-content">
+                <p class="chantiers-sidebar-heading">Actions rapides</p>
+
+                <button
+                    type="button"
+                    class="chantiers-sidebar-action chantiers-sidebar-invitations"
+                    onclick="window.location.href='/chantiers/invitations'">
+                    <span aria-hidden="true">✉</span>
+                    <span>Mes invitations</span>
+                </button>
+
+                <button
+                    type="button"
+                    class="chantiers-sidebar-action chantiers-sidebar-create"
+                    onclick="window.location.href='/chantiers/nouveau'">
+                    <span aria-hidden="true"></span>
+                    <span>Créer un chantier</span>
+                </button>
+            </div>
+        </aside>
+
+        <div class="chantiers-main">
+            <div class="chantiers-header">
+                <div>
+                    <p class="chantiers-eyebrow">GESTION DE PROJETS</p>
+                    <h1>Mes chantiers</h1>
+                    <p class="chantiers-subtitle">
+                        Organisez vos projets de construction et suivez leur avancement
+                        depuis AZÔÔDIÉ.
+                    </p>
+                </div>
+            </div>
+
+        <% if (projects.length === 0) { %>
         <section class="chantiers-empty">
             <div class="chantiers-empty-icon"></div>
             <h2>Votre premier chantier commence ici</h2>
@@ -112,6 +147,28 @@
                             </span>
                         </p>
                     </div>
+
+
+                    <div class="chantier-progress">
+                        <div class="chantier-progress-header">
+                            <span>Avancement des travaux</span>
+                            <strong><%= Number(project.progress_percentage ?? 0) %> %</strong>
+                        </div>
+
+                        <div
+                            class="chantier-progress-track"
+                            role="progressbar"
+                            aria-label="Avancement du chantier <%= project.title %>"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            aria-valuenow="<%= Number(project.progress_percentage ?? 0) %>"
+                        >
+                            <div
+                                class="chantier-progress-fill"
+                                style="width: <%= Number(project.progress_percentage ?? 0) %>%"
+                            ></div>
+                        </div>
+                    </div>
                     <div class="chantier-card-actions">
                         <button
                             type="button"
@@ -131,4 +188,36 @@
             <% }); %>
         </div>
     <% } %>
+        </div>
+    </div>
 </div>
+
+<script>
+(function () {
+    const layout = document.getElementById('chantiers-layout');
+    const toggle = document.getElementById('chantiers-sidebar-toggle');
+    const label = toggle
+        ? toggle.querySelector('.chantiers-sidebar-toggle-label')
+        : null;
+
+    if (!layout || !toggle) return;
+
+    toggle.addEventListener('click', function () {
+        const collapsed = layout.classList.toggle('is-collapsed');
+
+        toggle.setAttribute('aria-expanded', String(!collapsed));
+        toggle.setAttribute(
+            'aria-label',
+            collapsed
+                ? 'Déplier le menu des chantiers'
+                : 'Replier le menu des chantiers'
+        );
+
+        if (label) {
+            label.textContent = collapsed
+                ? 'Déplier le menu'
+                : 'Replier le menu';
+        }
+    });
+})();
+</script>

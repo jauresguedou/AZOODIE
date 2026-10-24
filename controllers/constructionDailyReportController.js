@@ -156,6 +156,7 @@ async function showNewReportForm(req, res) {
         project,
         formValues: {
             report_date: new Date().toISOString().slice(0, 10),
+            progress_percentage: String(project.progress_percentage ?? 0),
             work_completed: "",
             workers_count: "",
             materials_used: "",
@@ -189,6 +190,7 @@ async function renderDailyReportUploadError(req, res, error) {
     const formValues = {
         report_date: value("report_date") ||
             new Date().toISOString().slice(0, 10),
+        progress_percentage: value("progress_percentage"),
         work_completed: value("work_completed"),
         workers_count: value("workers_count"),
         materials_used: value("materials_used"),
@@ -245,6 +247,9 @@ async function createDailyReport(req, res) {
         report_date: typeof body.report_date === "string"
             ? body.report_date.trim()
             : "",
+        progress_percentage: typeof body.progress_percentage === "string"
+            ? body.progress_percentage.trim()
+            : "",
         work_completed: typeof body.work_completed === "string"
             ? body.work_completed.trim()
             : "",
@@ -263,6 +268,26 @@ async function createDailyReport(req, res) {
     };
 
     const errors = [];
+
+    let progressPercentage = null;
+
+    if (!/^\d+$/.test(formValues.progress_percentage)) {
+        errors.push(
+            "L'avancement du chantier doit être un entier entre 0 et 100."
+        );
+    } else {
+        progressPercentage = Number(formValues.progress_percentage);
+
+        if (
+            !Number.isSafeInteger(progressPercentage) ||
+            progressPercentage < 0 ||
+            progressPercentage > 100
+        ) {
+            errors.push(
+                "L'avancement du chantier doit être compris entre 0 et 100 %."
+            );
+        }
+    }
 
     if (!isValidDate(formValues.report_date)) {
         errors.push("Indiquez une date de rapport valide.");
@@ -339,6 +364,7 @@ async function createDailyReport(req, res) {
                 projectId: project.id,
                 userId: req.session.userId,
                 reportDate: formValues.report_date,
+                progressPercentage,
                 workCompleted: formValues.work_completed,
                 workersCount,
                 materialsUsed: formValues.materials_used,

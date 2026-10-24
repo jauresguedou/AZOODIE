@@ -1,115 +1,384 @@
+<div class="chantiers-page chantier-dashboard">
 
-<div class="chantiers-page">
-    <div class="chantiers-header">
-        <div>
-            <p class="chantiers-eyebrow">GESTION DE PROJETS</p>
-            <h1><%= project.title %></h1>
-            <p class="chantiers-subtitle">
-                Tableau de bord de votre chantier.
-            </p>
-        </div>
-    </div>
+    <%
+        const statusLabels = {
+            planning: "À planifier",
+            in_progress: "En cours",
+            paused: "En pause",
+            completed: "Terminé",
+            cancelled: "Annulé"
+        };
 
-    <section class="chantier-card">
-        <div class="chantier-card-top">
+        const accessLabels = {
+            owner: "Propriétaire",
+            site_manager: "Responsable du chantier",
+            viewer: "Lecture seule"
+        };
+
+        const dashboardReports = reports || [];
+        const latestReport = dashboardReports.length > 0
+            ? dashboardReports[0]
+            : null;
+
+        const progress = Math.max(
+            0,
+            Math.min(100, Number(project.progress_percentage || 0))
+        );
+
+        const totalWorkers = latestReport &&
+            latestReport.workers_count !== null &&
+            latestReport.workers_count !== undefined
+                ? Number(latestReport.workers_count)
+                : null;
+
+        const budget = project.budget_estimate !== null &&
+            project.budget_estimate !== undefined
+                ? Number(project.budget_estimate)
+                : null;
+
+        const formatDate = (value) => value
+            ? new Date(value).toLocaleDateString("fr-FR", {
+                timeZone: "UTC",
+                day: "2-digit",
+                month: "long",
+                year: "numeric"
+            })
+            : "Non définie";
+    %>
+
+    <div class="chantiers-layout chantier-dashboard-layout" id="chantier-detail-layout">
+        <aside class="chantiers-sidebar chantier-dashboard-sidebar"
+               aria-label="Actions du chantier">
+            <button
+                type="button"
+                class="chantiers-sidebar-toggle"
+                id="chantier-detail-sidebar-toggle"
+                aria-expanded="true"
+                aria-controls="chantier-detail-sidebar-content"
+                aria-label="Replier le menu du chantier">
+                <span class="chantiers-sidebar-toggle-icon" aria-hidden="true">☰</span>
+                <span class="chantiers-sidebar-toggle-label">Replier le menu</span>
+            </button>
+
+            <div class="chantiers-sidebar-content" id="chantier-detail-sidebar-content">
+                <p class="chantiers-sidebar-heading">Actions du chantier</p>
+
+                <% if (project.access_role === "owner") { %>
+                    <button
+                        type="button"
+                        class="chantiers-sidebar-action"
+                        onclick="window.location.href='/chantiers/<%= project.id %>/membres'">
+                        <span aria-hidden="true">♙</span>
+                        <span>Gérer les membres</span>
+                    </button>
+                <% } %>
+
+                <% if (["owner", "site_manager"].includes(project.access_role)) { %>
+                    <button
+                        type="button"
+                        class="chantiers-sidebar-action chantiers-sidebar-create"
+                        onclick="window.location.href='/chantiers/<%= project.id %>/rapports/nouveau'">
+                        <span aria-hidden="true">＋</span>
+                        <span>Nouveau rapport</span>
+                    </button>
+                <% } %>
+
+                <button
+                    type="button"
+                    class="chantiers-sidebar-action"
+                    onclick="window.location.href='/chantiers'">
+                    <span aria-hidden="true">←</span>
+                    <span>Mes chantiers</span>
+                </button>
+            </div>
+        </aside>
+
+        <div class="chantiers-main chantier-dashboard-main">
+            <header class="chantiers-header chantier-dashboard-header">
+                <div>
+                    <p class="chantiers-eyebrow">AZÔÔDIÉ · SUIVI DES TRAVAUX</p>
+                    <h1><%= project.title %></h1>
+                    <p class="chantiers-subtitle">
+                        <%= project.address_text || "Adresse non renseignée" %>
+                    </p>
+                </div>
+            </header>
+
+    <section class="chantier-card chantier-dashboard-overview">
+        <div class="chantier-dashboard-status-row">
             <span class="chantier-status chantier-status-<%= project.status %>">
-                <% const statusLabels = {
-                    planning: "À planifier",
-                    in_progress: "En cours",
-                    paused: "En pause",
-                    completed: "Terminé",
-                    cancelled: "Annulé"
-                }; %>
                 <%= statusLabels[project.status] || project.status %>
             </span>
 
             <span class="chantier-access">
-                <% const accessLabels = {
-                    owner: "Propriétaire",
-                    site_manager: "Responsable",
-                    viewer: "Lecture seule"
-                }; %>
                 <%= accessLabels[project.access_role] || "Membre" %>
             </span>
         </div>
 
-        <h2>Informations générales</h2>
+        <div class="chantier-dashboard-progress">
+            <div class="chantier-dashboard-progress-heading">
+                <div>
+                    <p class="chantiers-eyebrow">AVANCEMENT GLOBAL</p>
+                    <h2><%= progress %> %</h2>
+                </div>
+
+                <span><%= dashboardReports.length %> rapport<%= dashboardReports.length > 1 ? "s" : "" %></span>
+            </div>
+
+            <div
+                class="chantier-progress-track"
+                role="progressbar"
+                aria-label="Avancement global du chantier"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="<%= progress %>"
+            >
+                <div
+                    class="chantier-progress-fill"
+                    style="width: <%= progress %>%"
+                ></div>
+            </div>
+        </div>
+
+        <div class="chantier-dashboard-stats">
+            <article class="chantier-dashboard-stat">
+                <span class="chantier-dashboard-stat-label">Budget prévisionnel</span>
+                <strong>
+                    <% if (budget !== null && Number.isFinite(budget)) { %>
+                        <%= budget.toLocaleString("fr-FR") %> FCFA
+                    <% } else { %>
+                        Non renseigné
+                    <% } %>
+                </strong>
+            </article>
+
+            <article class="chantier-dashboard-stat">
+                <span class="chantier-dashboard-stat-label">Dernier rapport</span>
+                <strong>
+                    <%= latestReport ? formatDate(latestReport.report_date) : "Aucun rapport" %>
+                </strong>
+            </article>
+
+            <article class="chantier-dashboard-stat">
+                <span class="chantier-dashboard-stat-label">Ouvriers au dernier rapport</span>
+                <strong>
+                    <%= totalWorkers !== null ? totalWorkers : "Non renseigné" %>
+                </strong>
+            </article>
+
+            <article class="chantier-dashboard-stat">
+                <span class="chantier-dashboard-stat-label">Début du chantier</span>
+                <strong><%= formatDate(project.start_date) %></strong>
+            </article>
+        </div>
+    </section>
+
+    <section class="chantier-card chantier-dashboard-information">
+        <div class="chantier-dashboard-section-heading">
+            <div>
+                <p class="chantiers-eyebrow">APERÇU DU PROJET</p>
+                <h2>Informations générales</h2>
+            </div>
+        </div>
 
         <div class="chantier-details">
             <p>
                 <strong>Lieu :</strong>
-                <%= project.address_text %>
-            </p>
-
-            <% if (project.commune) { %>
-                <p>
-                    <strong>Commune :</strong>
-                    <%= project.commune %>
-                </p>
-            <% } %>
-
-            <% if (project.department) { %>
-                <p>
-                    <strong>Département :</strong>
-                    <%= project.department %>
-                </p>
-            <% } %>
-
-            <p>
-                <strong>Budget prévisionnel :</strong>
-                <% if (project.budget_estimate !== null &&
-                       project.budget_estimate !== undefined) { %>
-                    <%= Number(project.budget_estimate).toLocaleString("fr-FR") %>
-                    FCFA
-                <% } else { %>
-                    Non renseigné
-                <% } %>
+                <%= project.address_text || "Non renseigné" %>
             </p>
 
             <p>
-                <strong>Date de début :</strong>
-                <%= project.start_date
-                    ? new Date(project.start_date).toLocaleDateString(
-                        "fr-FR",
-                        { timeZone: "UTC" }
-                    )
-                    : "Non définie" %>
+                <strong>Commune :</strong>
+                <%= project.commune || "Non renseignée" %>
+            </p>
+
+            <p>
+                <strong>Département :</strong>
+                <%= project.department || "Non renseigné" %>
             </p>
 
             <p>
                 <strong>Fin prévue :</strong>
-                <%= project.target_end_date
-                    ? new Date(project.target_end_date).toLocaleDateString(
-                        "fr-FR",
-                        { timeZone: "UTC" }
-                    )
-                    : "Non définie" %>
+                <%= formatDate(project.target_end_date) %>
+            </p>
+
+            <p>
+                <strong>Créé le :</strong>
+                <%= formatDate(project.created_at) %>
             </p>
         </div>
 
         <% if (project.description) { %>
-            <h2>Description</h2>
-            <p><%= project.description %></p>
+            <div class="chantier-dashboard-description">
+                <h3>Description du chantier</h3>
+                <p><%= project.description %></p>
+            </div>
         <% } %>
-
-        <button
-           type="button"
-           class="btn-primary"
-           onclick="window.location.href='/chantiers'">
-            
-           Mes chantiers
-
-        </button>
     </section>
 
-    <section class="chantier-card">
-        <h2>Suivi des travaux</h2>
-        <p>
-            Les rapports journaliers, les photos du chantier et le suivi
-            des dépenses seront disponibles dans cette section.
-        </p>
-        <p>
-            <em>Fonctionnalités en cours de développement.</em>
-        </p>
+    <section class="chantier-dashboard-reports">
+        <div class="chantier-dashboard-section-heading">
+            <div>
+                <p class="chantiers-eyebrow">JOURNAL DU CHANTIER</p>
+                <h2>Rapports journaliers</h2>
+                <p class="chantiers-subtitle">
+                    Historique des travaux, de l'avancement et des médias transmis.
+                </p>
+            </div>
+
+        </div>
+
+        <% if (dashboardReports.length === 0) { %>
+            <article class="chantier-card chantier-dashboard-empty">
+                <h3>Aucun rapport journalier</h3>
+                <p>
+                    Les rapports apparaîtront ici dès qu'un premier rapport
+                    aura été enregistré pour ce chantier.
+                </p>
+
+            </article>
+        <% } else { %>
+
+            <div class="daily-reports-list chantier-dashboard-report-list">
+                <% dashboardReports.forEach(function(report, index) { %>
+                    <article class="chantier-card daily-report-card chantier-dashboard-report">
+
+                        <div class="daily-report-heading">
+                            <div>
+                                <p class="chantiers-eyebrow">
+                                    RAPPORT N° <%= dashboardReports.length - index %>
+                                </p>
+                                <h3><%= formatDate(report.report_date) %></h3>
+                                <p class="daily-report-meta">
+                                    Enregistré le
+                                    <%= report.created_at
+                                        ? new Date(report.created_at).toLocaleString(
+                                            "fr-FR",
+                                            { timeZone: "UTC" }
+                                        )
+                                        : "Date non renseignée" %>
+                                </p>
+                            </div>
+
+                            <% if (report.workers_count !== null &&
+                                   report.workers_count !== undefined) { %>
+                                <span class="chantier-access">
+                                    <%= report.workers_count %>
+                                    ouvrier<%= Number(report.workers_count) > 1 ? "s" : "" %>
+                                </span>
+                            <% } %>
+                        </div>
+
+                        <div class="daily-report-section daily-report-progress">
+                            <div class="chantier-progress-header">
+                                <span>Avancement déclaré</span>
+                                <strong><%= Number(report.progress_percentage ?? 0) %> %</strong>
+                            </div>
+
+                            <div
+                                class="chantier-progress-track"
+                                role="progressbar"
+                                aria-label="Avancement déclaré dans ce rapport"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                aria-valuenow="<%= Number(report.progress_percentage ?? 0) %>"
+                            >
+                                <div
+                                    class="chantier-progress-fill"
+                                    style="width: <%= Number(report.progress_percentage ?? 0) %>%"
+                                ></div>
+                            </div>
+                        </div>
+
+                        <div class="daily-report-section">
+                            <h4>Travaux réalisés</h4>
+                            <p class="daily-report-text"><%= report.work_completed %></p>
+                        </div>
+
+                        <% if (report.materials_used) { %>
+                            <div class="daily-report-section">
+                                <h4>Matériaux utilisés</h4>
+                                <p class="daily-report-text"><%= report.materials_used %></p>
+                            </div>
+                        <% } %>
+
+                        <% if (report.difficulties) { %>
+                            <div class="daily-report-section">
+                                <h4>Difficultés rencontrées</h4>
+                                <p class="daily-report-text"><%= report.difficulties %></p>
+                            </div>
+                        <% } %>
+
+                        <% if (report.notes) { %>
+                            <div class="daily-report-section">
+                                <h4>Notes complémentaires</h4>
+                                <p class="daily-report-text"><%= report.notes %></p>
+                            </div>
+                        <% } %>
+
+                        <% if (report.media && report.media.length > 0) { %>
+                            <section class="daily-report-section daily-report-media-section">
+                                <h4>Photos et vidéos du chantier</h4>
+
+                                <div class="daily-report-media-grid">
+                                    <% report.media.forEach(function(media) { %>
+                                        <% if (media.media_type === "image") { %>
+                                            <a
+                                                class="daily-report-media-item daily-report-image-link"
+                                                href="<%= media.media_url %>"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                aria-label="Ouvrir la photo du chantier dans un nouvel onglet"
+                                            >
+                                                <img
+                                                    src="<%= media.media_url %>"
+                                                    alt="Photo du chantier du <%= formatDate(report.report_date) %>"
+                                                    loading="lazy"
+                                                >
+                                            </a>
+                                        <% } else if (media.media_type === "video") { %>
+                                            <div class="daily-report-media-item daily-report-video-item">
+                                                <video controls playsinline preload="metadata">
+                                                    <source src="<%= media.media_url %>">
+                                                    Votre navigateur ne prend pas en charge la lecture vidéo.
+                                                </video>
+                                            </div>
+                                        <% } %>
+                                    <% }); %>
+                                </div>
+                            </section>
+                        <% } %>
+
+                    </article>
+                <% }); %>
+            </div>
+        <% } %>
     </section>
+
+    </div>
 </div>
+<script>
+(function () {
+    const layout = document.getElementById("chantier-detail-layout");
+    const toggle = document.getElementById("chantier-detail-sidebar-toggle");
+
+    if (!layout || !toggle) return;
+
+    const label = toggle.querySelector(".chantiers-sidebar-toggle-label");
+
+    toggle.addEventListener("click", function () {
+        const collapsed = layout.classList.toggle("is-collapsed");
+
+        toggle.setAttribute("aria-expanded", String(!collapsed));
+        toggle.setAttribute(
+            "aria-label",
+            collapsed ? "Déplier le menu du chantier" : "Replier le menu du chantier"
+        );
+
+        if (label) {
+            label.textContent = collapsed ? "Déplier le menu" : "Replier le menu";
+        }
+    });
+})();
+</script>
+

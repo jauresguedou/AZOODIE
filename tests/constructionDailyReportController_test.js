@@ -35,6 +35,7 @@ function makeRequest(overrides = {}) {
         session: { userId: 42 },
         body: {
             report_date: "2026-10-22",
+            progress_percentage: "35",
             work_completed: "Fondations réalisées",
             workers_count: "3",
             materials_used: "Ciment et sable",
@@ -142,6 +143,7 @@ describe("constructionDailyReportController — création de rapport", () => {
                     projectId: 7,
                     userId: 42,
                     reportDate: "2026-10-22",
+                    progressPercentage: 35,
                     workCompleted: "Fondations réalisées",
                     workersCount: 3,
                     materialsUsed: "Ciment et sable",
@@ -210,6 +212,71 @@ describe("constructionDailyReportController — création de rapport", () => {
 
 
     
+    test.each(["0", "35", "100"])(
+        "accepte un avancement valide de %s %%",
+        async (percentage) => {
+            const req = makeRequest({
+                body: {
+                    ...makeRequest().body,
+                    progress_percentage: percentage,
+                },
+            });
+            const res = makeResponse();
+
+            dailyReportModel.createDailyReportWithMedia.mockResolvedValue({
+                id: 102,
+            });
+
+            await createDailyReport(req, res);
+
+            expect(dailyReportModel.createDailyReportWithMedia)
+                .toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        progressPercentage: Number(percentage),
+                    }),
+                    expect.any(Array)
+                );
+
+            expect(res.redirect).toHaveBeenCalledWith(
+                "/chantiers/7/rapports"
+            );
+        }
+    );
+
+    test.each(["-1", "101", "12.5", ""])(
+        "refuse les pourcentages d'avancement invalides (%s)",
+        async (percentage) => {
+            const req = makeRequest({
+                body: {
+                    ...makeRequest().body,
+                    progress_percentage: percentage,
+                },
+            });
+            const res = makeResponse();
+
+            await createDailyReport(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.render).toHaveBeenCalledWith(
+                "chantiers/report-new",
+                expect.objectContaining({
+                    project,
+                    errors: expect.arrayContaining([
+                        expect.stringMatching(/avancement du chantier/i),
+                    ]),
+                })
+            );
+
+            expect(dailyReportModel.createDailyReportWithMedia)
+                .not.toHaveBeenCalled();
+
+            expect(cleanupCloudinaryMedia).toHaveBeenCalledWith(
+                req.files,
+                expect.anything()
+            );
+        }
+    );
+
     test("affiche le message précis pour un format de fichier non autorisé", async () => {
         const req = makeRequest({
             files: {},
