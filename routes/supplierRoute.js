@@ -1,4 +1,3 @@
-
 const express = require("express");
 const router = express.Router();
 
@@ -10,8 +9,24 @@ const {
 const {
     showDashboard,
     showRegistrationForm,
-    registerSupplier
+    registerSupplier,
+    showVerificationForm,
+    ensureCanSubmitVerification,
+    submitSupplierVerification
 } = require("../controllers/supplierController");
+
+const handleSupplierVerificationUpload = require(
+    "../middleware/supplierVerificationUpload"
+);
+
+const validateAndUploadSupplierVerificationDocuments = require(
+    "../middleware/validateAndUploadSupplierVerificationDocuments"
+);
+
+const {
+    ensureSupplierVerificationCsrfToken,
+    verifySupplierVerificationCsrf
+} = require("../middleware/supplierVerificationCsrf");
 
 const {
     showOfferForm,
@@ -40,6 +55,24 @@ router.get(
     showDashboard
 );
 
+router.get(
+    "/verification",
+    requireLogin,
+    requireSupplierRole,
+    ensureSupplierVerificationCsrfToken,
+    showVerificationForm
+);
+
+router.post(
+    "/verification",
+    requireLogin,
+    requireSupplierRole,
+    verifySupplierVerificationCsrf,
+    ensureCanSubmitVerification,
+    handleSupplierVerificationUpload,
+    validateAndUploadSupplierVerificationDocuments,
+    submitSupplierVerification
+);
 
 router.get(
     "/offers/new",

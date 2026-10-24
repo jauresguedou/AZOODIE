@@ -1,0 +1,205 @@
+
+<%
+    const memberSince = supplier.created_at
+        ? new Intl.DateTimeFormat("fr-FR", {
+            month: "long",
+            year: "numeric"
+        }).format(new Date(supplier.created_at))
+        : null;
+%>
+
+<div class="supplier-profile-page">
+    <section class="supplier-profile-card" aria-labelledby="supplier-profile-name">
+        
+        <div class="supplier-profile-cover">
+            <% if (supplier.logo_url) { %>
+                <img
+                    class="supplier-profile-cover-image"
+                    src="<%= supplier.logo_url %>"
+                    alt="Logo de <%= supplier.business_name %>"
+                >
+            <% } %>
+
+            <span>AZÔÔDIÉ · ESPACE PROFESSIONNEL</span>
+
+            <form
+                action="/profile/supplier-logo"
+                method="POST"
+                enctype="multipart/form-data"
+                class="supplier-profile-image-form supplier-profile-logo-form"
+            >
+                <label class="supplier-profile-edit-image" title="Ajouter ou modifier le logo">
+                    <span aria-hidden="true">✎</span>
+                    <input
+                        type="file"
+                        name="logo"
+                        accept="image/jpeg,image/png,image/webp"
+                        required
+                        onchange="this.form.submit()"
+                    >
+                </label>
+            </form>
+        </div>
+
+
+        <div class="supplier-profile-identity">
+            
+            <div class="supplier-profile-avatar-wrapper">
+                <% if (profilePhoto) { %>
+                    <img
+                        class="supplier-profile-avatar supplier-profile-avatar-image"
+                        src="<%= profilePhoto %>"
+                        alt="Photo de profil de l'entreprise"
+                    >
+                <% } else { %>
+                    <div class="supplier-profile-avatar" aria-hidden="true">
+                        <%= supplier.business_name.trim().charAt(0).toLocaleUpperCase("fr-FR") %>
+                    </div>
+                <% } %>
+
+                <form
+                    action="/profile/supplier-photo"
+                    method="POST"
+                    enctype="multipart/form-data"
+                    class="supplier-profile-image-form supplier-profile-avatar-form"
+                >
+                    <label class="supplier-profile-edit-image" title="Ajouter ou modifier la photo">
+                        <span aria-hidden="true">✎</span>
+                        <input
+                            type="file"
+                            name="photo"
+                            accept="image/jpeg,image/png,image/webp"
+                            required
+                            onchange="this.form.submit()"
+                        >
+                    </label>
+                </form>
+            </div>
+
+
+            <div class="supplier-profile-heading">
+                <p class="supplier-profile-eyebrow">Profil de l'entreprise</p>
+
+                <h1 id="supplier-profile-name">
+                    <%= supplier.business_name %>
+                    <% if (supplier.verified) { %>
+                        <span class="supplier-profile-verified" title="Entreprise vérifiée par AZÔÔDIÉ">
+                            ✓ Vérifiée
+                        </span>
+                    <% } %>
+                </h1>
+
+                <p class="supplier-profile-subtitle">
+                    Fournisseur de matériaux de construction
+                </p>
+
+                <p class="supplier-profile-location">
+                    <span aria-hidden="true">⌖</span>
+                    <%= [supplier.commune, supplier.department].filter(Boolean).join(", ") || "Localisation non renseignée" %>
+                </p>
+            </div>
+        </div>
+
+        <div class="supplier-profile-actions">
+            <a href="/supplier/dashboard" class="supplier-profile-button supplier-profile-button-primary">
+                Mon espace fournisseur
+            </a>
+
+            <% if (!supplier.verified) { %>
+                <a href="/supplier/verification" class="supplier-profile-button supplier-profile-button-secondary">
+                    Faire vérifier mon entreprise
+                </a>
+            <% } %>
+
+            <a href="/market" class="supplier-profile-button supplier-profile-button-market">
+                Explorer le Marché
+            </a>
+        </div>
+    </section>
+
+    <div class="supplier-profile-content">
+        <main class="supplier-profile-main">
+            <section class="supplier-profile-section">
+                <h2>À propos de l'entreprise</h2>
+
+                <% if (supplier.description && supplier.description.trim()) { %>
+                    <p class="supplier-profile-description"><%= supplier.description %></p>
+                <% } else { %>
+                    <p class="supplier-profile-empty">
+                        Aucune description renseignée pour le moment.
+                    </p>
+                <% } %>
+            </section>
+
+            <section class="supplier-profile-section">
+                <h2>Informations professionnelles</h2>
+
+                <dl class="supplier-profile-details">
+                    <div>
+                        <dt>Téléphone</dt>
+                        <dd><%= supplier.phone || "Non renseigné" %></dd>
+                    </div>
+
+                    <div>
+                        <dt>Département</dt>
+                        <dd><%= supplier.department || "Non renseigné" %></dd>
+                    </div>
+
+                    <div>
+                        <dt>Commune</dt>
+                        <dd><%= supplier.commune || "Non renseignée" %></dd>
+                    </div>
+
+                    <div>
+                        <dt>Adresse ou repère</dt>
+                        <dd><%= supplier.address_text || "Non renseigné" %></dd>
+                    </div>
+
+                    <% if (memberSince) { %>
+                        <div>
+                            <dt>Membre depuis</dt>
+                            <dd><%= memberSince %></dd>
+                        </div>
+                    <% } %>
+                </dl>
+            </section>
+        </main>
+
+        <aside class="supplier-profile-sidebar">
+            <section class="supplier-profile-section supplier-profile-trust">
+                <h2>Confiance et vérification</h2>
+
+                <% if (supplier.verified) { %>
+                    <p class="supplier-profile-trust-status is-verified">
+                        ✓ Entreprise vérifiée
+                    </p>
+                    <p>
+                        La vérification de cette entreprise a été approuvée par AZÔÔDIÉ.
+                    </p>
+                <% } else { %>
+                    <p class="supplier-profile-trust-status is-unverified">
+                        Vérification non obtenue
+                    </p>
+                    <p>
+                        Cette entreprise n'est pas actuellement marquée comme vérifiée.
+                        Les documents justificatifs sont facultatifs.
+                    </p>
+                    <a href="/supplier/verification" class="supplier-profile-text-link">
+                        Consulter la procédure de vérification →
+                    </a>
+                <% } %>
+            </section>
+
+            <section class="supplier-profile-section">
+                <h2>Votre activité</h2>
+                <p>
+                    Retrouvez la gestion de votre entreprise dans votre espace fournisseur.
+                    Les offres de matériaux restent consultables séparément sur le Marché.
+                </p>
+                <a href="/supplier/dashboard" class="supplier-profile-text-link">
+                    Accéder à mon espace →
+                </a>
+            </section>
+        </aside>
+    </div>
+</div>

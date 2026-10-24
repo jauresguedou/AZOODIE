@@ -41,7 +41,7 @@ function requireOwnership(req, res, next) {
     next();
 }
 
-function requireAdmin(req, res, next){
+function requireAdmin(req, res, next) {
    if(!req.session.userId) {
     return res.redirect("/login");
    }

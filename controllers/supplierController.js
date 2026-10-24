@@ -1,8 +1,14 @@
-
 const {
     getSupplierByUserId,
     createSupplier
 } = require("../models/supplier-model");
+
+const {
+    getLatestVerificationRequest,
+    submitVerificationRequest: createVerificationRequest
+} = require("../models/supplier-verification-model");
+
+const cleanupSupplierVerificationAssets = require("../utils/cleanupSupplierVerificationAssets");
 
 async function showDashboard(req, res, next) {
     try {
@@ -12,9 +18,14 @@ async function showDashboard(req, res, next) {
             return res.redirect("/supplier/register");
         }
 
+        const verificationRequest = await getLatestVerificationRequest(
+            supplier.id
+        );
+
         res.render("suppliers/dashboard", {
             title: "Espace fournisseur — AZÔÔDIÉ",
-            supplier
+            supplier,
+            verificationRequest
         });
     } catch (error) {
         next(error);
@@ -132,8 +143,148 @@ async function registerSupplier(req, res, next) {
     }
 }
 
+async function showVerificationForm(req, res, next) {
+    try {
+        const supplier = await getSupplierByUserId(req.session.userId);
+
+        if (!supplier) {
+            return res.redirect("/supplier/register");
+        }
+
+        const verificationRequest = await getLatestVerificationRequest(
+            supplier.id
+        );
+
+        res.render("suppliers/verification", {
+            title: "Vérification du fournisseur — AZÔÔDIÉ",
+            supplier,
+            verificationRequest,
+            errors: []
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+async function ensureCanSubmitVerification(req, res, next) {
+    try {
+        const supplier = await getSupplierByUserId(req.session.userId);
+
+        if (!supplier) {
+            return res.redirect("/supplier/register");
+        }
+
+        if (supplier.verified) {
+            return res.redirect("/supplier/dashboard");
+        }
+
+        const verificationRequest = await getLatestVerificationRequest(
+            supplier.id
+        );
+
+        if (verificationRequest?.status === "pending") {
+            return res.redirect("/supplier/dashboard");
+        }
+
+        req.supplier = supplier;
+        next();
+    } catch (error) {
+        next(error);
+    }
+}
+
+async function submitSupplierVerification(req, res, next) {
+    const wantsJson = typeof req.get === "function" &&
+        (req.get("Accept") || "").includes("application/json");
+
+    const files = Array.isArray(req.files) ? req.files : [];
+    let assetsPersisted = false;
+    let assetsCleaned = false;
+
+    async function cleanupUploadedAssets() {
+        if (assetsPersisted || assetsCleaned) return;
+        assetsCleaned = true;
+        await cleanupSupplierVerificationAssets(files);
+    }
+
+    try {
+        if (files.length < 1 || files.length > 3) {
+            await cleanupUploadedAssets();
+
+            const message = "Veuillez joindre entre 1 et 3 documents.";
+
+            if (wantsJson) {
+                return res.status(400).json({ message });
+            }
+
+            const verificationRequest = await getLatestVerificationRequest(
+                req.supplier.id
+            );
+
+            return res.status(400).render("suppliers/verification", {
+                title: "Vérification du fournisseur — AZÔÔDIÉ",
+                supplier: req.supplier,
+                verificationRequest,
+                supplierVerificationCsrfToken:
+                    req.session?.supplierVerificationCsrfToken,
+                errors: [{ msg: message }]
+            });
+        }
+
+        const documents = files.map((file) => ({
+            public_id: file.public_id,
+            format: file.format
+        }));
+
+        const result = await createVerificationRequest(
+            req.supplier.id,
+            documents
+        );
+
+        if (!result) {
+            await cleanupUploadedAssets();
+
+            const error = new Error(
+                "Impossible de soumettre la demande : fournisseur introuvable."
+            );
+            error.status = 404;
+            return next(error);
+        }
+
+        if (result.status === "submitted") {
+            assetsPersisted = true;
+        } else if (
+            ["already_verified", "pending"].includes(result.status)
+        ) {
+            await cleanupUploadedAssets();
+        } else {
+            throw new Error(
+                "Résultat inattendu lors de la soumission de la vérification."
+            );
+        }
+
+        if (
+            ["already_verified", "pending", "submitted"].includes(result.status)
+        ) {
+            if (wantsJson) {
+                return res.status(200).json({
+                    redirect: "/supplier/dashboard"
+                });
+            }
+
+            return res.redirect("/supplier/dashboard");
+        }
+    } catch (error) {
+        await cleanupUploadedAssets();
+        return next(error);
+    }
+}
+
 module.exports = {
     showDashboard,
     showRegistrationForm,
-    registerSupplier
+    registerSupplier,
+    showVerificationForm,
+    ensureCanSubmitVerification,
+    submitSupplierVerification
 };

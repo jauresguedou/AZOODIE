@@ -1,21 +1,59 @@
 const {getUserById, updateUserPhoto } = require("../models/user-model");
 const { getRequestsByClient } = require("../models/request-model");
 const { getProfessionalById } = require("../models/professional-model");
+const { getSupplierByUserId,updateSupplierLogo } = require("../models/supplier-model");
 
 
 
-async function showMyProfile(req, res){
+
+async function showMyProfile(req, res) {
+    if (req.session.userRole === "supplier") {
+        const [supplier, user] = await Promise.all([
+            getSupplierByUserId(req.session.userId),
+            getUserById(req.session.userId)
+        ]);
+
+        if (!supplier) {
+            return res.redirect("/supplier/register");
+        }
+
+        if (!user) {
+            return req.session.destroy((error) => {
+                if (error) {
+                    return res.status(500).send(
+                        "Impossible de restaurer la session utilisateur."
+                    );
+                }
+
+                return res.redirect("/login");
+            });
+        }
+
+        return res.render("suppliers/profile", {
+            title: `${supplier.business_name} — Profil fournisseur | AZÔÔDIÉ`,
+            supplier,
+            profilePhoto: user.photo_url || null
+        });
+    }
+
     if (req.session.userRole === "professional") {
         if (!req.session.professionalId) {
             return res.redirect("/professionals/add");
         }
 
-        const professional = await getProfessionalById(req.session.professionalId);
+        const professional = await getProfessionalById(
+            req.session.professionalId
+        );
+
         if (!professional) {
             req.session.professionalId = null;
+
             await new Promise((resolve, reject) => {
-                req.session.save((error) => error ? reject(error) : resolve());
+                req.session.save((error) =>
+                    error ? reject(error) : resolve()
+                );
             });
+
             return res.redirect("/professionals/add");
         }
 
@@ -23,16 +61,26 @@ async function showMyProfile(req, res){
     }
 
     const user = await getUserById(req.session.userId);
+
     if (!user) {
         return req.session.destroy((error) => {
             if (error) {
-                return res.status(500).send("Impossible de restaurer la session utilisateur.");
+                return res.status(500).send(
+                    "Impossible de restaurer la session utilisateur."
+                );
             }
+
             return res.redirect("/login");
         });
     }
+
     const announcements = await getRequestsByClient(req.session.userId);
-    res.render("clients/profile", { title: "Mon profil — AZÔÔDIÉ", user, announcements });
+
+    return res.render("clients/profile", {
+        title: "Mon profil — AZÔÔDIÉ",
+        user,
+        announcements
+    });
 }
 
 async function uploadMyPhoto(req, res) {
@@ -44,4 +92,21 @@ async function uploadMyPhoto(req, res) {
 
 }
 
-module.exports = { showMyProfile, uploadMyPhoto};
+async function uploadSupplierLogo(req, res) {
+    if (!req.file) {
+        return res.redirect("/profile");
+    }
+
+    await updateSupplierLogo(
+        req.session.userId,
+        req.file.secure_url
+    );
+
+    return res.redirect("/profile");
+}
+
+module.exports = {
+    showMyProfile,
+    uploadMyPhoto,
+    uploadSupplierLogo
+};

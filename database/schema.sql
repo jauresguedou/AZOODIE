@@ -277,6 +277,7 @@ CREATE TABLE IF NOT EXISTS suppliers (
     department VARCHAR(80) NOT NULL,
     commune VARCHAR(100) NOT NULL,
     address_text TEXT,
+    logo_url VARCHAR(500),
 
     verified BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

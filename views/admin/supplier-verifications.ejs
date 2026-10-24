@@ -1,0 +1,142 @@
+<div class="form-container" style="margin:32px auto; max-width:1000px;">
+    <h1>Vérification des fournisseurs</h1>
+
+    <p style="color:var(--gray);">
+        Examinez les documents avant de prendre une décision.
+        Un fournisseur non vérifié peut continuer à utiliser le Marché.
+    </p>
+
+    <% if (!requests || requests.length === 0) { %>
+        <p>Aucune demande de vérification pour le moment.</p>
+    <% } else { %>
+        <div style="display:grid; gap:24px; margin-top:24px;">
+            <% requests.forEach(function(request) { %>
+                <article style="border:1px solid var(--gray-light); border-radius:12px; padding:20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;">
+                        <div>
+                            <h2 style="margin-top:0;">
+                                <%= request.supplier_name || "Fournisseur" %>
+                            </h2>
+                            <p><strong>E-mail :</strong> <%= request.supplier_email || "Non renseigné" %></p>
+                            <p><strong>Demande :</strong> #<%= request.id %></p>
+                            <p>
+                                <strong>Soumise le :</strong>
+                                <%= request.submitted_at ? new Date(request.submitted_at).toLocaleString("fr-FR") : "Date inconnue" %>
+                            </p>
+                        </div>
+
+                        <span class="distance-chip"
+                              style="background:<%= request.status === 'pending' ? '#B9770E' : request.status === 'approved' ? 'var(--teal)' : '#C0392B' %>;">
+                            <%= request.status === "pending" ? "En attente" : request.status === "approved" ? "Approuvée" : "Rejetée" %>
+                        </span>
+                    </div>
+
+                    <p>
+                        <strong>Compte fournisseur :</strong>
+                        <%= request.supplier_verified ? "Vérifié" : "Non vérifié" %>
+                    </p>
+
+                    <h3>Documents justificatifs</h3>
+                    <p style="color:var(--gray);">
+                        Les documents sont privés. Les liens de téléchargement sont temporaires.
+                    </p>
+
+                    <div class="table-scroll">
+                        <table style="width:100%; border-collapse:collapse;">
+                            <thead>
+                                <tr style="text-align:left; border-bottom:1px solid var(--gray-light);">
+                                    <th style="padding:10px;">Document</th>
+                                    <th style="padding:10px;">Format</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (Array.isArray(request.documents) && request.documents.length > 0) { %>
+                                    <% request.documents.forEach(function(document) { %>
+                                        <tr style="border-bottom:1px solid var(--gray-light);">
+                                            <td style="padding:10px;">
+                                                <a href="/admin/supplier-verifications/<%= request.id %>/documents/<%= document.id %>">
+                                                    Télécharger le document
+                                                </a>
+                                            </td>
+                                            <td style="padding:10px;"><%= document.format %></td>
+                                        </tr>
+                                    <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="2" style="padding:10px;">
+                                            Aucun document disponible.
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <% if (request.status === "pending") { %>
+                        <form method="POST"
+                              action="/admin/supplier-verifications/<%= request.id %>/review"
+                              style="margin-top:20px; display:grid; gap:12px;">
+                            <input
+                                type="hidden"
+                                name="_csrf"
+                                value="<%= adminSupplierVerificationCsrfToken %>"
+                            >
+
+                            <label for="notes-<%= request.id %>">
+                                Notes de vérification (facultatif)
+                            </label>
+
+                            <textarea
+                                id="notes-<%= request.id %>"
+                                name="notes"
+                                rows="3"
+                                maxlength="2000"
+                                placeholder="Motif du rejet ou observations internes..."
+                                style="width:100%; box-sizing:border-box;"
+                            ></textarea>
+
+                            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                                <button
+                                    type="submit"
+                                    name="status"
+                                    value="approved"
+                                    class="btn-primary"
+                                    onclick="return confirm('Confirmer l’approbation de ce fournisseur ?');"
+                                >
+                                    Approuver
+                                </button>
+
+                                <button
+                                    type="submit"
+                                    name="status"
+                                    value="rejected"
+                                    class="btn-primary"
+                                    style="background:#C0392B;"
+                                    onclick="return confirm('Confirmer le rejet de cette demande ?');"
+                                >
+                                    Rejeter
+                                </button>
+                            </div>
+                        </form>
+                    <% } else { %>
+                        <div style="margin-top:16px;">
+                            <p>
+                                <strong>Décision :</strong>
+                                <%= request.status === "approved" ? "Approuvée" : "Rejetée" %>
+                            </p>
+                            <% if (request.review_notes) { %>
+                                <p><strong>Notes :</strong> <%= request.review_notes %></p>
+                            <% } %>
+                            <% if (request.reviewed_at) { %>
+                                <p>
+                                    <strong>Traitée le :</strong>
+                                    <%= new Date(request.reviewed_at).toLocaleString("fr-FR") %>
+                                </p>
+                            <% } %>
+                        </div>
+                    <% } %>
+                </article>
+            <% }); %>
+        </div>
+    <% } %>
+</div>

@@ -1,0 +1,172 @@
+<div class="supplier-workspace supplier-dashboard supplier-verification-page">
+  <header class="supplier-dashboard-header">
+    <div class="supplier-dashboard-welcome">
+      <span class="supplier-eyebrow">CONFIANCE ET TRANSPARENCE</span>
+      <h1>Vérification de mon entreprise</h1>
+      <p>Ajoutez des documents qui aident les clients à mieux connaître votre entreprise. Cette démarche est facultative.</p>
+    </div>
+  </header>
+
+  <section class="supplier-panel supplier-form-panel">
+    <div class="supplier-panel-heading">
+      <div>
+        <h2><%= supplier.business_name %></h2>
+        <p>Joignez de 1 à 3 documents justificatifs pour demander une vérification.</p>
+      </div>
+      <span class="supplier-step-indicator">Facultatif</span>
+    </div>
+
+    <% if (supplier.verified) { %>
+      <div class="supplier-verification-notice is-approved" role="status">
+        <strong>Entreprise vérifiée</strong>
+        <p>Votre entreprise a déjà été approuvée par AZÔÔDIÉ.</p>
+      </div>
+      <a class="supplier-secondary-button" href="/supplier/dashboard">Retour au tableau de bord</a>
+
+    <% } else if (verificationRequest && verificationRequest.status === 'pending') { %>
+      <div class="supplier-verification-notice is-pending" role="status">
+        <strong>Demande en cours d'examen</strong>
+        <p>Votre demande a été reçue. Vous pouvez continuer à utiliser le Marché et publier vos offres pendant l'examen.</p>
+      </div>
+      <a class="supplier-secondary-button" href="/supplier/dashboard">Retour au tableau de bord</a>
+
+    <% } else { %>
+      <div class="supplier-verification-notice" role="note">
+        <strong>Documents acceptés</strong>
+        <p>Registre de commerce ou justificatif d’existence de l’entreprise, attestation d’identification fiscale (IFU), agrément commercial, certificat de conformité des matériaux, attestation de qualité, garantie des produits, assurance professionnelle ou tout autre justificatif pertinent.</p>
+      </div>
+
+      <div id="supplier-verification-errors" class="form-errors" role="alert" aria-live="assertive" hidden>
+        <ul><li id="supplier-verification-error-message"></li></ul>
+      </div>
+
+      <% if (verificationRequest && verificationRequest.status === 'rejected') { %>
+        <div class="supplier-verification-notice is-rejected" role="status">
+          <strong>Demande précédente refusée</strong>
+          <p>Vous pouvez soumettre une nouvelle demande avec des documents adaptés.</p>
+        </div>
+      <% } %>
+
+      <form
+        id="supplier-verification-form"
+        class="supplier-modern-form supplier-verification-form"
+        action="/supplier/verification"
+        method="POST"
+        enctype="multipart/form-data"
+        data-csrf-token="<%= supplierVerificationCsrfToken %>">
+
+        <div class="supplier-field">
+          <label for="verification-documents"></label>
+          <input
+            id="verification-documents"
+            name="documents"
+            type="file"
+            accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf"
+            multiple
+            required>
+          <small>Formats : JPEG, PNG, WebP ou PDF. 10 Mo maximum par fichier.</small>
+        </div>
+
+        <div class="supplier-verification-privacy" role="note">
+          <strong>Confidentialité de vos documents</strong>
+          <p>Les justificatifs ne sont pas destinés à être affichés publiquement. Ils sont réservés au processus de vérification et aux personnes autorisées.</p>
+        </div>
+
+        <div class="supplier-form-actions">
+          <a class="supplier-secondary-button" href="/supplier/dashboard">Annuler</a>
+          <button id="supplier-verification-submit" type="submit" class="supplier-publish-button">Envoyer ma demande</button>
+        </div>
+      </form>
+
+      <script>
+        (() => {
+          const form = document.getElementById('supplier-verification-form');
+          if (!form) return;
+
+          const fileInput = document.getElementById('verification-documents');
+          const submitButton = document.getElementById('supplier-verification-submit');
+          const errorBox = document.getElementById('supplier-verification-errors');
+          const errorMessage = document.getElementById('supplier-verification-error-message');
+          const maxBytes = 10 * 1024 * 1024;
+          const allowedTypes = new Set([
+            'image/jpeg', 'image/png', 'image/webp', 'application/pdf'
+          ]);
+
+          function showError(message) {
+            errorMessage.textContent = message;
+            errorBox.hidden = false;
+            errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+
+          form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            errorBox.hidden = true;
+
+            const files = Array.from(fileInput.files || []);
+
+            if (files.length < 1 || files.length > 3) {
+              showError('Veuillez sélectionner entre 1 et 3 documents.');
+              return;
+            }
+
+            for (const file of files) {
+              if (file.size > maxBytes) {
+                showError('Chaque document doit peser au maximum 10 Mo.');
+                return;
+              }
+
+              if (!allowedTypes.has(file.type)) {
+                showError('Format non autorisé. Utilisez un PDF, JPEG, PNG ou WebP.');
+                return;
+              }
+            }
+
+            submitButton.disabled = true;
+            submitButton.textContent = 'Envoi en cours…';
+
+            try {
+              const response = await fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {
+                  'X-CSRF-Token': form.dataset.csrfToken,
+                  'Accept': 'application/json'
+                },
+                credentials: 'same-origin'
+              });
+
+              if (response.redirected) {
+                window.location.assign(response.url);
+                return;
+              }
+
+              const contentType = response.headers.get('content-type') || '';
+
+              if (contentType.includes('application/json')) {
+                const result = await response.json();
+
+                if (response.ok && result.redirect) {
+                  window.location.assign(result.redirect);
+                  return;
+                }
+
+                throw new Error(result.message || 'Impossible d’envoyer la demande. Réessayez.');
+              }
+
+              if (response.ok) {
+                window.location.assign('/supplier/dashboard');
+                return;
+              }
+
+              throw new Error('L’envoi a échoué. Rechargez la page et réessayez.');
+            } catch (error) {
+              showError(error.message || 'Une erreur est survenue pendant l’envoi.');
+              submitButton.disabled = false;
+              submitButton.textContent = 'Envoyer ma demande';
+            }
+          });
+        })();
+      </script>
+    <% } %>
+  </section>
+</div>

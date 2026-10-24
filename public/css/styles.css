@@ -62,6 +62,126 @@ body {
 }
 
 
+
+/* AZÔÔDIÉ — Supplier profile photo and company logo editing */
+
+.supplier-profile-cover {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+
+.supplier-profile-cover-image {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.supplier-profile-cover > span {
+    position: relative;
+    z-index: 1;
+}
+
+
+.supplier-profile-image-form {
+    margin: 0;
+}
+
+.supplier-profile-logo-form {
+    position: absolute;
+    z-index: 2;
+    top: 16px;
+    right: 16px;
+}
+
+.supplier-profile-avatar-wrapper {
+    position: relative;
+    flex: 0 0 120px;
+    width: 120px;
+    height: 120px;
+    margin-top: -58px;
+}
+
+.supplier-profile-avatar-wrapper .supplier-profile-avatar {
+    width: 100%;
+    height: 100%;
+    margin-top: 0;
+}
+
+.supplier-profile-avatar-image {
+    display: block;
+    object-fit: cover;
+}
+
+.supplier-profile-avatar-form {
+    position: absolute;
+    right: -8px;
+    bottom: -8px;
+    z-index: 3;
+}
+
+.supplier-profile-edit-image {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    place-items: center;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: #0f6e6e;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.35rem;
+    font-weight: 700;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.supplier-profile-edit-image:hover {
+    background: #0a5555;
+    transform: scale(1.05);
+}
+
+.supplier-profile-edit-image input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    clip-path: inset(50%);
+}
+
+.supplier-profile-edit-image:focus-within {
+    outline: 3px solid #f4a261;
+    outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+    .supplier-profile-avatar-wrapper {
+        flex-basis: 94px;
+        width: 94px;
+        height: 94px;
+        margin-top: -46px;
+    }
+
+    .supplier-profile-logo-form {
+        top: 10px;
+        right: 10px;
+    }
+
+    .supplier-profile-edit-image {
+        width: 34px;
+        height: 34px;
+        font-size: 1.2rem;
+    }
+}
+
+
+
 /* AZÔÔDIÉ — Progression des chantiers */
 .chantier-progress {
     margin-top: 20px;
@@ -97,6 +217,368 @@ body {
     background: #0d9488;
     transition: width 0.3s ease;
 }
+
+
+
+/* =========================================
+   AZÔÔDIÉ — Supplier business profile
+   Independent from the Market and dashboard
+   ========================================= */
+
+.supplier-profile-page {
+  --supplier-profile-teal: #0f6e6e;
+  --supplier-profile-teal-dark: #0a5555;
+  --supplier-profile-orange: #e8853b;
+  --supplier-profile-text: #20252b;
+  --supplier-profile-muted: #687582;
+  --supplier-profile-border: #e1e6eb;
+
+  width: min(1080px, calc(100% - 32px));
+  margin: 32px auto 56px;
+  color: var(--supplier-profile-text);
+}
+
+.supplier-profile-card,
+.supplier-profile-section {
+  overflow: hidden;
+  border: 1px solid var(--supplier-profile-border);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 4px 18px rgba(31, 41, 55, 0.055);
+}
+
+.supplier-profile-cover {
+  display: flex;
+  min-height: 170px;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 24px 28px;
+  background:
+    radial-gradient(ellipse at 80% 15%, rgba(255, 255, 255, 0.22), transparent 35%),
+    linear-gradient(118deg, #0a5555 0%, #0f6e6e 52%, #4a9991 100%);
+}
+
+.supplier-profile-cover span {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.13em;
+}
+
+.supplier-profile-identity {
+  display: flex;
+  align-items: flex-end;
+  gap: 22px;
+  padding: 0 30px 24px;
+}
+
+.supplier-profile-avatar {
+  display: grid;
+  flex: 0 0 120px;
+  width: 120px;
+  height: 120px;
+  place-items: center;
+  margin-top: -58px;
+  border: 5px solid #fff;
+  border-radius: 20px;
+  background: linear-gradient(145deg, var(--supplier-profile-orange), #c9642d);
+  box-shadow: 0 3px 12px rgba(31, 41, 55, 0.15);
+  color: #fff;
+  font-size: 3rem;
+  font-weight: 800;
+}
+
+.supplier-profile-heading {
+  flex: 1;
+  min-width: 0;
+  padding-top: 15px;
+}
+
+.supplier-profile-eyebrow {
+  margin: 0 0 7px;
+  color: var(--supplier-profile-teal);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.supplier-profile-heading h1 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.supplier-profile-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 9px;
+  border: 1px solid #b8e4cb;
+  border-radius: 999px;
+  background: #e9f8ef;
+  color: #17633f;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.supplier-profile-subtitle {
+  margin: 9px 0 6px;
+  color: var(--supplier-profile-muted);
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+.supplier-profile-location {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  color: var(--supplier-profile-muted);
+  font-size: 0.88rem;
+}
+
+.supplier-profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0 30px 25px;
+}
+
+.supplier-profile-button {
+  display: inline-flex;
+  min-height: 43px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 0.86rem;
+  font-weight: 750;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.supplier-profile-button:hover {
+  transform: translateY(-1px);
+}
+
+.supplier-profile-button-primary {
+  background: var(--supplier-profile-teal);
+  color: #fff;
+}
+
+.supplier-profile-button-primary:hover {
+  background: var(--supplier-profile-teal-dark);
+  color: #fff;
+}
+
+.supplier-profile-button-secondary {
+  border-color: #cfe7e4;
+  background: #edf8f6;
+  color: var(--supplier-profile-teal-dark);
+}
+
+.supplier-profile-button-secondary:hover {
+  background: #dff1ed;
+}
+
+.supplier-profile-button-market {
+  border-color: var(--supplier-profile-border);
+  background: #fff;
+  color: var(--supplier-profile-text);
+}
+
+.supplier-profile-button-market:hover {
+  background: #f6f8fa;
+}
+
+.supplier-profile-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 310px;
+  align-items: start;
+  gap: 22px;
+  margin-top: 22px;
+}
+
+.supplier-profile-main,
+.supplier-profile-sidebar {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.supplier-profile-section {
+  padding: 24px;
+}
+
+.supplier-profile-section h2 {
+  margin: 0 0 17px;
+  font-size: 1.08rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.supplier-profile-description,
+.supplier-profile-section > p {
+  color: var(--supplier-profile-muted);
+  font-size: 0.91rem;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.supplier-profile-description {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.supplier-profile-empty {
+  margin: 0;
+  padding: 14px;
+  border-radius: 10px;
+  background: #f6f8fa;
+}
+
+.supplier-profile-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 18px;
+  margin: 0;
+}
+
+.supplier-profile-details > div {
+  min-width: 0;
+}
+
+.supplier-profile-details dt {
+  margin-bottom: 6px;
+  color: var(--supplier-profile-muted);
+  font-size: 0.78rem;
+}
+
+.supplier-profile-details dd {
+  margin: 0;
+  font-size: 0.91rem;
+  font-weight: 700;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.supplier-profile-trust-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.supplier-profile-trust-status.is-verified {
+  background: #e9f8ef;
+  color: #17633f;
+}
+
+.supplier-profile-trust-status.is-unverified {
+  background: #fff3e3;
+  color: #89551a;
+}
+
+.supplier-profile-text-link {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--supplier-profile-teal);
+  font-size: 0.87rem;
+  font-weight: 750;
+  line-height: 1.6;
+  text-decoration: none;
+}
+
+.supplier-profile-text-link:hover {
+  color: var(--supplier-profile-teal-dark);
+  text-decoration: underline;
+}
+
+@media (max-width: 760px) {
+  .supplier-profile-page {
+    width: min(100% - 24px, 600px);
+    margin-top: 20px;
+  }
+
+  .supplier-profile-cover {
+    min-height: 125px;
+    padding: 18px;
+  }
+
+  .supplier-profile-cover span {
+    font-size: 0.62rem;
+  }
+
+  .supplier-profile-identity {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0;
+    padding: 0 18px 20px;
+  }
+
+  .supplier-profile-avatar {
+    flex-basis: 94px;
+    width: 94px;
+    height: 94px;
+    margin-top: -46px;
+    border-radius: 17px;
+    font-size: 2.5rem;
+  }
+
+  .supplier-profile-heading {
+    padding-top: 15px;
+  }
+
+  .supplier-profile-heading h1 {
+    font-size: 1.55rem;
+  }
+
+  .supplier-profile-actions {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 18px 20px;
+  }
+
+  .supplier-profile-button {
+    width: 100%;
+  }
+
+  .supplier-profile-content {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .supplier-profile-main,
+  .supplier-profile-sidebar {
+    gap: 16px;
+  }
+
+  .supplier-profile-section {
+    padding: 20px 18px;
+  }
+
+  .supplier-profile-details {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 17px;
+  }
+}
+
 
 /* ==========================================
    AZÔÔDIÉ — Construction projects (Chantiers)

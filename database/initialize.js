@@ -1,6 +1,12 @@
 const pool = require("../config/database");
 
 async function initializeDatabase(database = pool) {
+
+        // Supplier business logo for the supplier profile cover.
+    await database.query(`
+        ALTER TABLE suppliers
+        ADD COLUMN IF NOT EXISTS logo_url VARCHAR(500)
+    `);
     await database.query(`
         CREATE TABLE IF NOT EXISTS professional_portfolio_posts (
             id SERIAL PRIMARY KEY,
@@ -250,6 +256,50 @@ async function initializeDatabase(database = pool) {
     await database.query(`
         CREATE INDEX IF NOT EXISTS construction_daily_report_media_report_idx
         ON construction_daily_report_media(report_id, created_at ASC, id ASC)
+    `);
+
+
+        // Supplier verification requests: administrative review workflow.
+    await database.query(`
+        CREATE TABLE IF NOT EXISTS supplier_verification_requests (
+            id SERIAL PRIMARY KEY,
+            supplier_id INTEGER NOT NULL
+                REFERENCES suppliers(id) ON DELETE CASCADE,
+            status VARCHAR(20) NOT NULL DEFAULT 'pending'
+                CHECK (status IN ('pending', 'approved', 'rejected')),
+            submitted_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            reviewed_by INTEGER
+                REFERENCES users(id) ON DELETE SET NULL,
+            reviewed_at TIMESTAMPTZ,
+            review_notes TEXT
+        )
+    `);
+
+    // Prevent multiple simultaneous pending requests for one supplier.
+    await database.query(`
+        CREATE UNIQUE INDEX IF NOT EXISTS supplier_verification_one_pending_idx
+        ON supplier_verification_requests(supplier_id)
+        WHERE status = 'pending'
+    `);
+
+    // Private documents attached to supplier verification requests.
+    await database.query(`
+        CREATE TABLE IF NOT EXISTS supplier_verification_documents (
+            id SERIAL PRIMARY KEY,
+            request_id INTEGER NOT NULL
+                REFERENCES supplier_verification_requests(id) ON DELETE CASCADE,
+            public_id TEXT NOT NULL UNIQUE,
+            format VARCHAR(10) NOT NULL
+                CHECK (format IN ('jpg', 'jpeg', 'png', 'webp', 'pdf')),
+            resource_type VARCHAR(20) NOT NULL DEFAULT 'image'
+                CHECK (resource_type = 'image'),
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
+
+    await database.query(`
+        CREATE INDEX IF NOT EXISTS supplier_verification_documents_request_idx
+        ON supplier_verification_documents(request_id, id)
     `);
 
 

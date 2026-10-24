@@ -12,6 +12,7 @@ async function getSupplierByUserId(userId) {
             department,
             commune,
             address_text,
+            logo_url,
             verified,
             created_at,
             updated_at
@@ -50,7 +51,18 @@ async function createSupplier(userId, data) {
     return result.rows[0];
 }
 
+async function updateSupplierLogo(userId, logoUrl) {
+    await pool.query(
+        `UPDATE suppliers
+         SET logo_url = $1,
+             updated_at = NOW()
+         WHERE user_id = $2`,
+        [logoUrl, userId]
+    );
+}
+
 module.exports = {
     getSupplierByUserId,
-    createSupplier
+    createSupplier,
+    updateSupplierLogo
 };
