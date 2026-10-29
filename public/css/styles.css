@@ -9016,3 +9016,79 @@ body {
     }
 }
 
+
+/* AZÔÔDIÉ — Clean notification navigation item */
+.site-nav .nav-links > a.nav-notifications {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 42px;
+    padding: 10px 12px;
+    color: #40525D;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* Bell icon container */
+.site-nav .nav-notification-icon {
+    position: relative;
+    display: inline-flex;
+    flex: 0 0 22px;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+}
+
+/* Bell itself */
+.site-nav .nav-notification-icon svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+}
+
+/* Red dot positioned on the bell */
+.site-nav .nav-notification-dot {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    display: block;
+    width: 9px;
+    height: 9px;
+    padding: 0;
+    border: 2px solid #FFFFFF;
+    border-radius: 50%;
+    background: #E53935;
+    box-sizing: content-box;
+}
+
+/* Notifications label */
+.site-nav .nav-notification-label {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Hover and keyboard accessibility */
+.site-nav .nav-links > a.nav-notifications:hover {
+    color: #0F6E6E;
+    background: #EAF5F3;
+}
+
+.site-nav .nav-links > a.nav-notifications:focus-visible {
+    outline: 3px solid #E8853B;
+    outline-offset: 3px;
+}
+
+/* Keep the notification item aligned on mobile */
+@media (max-width: 768px) {
+    .site-nav .nav-links > a.nav-notifications {
+        justify-content: flex-start;
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
