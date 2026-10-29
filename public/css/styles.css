@@ -9018,17 +9018,31 @@ body {
 
 
 /* AZÔÔDIÉ — Clean notification navigation item */
+
+/* AZÔÔDIÉ — Notification link with icon and label */
 .site-nav .nav-links > a.nav-notifications {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 9px;
+
+    /* Override the older icon-only button dimensions */
+    width: auto;
+    min-width: max-content;
+    height: auto;
     min-height: 42px;
     padding: 10px 12px;
+    box-sizing: border-box;
+
+    border-radius: 10px;
     color: #40525D;
+    background: transparent;
     text-decoration: none;
     white-space: nowrap;
+    flex-shrink: 0;
 }
+
 
 /* Bell icon container */
 .site-nav .nav-notification-icon {
@@ -9091,4 +9105,10 @@ body {
         width: 100%;
         box-sizing: border-box;
     }
+}
+
+/* Keep logout and notification links from shrinking */
+.site-nav .nav-links > a.nav-notifications,
+.site-nav .nav-logout-form {
+    flex-shrink: 0;
 }
