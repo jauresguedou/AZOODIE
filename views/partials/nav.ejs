@@ -1,11 +1,16 @@
-<nav class="site-nav">
-    <a href="/" class="nav-brand">AZÔÔDIÉ</a>
+
+<nav class="site-nav" aria-label="Navigation principale">
+    <a href="/" class="nav-brand" aria-label="AZÔÔDIÉ — Accueil">
+        <span class="nav-brand-mark" aria-hidden="true">A</span>
+        <span>AZÔÔDIÉ</span>
+    </a>
 
     <button
         type="button"
         id="nav-toggle"
         class="nav-toggle"
         aria-label="Ouvrir le menu"
+        aria-controls="azoodie-nav-links"
         aria-expanded="false"
     >
         <span></span>
@@ -13,38 +18,109 @@
         <span></span>
     </button>
 
-    <div class="nav-links">
+    <div class="nav-links" id="azoodie-nav-links">
 
-        <!-- Shared navigation: available to everyone -->
-        <a href="/market" class="nav-market-link"> Marché</a>
+        <!-- Shared navigation -->
+        <a href="/market" class="nav-market-link">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 10h18l-2-6H5l-2 6Z"/>
+                <path d="M5 10v10h14V10"/>
+                <path d="M9 20v-6h6v6"/>
+            </svg>
+            <span>Marché</span>
+        </a>
 
         <% if (session.userRole !== 'professional') { %>
-            <a href="/search?lat=6.3703&lng=2.3912">Rechercher</a>
-            <a href="/professionals">Professionnels</a>
+            <a href="/search?lat=6.3703&lng=2.3912">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="10.5" cy="10.5" r="6.5"/>
+                    <path d="m16 16 4.5 4.5"/>
+                </svg>
+                <span>Rechercher</span>
+            </a>
+
+            <a href="/professionals">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="10" cy="7" r="4"/>
+                    <path d="M20 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <span>Professionnels</span>
+            </a>
         <% } %>
 
         <% if (!session.userId) { %>
 
-            <!-- Visitors who are not logged in -->
-            <a href="/login">Connexion</a>
-            <a href="/register">Inscription</a>
+            <!-- Visitors -->
+            <a href="/login" class="nav-auth-link">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                    <path d="m10 17 5-5-5-5"/>
+                    <path d="M15 12H3"/>
+                </svg>
+                <span>Connexion</span>
+            </a>
+
+            <a href="/register" class="nav-register-link">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="8" r="4"/>
+                    <path d="M3 21v-2a6 6 0 0 1 6-6h1"/>
+                    <path d="M19 8v8M15 12h8"/>
+                </svg>
+                <span>Inscription</span>
+            </a>
 
         <% } else { %>
 
-            <!-- Construction project management -->
+            <!-- Shared authenticated-user navigation -->
             <a href="/chantiers" class="nav-chantiers-link">
-                 Chantiers
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 21h18"/>
+                    <path d="M5 21V7l8-4v18"/>
+                    <path d="M13 10h6v11"/>
+                    <path d="M8 10h2M8 14h2M8 18h2M16 14h1M16 17h1"/>
+                </svg>
+                <span>Chantiers</span>
             </a>
 
             <!-- Administrator navigation -->
             <% if (session.userRole === 'admin') { %>
-                <a href="/admin">Admin</a>
+                <a href="/admin" class="nav-admin-link">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3 20 6v5c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-3Z"/>
+                        <path d="m9 12 2 2 4-4"/>
+                    </svg>
+                    <span>Admin</span>
+                </a>
             <% } %>
 
             <!-- Supplier navigation -->
             <% if (session.userRole === 'supplier') { %>
                 <a href="/supplier/dashboard" class="nav-supplier-link">
-                    Espace fournisseur
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 21h18"/>
+                        <path d="M5 21V8l7-5 7 5v13"/>
+                        <path d="M9 21v-6h6v6"/>
+                        <path d="M9 10h.01M15 10h.01"/>
+                    </svg>
+                    <span>Espace fournisseur</span>
                 </a>
             <% } %>
 
@@ -52,10 +128,47 @@
             <% if (session.userRole === 'professional') { %>
 
                 <% if (session.professionalId) { %>
-                    <a href="/professionals/dashboard">Tableau de bord</a>
-                    <a href="/professionals/leads">Mes demandes</a>
-                    <a href="/requests/feed">Annonces</a>
-                    <a href="/professionals/<%= session.professionalId %>">Mon profil</a>
+                    <a href="/professionals/dashboard">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="9" rx="1"/>
+                            <rect x="14" y="3" width="7" height="5" rx="1"/>
+                            <rect x="14" y="12" width="7" height="9" rx="1"/>
+                            <rect x="3" y="16" width="7" height="5" rx="1"/>
+                        </svg>
+                        <span>Tableau de bord</span>
+                    </a>
+
+                    <a href="/professionals/leads">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M8 6h13M8 12h13M8 18h13"/>
+                            <path d="M3 6h.01M3 12h.01M3 18h.01"/>
+                        </svg>
+                        <span>Mes demandes</span>
+                    </a>
+
+                    <a href="/requests/feed">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16v16H4z"/>
+                            <path d="M8 8h8M8 12h8M8 16h5"/>
+                        </svg>
+                        <span>Annonces</span>
+                    </a>
+
+                    <a href="/professionals/<%= session.professionalId %>">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="4"/>
+                            <path d="M4 21v-2a8 8 0 0 1 16 0v2"/>
+                        </svg>
+                        <span>Mon profil</span>
+                    </a>
 
                     <a
                         href="/professionals/notifications"
@@ -63,44 +176,64 @@
                         aria-label="<%= unreadCount > 0 ? 'Notifications, nouvelles notifications' : 'Notifications' %>"
                         title="<%= unreadCount > 0 ? 'Nouvelles notifications' : 'Notifications' %>"
                     >
-                        <svg
-                            aria-hidden="true"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.8"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        >
-                            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
-                            <path d="M10 21h4"></path>
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+                            <path d="M10 21h4"/>
                         </svg>
+                        <span class="nav-notification-label">Notifications</span>
 
                         <% if (unreadCount > 0) { %>
-                            <span class="nav-notification-dot" aria-hidden="true"></span>
+                            <span class="nav-notification-dot" aria-label="Nouvelles notifications">
+                                <%= unreadCount > 99 ? '99+' : unreadCount %>
+                            </span>
                         <% } %>
                     </a>
 
                 <% } else { %>
-                    <a href="/professionals/add">Mon profil</a>
+                    <a href="/professionals/add">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="4"/>
+                            <path d="M4 21v-2a8 8 0 0 1 16 0v2"/>
+                            <path d="M19 8v6M16 11h6"/>
+                        </svg>
+                        <span>Mon profil</span>
+                    </a>
                 <% } %>
 
             <% } else { %>
 
                 <!-- General profile link for non-professional users -->
-                <a href="/profile">Mon profil</a>
+                <a href="/profile">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="8" r="4"/>
+                        <path d="M4 21v-2a8 8 0 0 1 16 0v2"/>
+                    </svg>
+                    <span>Mon profil</span>
+                </a>
 
             <% } %>
 
-            <!-- Shared authenticated-user action -->
+            <!-- Logout remains a POST form -->
             <form action="/logout" method="POST" class="nav-logout-form">
                 <button type="submit" class="nav-link-btn">
-                    Déconnexion
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 17l5-5-5-5"/>
+                        <path d="M15 12H3"/>
+                        <path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/>
+                    </svg>
+                    <span>Déconnexion</span>
                 </button>
             </form>
 
         <% } %>
-
     </div>
 </nav>
 
