@@ -86,14 +86,23 @@
                                 Notes de vérification (facultatif)
                             </label>
 
+                            
                             <textarea
+                                class="admin-verification-notes"
                                 id="notes-<%= request.id %>"
                                 name="notes"
-                                rows="3"
+                                rows="4"
                                 maxlength="2000"
-                                placeholder="Motif du rejet ou observations internes..."
-                                style="width:100%; box-sizing:border-box;"
+                                placeholder="Expliquez votre décision ou ajoutez vos observations internes..."
+                                aria-describedby="notes-help-<%= request.id %>"
                             ></textarea>
+                            <p
+                                class="admin-verification-notes-help"
+                                id="notes-help-<%= request.id %>"
+                            >
+                                Facultatif · 2 000 caractères maximum.
+                            </p>
+
 
                             <div style="display:flex; gap:12px; flex-wrap:wrap;">
                                 <button

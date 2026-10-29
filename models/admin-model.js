@@ -39,4 +39,34 @@ async function getCoverageSummary() {
 
 }
 
-module.exports = { getCoverageSummary};
+async function getAdminDashboardSummary() {
+    const result = await pool.query(`
+        SELECT
+            COUNT(*) FILTER (
+                WHERE role = 'client'
+            )::int AS clients_count,
+
+            COUNT(*) FILTER (
+                WHERE role = 'professional'
+            )::int AS professionals_count,
+
+            COUNT(*) FILTER (
+                WHERE role = 'supplier'
+            )::int AS suppliers_count,
+
+            (
+                SELECT COUNT(*)::int
+                FROM supplier_verification_requests
+                WHERE status = 'pending'
+            ) AS pending_supplier_verifications
+
+        FROM users
+    `);
+
+    return result.rows[0];
+}
+
+module.exports = {
+    getCoverageSummary,
+    getAdminDashboardSummary,
+};

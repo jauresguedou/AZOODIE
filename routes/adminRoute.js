@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const {
+    showAdminDashboard,
     showCoverageDashboard,
     showSupplierVerifications,
     reviewSupplierVerification,
@@ -14,7 +15,7 @@ const {
     ensureAdminSupplierVerificationCsrfToken,
     verifyAdminSupplierVerificationCsrf,
 } = require("../middleware/adminSupplierVerificationCsrf");
-
+router.get("/", requireAdmin, showAdminDashboard);
 router.get("/coverage", requireAdmin, showCoverageDashboard);
 
 router.get(

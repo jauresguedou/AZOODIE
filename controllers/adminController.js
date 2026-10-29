@@ -1,5 +1,5 @@
 
-const { getCoverageSummary } = require("../models/admin-model");
+const { getCoverageSummary, getAdminDashboardSummary } = require("../models/admin-model");
 
 const {
     getVerificationRequestsForAdmin,
@@ -8,6 +8,15 @@ const {
 } = require("../models/supplier-verification-model");
 
 const { createSupplierVerificationDocumentUrl } = require("../utils/supplierVerificationDocumentUrl");
+
+async function showAdminDashboard(req, res) {
+    const summary = await getAdminDashboardSummary();
+
+    res.render("admin/dashboard", {
+        title: "Administration - AZÔÔDIÉ",
+        summary,
+    })
+}
 
 async function showCoverageDashboard(req, res) {
     const zones = await getCoverageSummary();
@@ -101,6 +110,7 @@ async function showSupplierVerificationDocument(req, res) {
 }
 
 module.exports = {
+    showAdminDashboard,
     showCoverageDashboard,
     showSupplierVerifications,
     reviewSupplierVerification,

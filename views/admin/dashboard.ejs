@@ -1,0 +1,118 @@
+
+<div class="admin-page">
+    <header class="admin-hero">
+        <div>
+            <p class="admin-eyebrow">AZÔÔDIÉ · Administration</p>
+            <h1>Tableau de bord</h1>
+            <p class="admin-hero-description">
+                Pilotez votre plateforme, suivez les comptes et gérez
+                les opérations essentielles depuis un espace centralisé.
+            </p>
+        </div>
+
+        <div class="admin-hero-mark" aria-hidden="true">A</div>
+    </header>
+
+    <section class="admin-section" aria-labelledby="admin-overview-title">
+        <div class="admin-section-heading">
+            <div>
+                <h2 id="admin-overview-title">Vue d'ensemble</h2>
+                <p>Les principaux indicateurs de votre plateforme.</p>
+            </div>
+        </div>
+
+        <div class="admin-kpi-grid">
+            <article class="admin-kpi">
+                <div class="admin-kpi-top">
+                    <p class="admin-kpi-label">Clients</p>
+                    <span class="admin-kpi-icon" aria-hidden="true">C</span>
+                </div>
+                <strong class="admin-kpi-value">
+                    <%= Number(summary.clients_count || 0).toLocaleString("fr-FR") %>
+                </strong>
+                <p class="admin-kpi-caption">Comptes clients enregistrés</p>
+            </article>
+
+            <article class="admin-kpi">
+                <div class="admin-kpi-top">
+                    <p class="admin-kpi-label">Professionnels</p>
+                    <span class="admin-kpi-icon" aria-hidden="true">P</span>
+                </div>
+                <strong class="admin-kpi-value">
+                    <%= Number(summary.professionals_count || 0).toLocaleString("fr-FR") %>
+                </strong>
+                <p class="admin-kpi-caption">Comptes professionnels enregistrés</p>
+            </article>
+
+            <article class="admin-kpi">
+                <div class="admin-kpi-top">
+                    <p class="admin-kpi-label">Fournisseurs</p>
+                    <span class="admin-kpi-icon orange" aria-hidden="true">F</span>
+                </div>
+                <strong class="admin-kpi-value">
+                    <%= Number(summary.suppliers_count || 0).toLocaleString("fr-FR") %>
+                </strong>
+                <p class="admin-kpi-caption">Comptes fournisseurs enregistrés</p>
+            </article>
+
+            <article class="admin-kpi">
+                <div class="admin-kpi-top">
+                    <p class="admin-kpi-label">Vérifications en attente</p>
+                    <span class="admin-kpi-icon orange" aria-hidden="true">!</span>
+                </div>
+                <strong class="admin-kpi-value">
+                    <%= Number(summary.pending_supplier_verifications || 0).toLocaleString("fr-FR") %>
+                </strong>
+                <p class="admin-kpi-caption">Demandes nécessitant une décision</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="admin-section" aria-labelledby="admin-tools-title">
+        <div class="admin-section-heading">
+            <div>
+                <h2 id="admin-tools-title">Gestion de la plateforme</h2>
+                <p>Accédez rapidement aux outils d'administration disponibles.</p>
+            </div>
+        </div>
+
+        <div class="admin-tools-grid">
+            <a class="admin-tool" href="/admin/supplier-verifications">
+                <span class="admin-tool-icon orange" aria-hidden="true">✓</span>
+                <span class="admin-tool-content">
+                    <h3>Vérification des fournisseurs</h3>
+                    <p>
+                        Consultez les justificatifs, examinez les demandes
+                        et approuvez ou rejetez les dossiers.
+                    </p>
+                    <span class="admin-tool-link">Gérer les vérifications →</span>
+                </span>
+            </a>
+
+            <a class="admin-tool" href="/admin/coverage">
+                <span class="admin-tool-icon" aria-hidden="true">⌖</span>
+                <span class="admin-tool-content">
+                    <h3>Couverture géographique</h3>
+                    <p>
+                        Identifiez les zones où les demandes ouvertes
+                        dépassent le nombre de professionnels disponibles.
+                    </p>
+                    <span class="admin-tool-link">Analyser les zones →</span>
+                </span>
+            </a>
+        </div>
+    </section>
+
+    <aside class="admin-status-panel">
+        <span class="admin-status-dot" aria-hidden="true"></span>
+        <div>
+            <h3>Prochaine étape : gestion centralisée</h3>
+            <p>
+                La gestion des comptes clients, des profils professionnels,
+                des fournisseurs et des offres du Marché pourra être ajoutée
+                à cet espace au fur et à mesure de la mise en place des routes
+                et des contrôles d'accès correspondants.
+            </p>
+        </div>
+    </aside>
+</div>
